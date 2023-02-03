@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="162c1fa6-8509-48f9-99f5-3cb4053e3ef3" name="Changes" comment="First draft of the Action interface">
-      <change afterPath="$PROJECT_DIR$/src/main/java/edu/ntnu/idatt2001/paths/ScoreAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="162c1fa6-8509-48f9-99f5-3cb4053e3ef3" name="Changes" comment="First draft of the ScoreAction class" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -66,7 +63,7 @@
       <updated>1675329941298</updated>
       <workItem from="1675329943050" duration="1178000" />
       <workItem from="1675346017195" duration="62000" />
-      <workItem from="1675433050866" duration="8424000" />
+      <workItem from="1675433050866" duration="9321000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1675330799853</created>
@@ -96,7 +93,14 @@
       <option name="project" value="LOCAL" />
       <updated>1675441152414</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="First draft of the ScoreAction class">
+      <created>1675442375754</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1675442375754</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -118,6 +122,7 @@
     <MESSAGE value="First draft of the Passage class." />
     <MESSAGE value="First draft of the Player class" />
     <MESSAGE value="First draft of the Action interface" />
-    <option name="LAST_COMMIT_MESSAGE" value="First draft of the Action interface" />
+    <MESSAGE value="First draft of the ScoreAction class" />
+    <option name="LAST_COMMIT_MESSAGE" value="First draft of the ScoreAction class" />
   </component>
 </project>
