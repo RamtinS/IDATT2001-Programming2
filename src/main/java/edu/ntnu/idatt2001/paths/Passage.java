@@ -46,7 +46,7 @@ public class Passage {
     @Override
     public String toString(){
 
-        return "\nTitle: " + title + "\nContent: " + content;
+        return "\nTitle: " + getTitle() + "\nContent: " + getContent();
     }
 
     @Override
