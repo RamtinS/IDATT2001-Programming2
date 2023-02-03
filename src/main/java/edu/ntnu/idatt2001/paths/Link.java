@@ -13,7 +13,9 @@ public class Link {
   private final String reference;
   private List<Action> actions;
 
-  public Link(String text, String reference) {
+  public Link(String text, String reference) throws NullPointerException, IllegalArgumentException {
+    Objects.requireNonNull(text, "\nText cannot be null.");
+    Objects.requireNonNull(reference, "\nReference cannot be null.");
     if (text.isBlank()) throw new IllegalArgumentException("\nText cannot be blank.");
     if (reference.isBlank()) throw new IllegalArgumentException("\nReference cannot be blank.");
     this.text = text;
