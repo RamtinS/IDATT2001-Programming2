@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2001.paths;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Objects;
 public class Link {
   private final String text;
   private final String reference;
-  private List<Action> actions;
+  private final List<Action> actions;
 
   public Link(String text, String reference) throws NullPointerException, IllegalArgumentException {
     Objects.requireNonNull(text, "\nText cannot be null.");
@@ -20,6 +21,7 @@ public class Link {
     if (reference.isBlank()) throw new IllegalArgumentException("\nReference cannot be blank.");
     this.text = text;
     this.reference = reference;
+    this.actions = new ArrayList<>();
   }
 
   public String getText() {
@@ -30,7 +32,7 @@ public class Link {
     return reference;
   }
 
-  public addAction(Action action){
+  public void addAction(Action action){
     actions.add(action);
   }
 
