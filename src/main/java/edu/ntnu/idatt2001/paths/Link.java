@@ -34,6 +34,7 @@ public class Link {
   }
 
   public void addAction(Action action){
+    Objects.requireNonNull(action, "\nAction cannot be null.");
     actions.add(action);
   }
 
