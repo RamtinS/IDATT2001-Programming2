@@ -1,5 +1,18 @@
 package edu.ntnu.idatt2001.paths;
 
-interface Action{
-    void execute(Player player);
+/**
+ * The interface represents an action, which
+ * represents a future change in the state of a player.
+ *
+ * @author ...
+ * @version JDK 17
+ */
+interface Action {
+
+  /**
+   * The method changes the state of the player.
+   *
+   * @param player the player which is affected by the action.
+   */
+  void execute(Player player);
 }
