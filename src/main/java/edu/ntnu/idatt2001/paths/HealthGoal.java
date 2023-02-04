@@ -1,5 +1,7 @@
 package edu.ntnu.idatt2001.paths;
 
+import java.util.Objects;
+
 public class HealthGoal implements Goal{
   private final int minimumHealth;
 
@@ -13,7 +15,8 @@ public class HealthGoal implements Goal{
   }
 
   @Override
-  public boolean isFulfilled(Player player) {
+  public boolean isFulfilled(Player player) throws NullPointerException {
+    Objects.requireNonNull(player, "\nPlayer cannot be null.");
     return player.getHealth() > getMinimumHealth();
   }
 }
