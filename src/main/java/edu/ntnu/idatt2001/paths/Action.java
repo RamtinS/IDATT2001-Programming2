@@ -7,7 +7,7 @@ package edu.ntnu.idatt2001.paths;
  * @author ...
  * @version JDK 17
  */
-interface Action {
+public interface Action {
 
   /**
    * The method changes the state of the player.
