@@ -4,6 +4,9 @@ import java.util.Objects;
 
 /**
  * The class represents a gold action.
+ *
+ * @author ...
+ * @version JDK 17
  */
 public class GoldAction implements Action {
   private final int gold;

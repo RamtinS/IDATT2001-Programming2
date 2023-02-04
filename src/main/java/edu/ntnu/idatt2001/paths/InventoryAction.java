@@ -4,6 +4,9 @@ import java.util.Objects;
 
 /**
  * The class represents an inventory action.
+ *
+ * @author ...
+ * @version JDK 17
  */
 public class InventoryAction implements Action {
     private final String item;

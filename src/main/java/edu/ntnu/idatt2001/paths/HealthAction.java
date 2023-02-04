@@ -4,6 +4,9 @@ import java.util.Objects;
 
 /**
  * The class represents a health action.
+ *
+ * @author ...
+ * @version JDK 17
  */
 public class HealthAction implements Action {
   private final int health;

@@ -4,6 +4,9 @@ import java.util.Objects;
 
 /**
  * The class represents an action where a player scores points.
+ *
+ * @author ...
+ * @version JDK 17
  */
 public class ScoreAction implements Action {
   private final int points;
