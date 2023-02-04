@@ -7,6 +7,9 @@ import java.util.Objects;
 
 /**
  * Class that represents a story.
+ *
+ * @author ...
+ * @version JDK 17
  */
 public class Story {
   private final String title;
