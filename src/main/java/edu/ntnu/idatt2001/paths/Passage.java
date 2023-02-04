@@ -3,6 +3,7 @@ package edu.ntnu.idatt2001.paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 /**
  * The class represents a passage.
  *
