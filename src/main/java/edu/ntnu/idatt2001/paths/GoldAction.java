@@ -1,5 +1,7 @@
 package edu.ntnu.idatt2001.paths;
 
+import java.util.Objects;
+
 /**
  * The class represents a gold action.
  */
@@ -21,7 +23,8 @@ public class GoldAction implements Action{
      * @param player The player that the action will be performed on.
      */
     @Override
-    public void execute(Player player) {
+    public void execute(Player player) throws NullPointerException {
+        Objects.requireNonNull(player, "Player cannot be null");
         player.addGold(getGold());
     }
 
