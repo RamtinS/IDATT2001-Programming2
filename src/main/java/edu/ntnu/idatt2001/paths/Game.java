@@ -34,11 +34,23 @@ public class Game {
     return goals;
   }
 
+  /**
+   * Returns the opening passage of the game.
+   *
+   * @return The opening passage of the game.
+   */
   public Passage begin() {
     return story.getOpeningPassage();
   }
 
-  public Passage go(Link link) throws NullPointerException{
+  /**
+   * Finds the corresponding passage from the given links, and returns it.
+   *
+   * @param link The link used to find the corresponding passage
+   * @return Passage from the corresponding link.
+   * @throws NullPointerException If the link is null.
+   */
+  public Passage go(Link link) throws NullPointerException {
     Objects.requireNonNull(link, "\nLink cannot be null");
     return story.getPassage(link);
   }
