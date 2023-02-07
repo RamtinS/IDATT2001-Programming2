@@ -33,19 +33,6 @@ public class HealthAction implements Action {
   @Override
   public void execute(Player player) throws NullPointerException {
     Objects.requireNonNull(player, "Player cannot be null");
-    player.addHealth(getHealth());
+    player.addHealth(this.health);
   }
-
-  /**
-   * Gets the change in health given by the task.
-   *
-   * @return The change in health given by the task.
-   */
-  public int getHealth() {
-    return health;
-  }
-
-
-
-
 }
