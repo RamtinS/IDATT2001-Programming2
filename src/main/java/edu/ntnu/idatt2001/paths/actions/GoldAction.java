@@ -31,19 +31,6 @@ public class GoldAction implements Action {
   @Override
   public void execute(Player player) throws NullPointerException {
     Objects.requireNonNull(player, "Player cannot be null");
-    player.addGold(getGold());
+    player.addGold(this.gold);
   }
-
-  /**
-   * Gets the amount of gold given by completing the task.
-   *
-   * @return The amount of gold given by completing the task.
-   */
-  public int getGold() {
-    return gold;
-  }
-
-
-
-
 }
