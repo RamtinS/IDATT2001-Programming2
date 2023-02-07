@@ -32,15 +32,6 @@ public class InventoryAction implements Action {
    */
   @Override
   public void execute(Player player) {
-    player.addToInventory(getItem());
-  }
-
-  /**
-   * Gets the item given by the InventoryAction.
-   *
-   * @return The item that will be awarded for completing the action.
-   */
-  public String getItem() {
-    return item;
+    player.addToInventory(this.item);
   }
 }
