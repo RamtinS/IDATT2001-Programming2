@@ -1,4 +1,6 @@
-package edu.ntnu.idatt2001.paths;
+package edu.ntnu.idatt2001.paths.goals;
+
+import edu.ntnu.idatt2001.paths.Player;
 
 import java.util.Objects;
 
@@ -8,7 +10,7 @@ import java.util.Objects;
  * @author ...
  * @version JDK 17
  */
-public class GoldGoal implements Goal{
+public class GoldGoal implements Goal {
   private final int minimumGold;
 
   /**

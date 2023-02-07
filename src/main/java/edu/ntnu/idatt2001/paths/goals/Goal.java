@@ -1,4 +1,6 @@
-package edu.ntnu.idatt2001.paths;
+package edu.ntnu.idatt2001.paths.goals;
+
+import edu.ntnu.idatt2001.paths.Player;
 
 /**
  * The interface represents a target value or a desired
