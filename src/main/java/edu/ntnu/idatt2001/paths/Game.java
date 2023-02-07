@@ -2,6 +2,7 @@ package edu.ntnu.idatt2001.paths;
 
 import edu.ntnu.idatt2001.paths.goals.Goal;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,7 +30,8 @@ public class Game {
     Objects.requireNonNull(story, "\nStory cannot be null");
     this.player = player;
     this.story = story;
-    this.goals = goals;
+    this.goals = new ArrayList<>();
+    this.goals.addAll(goals);
   }
 
   /**
