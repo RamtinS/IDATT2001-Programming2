@@ -26,15 +26,6 @@ public class InventoryGoal implements Goal {
   }
 
   /**
-   * The method retrieves a list of mandatory items.
-   *
-   * @return list of mandatory items.
-   */
-  public List<String> getMandatoryItems() {
-    return mandatoryItems;
-  }
-
-  /**
    * The method checks if the player has the mandatory items.
    *
    * @param player the player assigned to the goal.
