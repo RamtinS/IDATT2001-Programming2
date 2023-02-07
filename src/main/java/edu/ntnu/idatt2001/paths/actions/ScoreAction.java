@@ -35,15 +35,6 @@ public class ScoreAction implements Action {
   @Override
   public void execute(Player player) throws NullPointerException {
     Objects.requireNonNull(player, "Player cannot be null");
-    player.addScore(getPoints());
-  }
-
-  /**
-   * Gets the amount of points that should be awarded for the action.
-   *
-   * @return The amount of points awarded for the action.
-   */
-  public int getPoints() {
-    return points;
+    player.addScore(this.points);
   }
 }
