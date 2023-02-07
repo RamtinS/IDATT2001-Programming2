@@ -56,8 +56,10 @@ public class Passage {
    *
    * @param link link which is being added to the list of links.
    * @return boolean value which checks if the link was added.
+   * @throws NullPointerException if link is null.
    */
-  public boolean addLink(Link link){
+  public boolean addLink(Link link) throws NullPointerException {
+    Objects.requireNonNull(link, "\nLink cannot be null");
     return links.add(link);
   }
 
