@@ -84,7 +84,8 @@ public class Link {
   @Override
   public String toString() {
     return "\nText: " + getText() + "."
-            + "\nReference: " + getReference() + ".";
+            + "\nReference: " + getReference() + "."
+            + "\nActions: " + getActions() + ".";
   }
 
   /**
