@@ -18,12 +18,13 @@ public class Passage {
   /**
    * Constructor to create an object of the type passage.
    *
-   * @param title overall description of passage.
+   * @param title   overall description of passage.
    * @param content represents a paragraph or part of a dialogue.
-   * @throws NullPointerException if title or content is null.
+   * @throws NullPointerException     if title or content is null.
    * @throws IllegalArgumentException if title or content is blank.
    */
-  public Passage(String title, String content) throws NullPointerException, IllegalArgumentException {
+  public Passage(String title, String content) throws NullPointerException,
+          IllegalArgumentException {
     Objects.requireNonNull(title, "\nTitle cannot be null");
     Objects.requireNonNull(content, "\nContent cannot be null");
     if (title.isBlank()) throw new IllegalArgumentException("\nTitle cannot be blank");
@@ -38,7 +39,7 @@ public class Passage {
    *
    * @return title of the passage.
    */
-  public String getTitle(){
+  public String getTitle() {
     return title;
   }
 
@@ -47,7 +48,7 @@ public class Passage {
    *
    * @return content of the passage.
    */
-  public String getContent(){
+  public String getContent() {
     return content;
   }
 
@@ -68,7 +69,7 @@ public class Passage {
    *
    * @return the list links.
    */
-  public List<Link> getLinks(){
+  public List<Link> getLinks() {
     return links;
   }
 
@@ -77,42 +78,46 @@ public class Passage {
    *
    * @return true or false depending on whether the list is empty.
    */
-  public boolean hasLinks(){
+  public boolean hasLinks() {
     return !links.isEmpty();
   }
 
   /**
-   * The toString collects all the information about the passage,
-   * and return a textual representation of the passage.
+   * Creates a string containing information about the object.
    *
-   * @return information about the passage.
+   * @return A string containing information about the object.
    */
   @Override
-  public String toString(){
-    return "\nTitle: " + getTitle() + "\nContent: " + getContent();
+  public String toString() {
+    return "\nTitle: " + getTitle()
+            + "\nContent: " + getContent()
+            + "\nLinks: " + getLinks();
+
   }
 
   /**
    * The method checks for equality between objects.
    *
-   * @param o the object to which it is being compared.
-   * @return a boolean value which indicate whether they are equal or not.
+   * @param o The object that this object will be compared to.
+   * @return true if the objects are equal, false if they are not.
    */
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Passage passage = (Passage) o;
-    return getTitle().equals(passage.getTitle()) && getContent().equals(passage.getContent());
+    return getTitle().equals(passage.getTitle())
+            && getContent().equals(passage.getContent())
+            && getLinks().equals(passage.getLinks());
   }
 
   /**
-   * The method generates a hash value for the object.
+   * Creates a hashcode for the object.
    *
-   * @return hash value for the object.
+   * @return Hashcode for the object.
    */
   @Override
   public int hashCode() {
-    return Objects.hash(getTitle(), getContent());
+    return Objects.hash(getTitle(), getContent(), getLinks());
   }
 }
