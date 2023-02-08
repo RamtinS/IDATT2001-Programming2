@@ -99,9 +99,9 @@ public class Link {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Link link = (Link) o;
-    return Objects.equals(getText(),
-            link.getText()) && Objects.equals(getReference(),
-            link.getReference());
+    return getText().equals(link.getText())
+            && getReference().equals(link.getReference())
+            && getActions().equals(link.getActions());
   }
 
   /**
@@ -111,6 +111,6 @@ public class Link {
    */
   @Override
   public int hashCode() {
-    return Objects.hash(getText(), getReference());
+    return Objects.hash(getText(), getReference(), getActions());
   }
 }
