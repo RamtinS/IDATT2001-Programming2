@@ -19,6 +19,7 @@ class PlayerTest {
   @BeforeEach
   void setUp() {
     player = new Player("Name", 1, 2, 3);
+
   }
 
 @Test
@@ -29,28 +30,31 @@ class PlayerTest {
     int validGold = 2;
     int validScore = 3;
 
-    int inValidHealth = -1;
-    int inValidGold = -1;
-    int inValidScore = -1;
+    int invalidHealth = -1;
+    int invalidGold = -1;
+    int invalidScore = -1;
 
-    assertThrows(IllegalArgumentException.class, () -> new Player(validName, inValidHealth, validGold, validScore));
-    assertThrows(IllegalArgumentException.class, () -> new Player(validName, validHealth, inValidGold, validScore));
-    assertThrows(IllegalArgumentException.class, () -> new Player(validName, validHealth, validGold, inValidScore));
+    assertThrows(IllegalArgumentException.class, () -> new Player(validName, invalidHealth, validGold, validScore));
+    assertThrows(IllegalArgumentException.class, () -> new Player(validName, validHealth, invalidGold, validScore));
+    assertThrows(IllegalArgumentException.class, () -> new Player(validName, validHealth, validGold, invalidScore));
 }
 
 @Test
 @DisplayName("Test constructor with invalid input throws NullPointerException")
   void testConstructorWithInvalidInputThrowsNullPointerException(){
-  String inValidName = null;
+
+  String invalidName = null;
   int validHealth = 1;
   int validGold = 2;
   int validScore = 3;
-  assertThrows(NullPointerException.class, () -> new Player(inValidName, validHealth, validScore, validGold));
+
+  assertThrows(NullPointerException.class, () -> new Player(invalidName, validHealth, validScore, validGold));
 }
 
 @Test
 @DisplayName("Test constructor with valid input")
   void testConstructorWithValidInput(){
+
     String validName = "testName";
     int validHealth = 1;
     int validGold = 2;
@@ -65,6 +69,7 @@ class PlayerTest {
   @Test
   @DisplayName("Should get name")
   void shouldGetName() {
+
     String expected = "Name";
     String actual = player.getName();
 
@@ -74,6 +79,7 @@ class PlayerTest {
   @Test
   @DisplayName("Should add health")
   void addHealth() {
+
     player.addHealth(1);
     int expected = 2;
     int actual = player.getHealth();
@@ -83,30 +89,37 @@ class PlayerTest {
   @Test
   @DisplayName("Should not add health, throws IllegalArgumentException")
   void shouldNotAddHealthAndThrowIllegalArgumentException(){
+
     assertThrows(IllegalArgumentException.class, () -> player.addHealth(-1));
   }
 
   @Test
   @DisplayName("Should get health")
   void shouldGetHealth() {
+
     int expected = 1;
     int actual = player.getHealth();
+
     assertEquals(expected, actual);
   }
 
   @Test
   @DisplayName("Should add score")
   void shouldAddScore() {
+
     player.addScore(1);
     int expected = 3;
     int actual = player.getScore();
+
     assertEquals(expected,actual);
   }
 
   @Test
   @DisplayName("Should not add score and throws IllegalArgumentException")
   void shouldNotAddScoreAndThrowsIllegalArgumentException(){
-    assertThrows(IllegalArgumentException.class, () -> player.addScore(-1));
+    int points = -1;
+
+    assertThrows(IllegalArgumentException.class, () -> player.addScore(points));
   }
 
   @Test
@@ -114,6 +127,7 @@ class PlayerTest {
   void shouldGetScore() {
     int expected = 2;
     int actual = player.getScore();
+
     assertEquals(expected, actual);
   }
 
@@ -123,6 +137,7 @@ class PlayerTest {
     player.addGold(1);
     int expected = 4;
     int actual = player.getGold();
+
     assertEquals(expected,actual);
   }
 
@@ -137,6 +152,7 @@ class PlayerTest {
   void shouldGetGold() {
     int expected = 3;
     int actual = player.getGold();
+
     assertEquals(expected,actual);
   }
 
@@ -151,6 +167,7 @@ class PlayerTest {
   @DisplayName("Should not add to inventory, throws IllegalArgumentException")
   void shouldNotAddToInventoryThrowsIllegalArgumentException(){
     String item = "";
+
     assertThrows(IllegalArgumentException.class, () -> player.addToInventory(item));
   }
 
@@ -158,6 +175,7 @@ class PlayerTest {
   @DisplayName("Should not add to inventory, throws NullPointerException")
   void shouldNotAddToInventoryThrowsNullPointerException(){
     String item = null;
+
     assertThrows(NullPointerException.class, () -> player.addToInventory(item));
   }
 
