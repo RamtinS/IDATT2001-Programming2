@@ -19,9 +19,52 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class PassageTest {
   Passage passage;
+  Link testLink;
   @BeforeEach
   void setUp() {
     passage = new Passage("Passage title", "Passage content");
+    testLink = new Link("Link text", "Link reference");
+  }
+
+  @Test
+  @DisplayName("Test constructor with invalid input throws NullPointerException")
+    void testConstructorWithInvalidInputThrowsNullPointerException(){
+
+    String validTitle = "Test title";
+    String validContent = "Test content";
+
+    String invalidTitle = null;
+    String invalidContent = null;
+
+    assertThrows(NullPointerException.class, () -> new Passage(invalidTitle, validContent));
+    assertThrows(NullPointerException.class, () -> new Passage(validTitle, invalidContent));
+  }
+
+  @Test
+  @DisplayName("Test constructor with invalid input throws IllegalArgumentException")
+    void testConstructorWithInvalidInputThrowsIllegalArguementException(){
+
+    String validTitle = "Test title";
+    String validContent = "Test content";
+
+    String invalidTitle = "";
+    String invalidContent = "";
+
+    assertThrows(IllegalArgumentException.class, () -> new Passage(invalidTitle, validContent));
+    assertThrows(IllegalArgumentException.class, () -> new Passage(validTitle, invalidContent));
+  }
+
+  @Test
+  @DisplayName("Test constructor with valid input")
+  void testConstructorWithValidInput(){
+
+    String expectedTitle = "Test title";
+    String expectedContent = "Test content";
+
+    Passage passage = new Passage(expectedTitle, expectedContent);
+
+    assertEquals(expectedTitle, passage.getTitle());
+    assertEquals(expectedContent, passage.getContent());
   }
 
   @Test
@@ -60,11 +103,11 @@ class PassageTest {
   @DisplayName("Should get links")
   void shouldGetLinks() {
 
-    passage.addLink(createDefaultLink());
+    passage.addLink(testLink);
     List<Link> actual = passage.getLinks();
 
     List<Link> expected = new ArrayList<>();
-    expected.add(createDefaultLink());
+    expected.add(testLink);
 
     assertEquals(expected, actual);
   }
@@ -76,15 +119,13 @@ class PassageTest {
     passage.addLink(link);
     boolean actual = passage.hasLinks();
 
-    boolean expected = true;
-
-    assertEquals(expected, actual);
+    assertTrue(actual);
   }
 
   @Test
   @DisplayName("toString()")
   void testToString() {
-    passage.addLink(createDefaultLink());
+    passage.addLink(testLink);
     String expected = """
                 
             Title: Passage title
@@ -105,15 +146,5 @@ class PassageTest {
 
     assertEquals(passage, passage2);
 
-  }
-
-  /**
-   * Standard data for some methods, creates a link that can
-   * be used to test other methods.
-   *
-   * @return The created link.
-   */
-  private Link createDefaultLink(){
-    return new Link("Link text", "Link reference");
   }
 }
