@@ -7,6 +7,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * The class tests the GoldGoal class.
+ *
+ * @author ...
+ * @version JDK 17
+ */
 class GoldGoalTest {
 
   GoldGoal goldGoal;
@@ -32,10 +38,17 @@ class GoldGoalTest {
   }
 
   @Test
-  @DisplayName("Should check if the goal is fulfilled")
-  void shouldCheckIfGoalIsFulfilled() {
-    Player player = new Player("Test name", 100, 100, 50);
+  @DisplayName("Goal is fulfilled")
+  void goalIsFulfilled() {
+    Player player = new Player("Test name", 100, 100, 15);
     assertTrue(goldGoal.isFulfilled(player));
+  }
+
+  @Test
+  @DisplayName("Goal is not fulfilled")
+  void goalIsNotFulfilled() {
+    Player player = new Player("Test name", 100, 100, 5);
+    assertFalse(goldGoal.isFulfilled(player));
   }
 
   @Test
