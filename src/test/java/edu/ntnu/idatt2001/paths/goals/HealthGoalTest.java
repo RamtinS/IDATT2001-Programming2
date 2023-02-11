@@ -7,6 +7,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * The class tests the HealthGoal class.
+ *
+ * @author ...
+ * @version JDK 17
+ */
 class HealthGoalTest {
 
   HealthGoal healthGoal;
@@ -32,10 +38,17 @@ class HealthGoalTest {
   }
 
   @Test
-  @DisplayName("Should check if goal is fulfilled")
-  void shouldCheckIfGoalIsFulfilled() {
+  @DisplayName("Goal is fulfilled")
+  void goalIsFulfilled() {
     Player player = new Player("Test name", 100, 100, 50);
     assertTrue(healthGoal.isFulfilled(player));
+  }
+
+  @Test
+  @DisplayName("Goal is not fulfilled")
+  void goalIsNotFulfilled() {
+    Player player = new Player("Test name", 5, 100, 50);
+    assertFalse(healthGoal.isFulfilled(player));
   }
 
   @Test
