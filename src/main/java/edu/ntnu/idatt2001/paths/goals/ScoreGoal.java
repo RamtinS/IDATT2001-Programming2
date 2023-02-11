@@ -25,6 +25,15 @@ public class ScoreGoal implements Goal {
   }
 
   /**
+   * The method retrieves the minimum points.
+   *
+   * @return the minimum points.
+   */
+  public int getMinimumPoints() {
+    return minimumPoints;
+  }
+
+  /**
    * The method checks if the minimum score value is achieved.
    *
    * @param player the player assigned to the goal.
@@ -34,6 +43,6 @@ public class ScoreGoal implements Goal {
   @Override
   public boolean isFulfilled(Player player) throws NullPointerException {
     Objects.requireNonNull(player, "\nPlayer cannot be null.");
-    return player.getScore() > this.minimumPoints;
+    return player.getScore() > getMinimumPoints();
   }
 }
