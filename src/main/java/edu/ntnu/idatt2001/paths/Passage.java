@@ -89,10 +89,9 @@ public class Passage {
    */
   @Override
   public String toString() {
-    return "\nTitle: " + getTitle()
+    return "Title: " + getTitle()
             + "\nContent: " + getContent()
             + "\nLinks: " + getLinks();
-
   }
 
   /**

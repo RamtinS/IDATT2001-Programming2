@@ -127,15 +127,11 @@ class PassageTest {
   void testToString() {
     passage.addLink(testLink);
     String expected = """
-                
             Title: Passage title
             Content: Passage content
-            Links: [
-            Text: Link text.
+            Links: [Text: Link text.
             Reference: Link reference.]""";
-
     String actual = passage.toString();
-
     assertEquals(expected, actual);
   }
 
