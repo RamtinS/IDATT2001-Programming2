@@ -25,6 +25,36 @@ class LinkTest {
   }
 
   @Test
+  @DisplayName("Test constructor valid input")
+  void testConstructorValidInput() {
+    Link testLink = new Link("Test constructor", "Test constructor");
+    assertEquals("Test constructor", testLink.getText());
+    assertEquals("Test constructor", testLink.getReference());
+  }
+
+  @Test
+  @DisplayName("Test constructor invalid input throws NullPointerException")
+  void testConstructorInvalidInputThrowsNullPointerException() {
+    String invalidText = null;
+    String invalidReference = null;
+    String validText = "Test constructor";
+    String validReference = "Test constructor";
+    assertThrows(NullPointerException.class, () -> new Link(invalidText, validReference));
+    assertThrows(NullPointerException.class, () -> new Link(validText, invalidReference));
+  }
+
+  @Test
+  @DisplayName("Test constructor invalid input throws IllegalArgumentException")
+  void testConstructorInvalidInputThrowsIllegalArgumentException() {
+    String invalidText = "";
+    String invalidReference = "";
+    String validText = "Test constructor";
+    String validReference = "Test constructor";
+    assertThrows(IllegalArgumentException.class, () -> new Link(invalidText, validReference));
+    assertThrows(IllegalArgumentException.class, () -> new Link(validText, invalidReference));
+  }
+
+  @Test
   @DisplayName("Should get the text of the link.")
   void shouldGetTextOfLink() {
     String expected = "Test text";
