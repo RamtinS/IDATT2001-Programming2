@@ -27,6 +27,15 @@ public class InventoryGoal implements Goal {
   }
 
   /**
+   * The method retrieves a list of mandatory items.
+   *
+   * @return list of mandatory items.
+   */
+  public List<String> getMandatoryItems() {
+    return mandatoryItems;
+  }
+
+  /**
    * The method checks if the player has the mandatory items.
    *
    * @param player the player assigned to the goal.
@@ -36,6 +45,6 @@ public class InventoryGoal implements Goal {
   @Override
   public boolean isFulfilled(Player player) throws NullPointerException {
     Objects.requireNonNull(player, "\nPlayer cannot be null");
-    return player.getInventory().containsAll(mandatoryItems);
+    return player.getInventory().containsAll(getMandatoryItems());
   }
 }
