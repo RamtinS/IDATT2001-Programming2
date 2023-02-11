@@ -25,6 +25,15 @@ public class GoldGoal implements Goal {
   }
 
   /**
+   * The method retrieves the minimum amount of gold.
+   *
+   * @return the minimum amount of gold.
+   */
+  public int getMinimumGold() {
+    return minimumGold;
+  }
+
+  /**
    * The method checks if the minimum gold goal is achieved.
    *
    * @param player the player assigned to the goal.
@@ -34,6 +43,6 @@ public class GoldGoal implements Goal {
   @Override
   public boolean isFulfilled(Player player) throws NullPointerException {
     Objects.requireNonNull(player, "\nPlayer cannot be null.");
-    return player.getGold() > this.minimumGold;
+    return player.getGold() > getMinimumGold();
   }
 }
