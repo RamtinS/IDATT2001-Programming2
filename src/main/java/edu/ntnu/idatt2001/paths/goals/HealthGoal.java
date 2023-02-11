@@ -25,6 +25,15 @@ public class HealthGoal implements Goal {
   }
 
   /**
+   * The method retrieves the minimum health value.
+   *
+   * @return the minimum health value.
+   */
+  public int getMinimumHealth() {
+    return minimumHealth;
+  }
+
+  /**
    * The method checks if the minimum health value is achieved.
    *
    * @param player the player assigned to the goal.
@@ -34,6 +43,6 @@ public class HealthGoal implements Goal {
   @Override
   public boolean isFulfilled(Player player) throws NullPointerException {
     Objects.requireNonNull(player, "\nPlayer cannot be null.");
-    return player.getHealth() > this.minimumHealth;
+    return player.getHealth() > getMinimumHealth();
   }
 }
