@@ -18,10 +18,37 @@ import static org.junit.jupiter.api.Assertions.*;
 class StoryTest {
 
   Story story;
+  Passage passage;
 
   @BeforeEach
   void setUp() {
-    story = new Story("Test title", createDefualtPassage());
+    passage = new Passage("Test title", "Test content");
+    story = new Story("Test title", passage);
+  }
+
+  @Test
+  @DisplayName("Test constructor valid input")
+  void testConstructorValidInput() {
+    Story testStoryConstructor = new Story("Test title", passage);
+    assertEquals("Test title", testStoryConstructor.getTitle());
+    assertEquals(passage, testStoryConstructor.getOpeningPassage());
+  }
+
+  @Test
+  @DisplayName("Test constructor invalid input throws NullPointerException")
+  void testConstructorInvalidInputThrowsNullPointerException() {
+    String invalidTitle = null;
+    Passage invalidPassage = null;
+    String validTitle = "Test title";
+    assertThrows(NullPointerException.class, () -> new Story(invalidTitle, passage));
+    assertThrows(NullPointerException.class, () -> new Story(validTitle, invalidPassage));
+  }
+
+  @Test
+  @DisplayName("Test constructor invalid input throws IllegalArgumentException")
+  void testConstructorInvalidInputThrowsIllegalArgumentException() {
+    String invalidTitle = "";
+    assertThrows(IllegalArgumentException.class, () -> new Story(invalidTitle, passage));
   }
 
   @Test
@@ -35,7 +62,7 @@ class StoryTest {
   @Test
   @DisplayName("Should get the opening passage of the story.")
   void shouldGetOpeningPassage() {
-    Passage expectedPassage = createDefualtPassage();
+    Passage expectedPassage = passage;
     Passage actualPassage = story.getOpeningPassage();
     assertEquals(expectedPassage, actualPassage);
   }
@@ -43,7 +70,7 @@ class StoryTest {
   @Test
   @DisplayName("Should add passage")
   void shouldAddPassage() {
-    story.addPassage(createDefualtPassage());
+    story.addPassage(passage);
     assertFalse(story.getPassages().isEmpty());
   }
 
@@ -57,9 +84,9 @@ class StoryTest {
   @Test
   @DisplayName("Should get passage")
   void shouldGetPassage() {
-    story.addPassage(createDefualtPassage());
-    Link link = new Link (createDefualtPassage().getTitle(), createDefualtPassage().getTitle());
-    Passage expected = createDefualtPassage();
+    story.addPassage(passage);
+    Link link = new Link (passage.getTitle(), passage.getTitle());
+    Passage expected = passage;
     Passage actual = story.getPassage(link);
     assertEquals(expected, actual);
   }
@@ -74,18 +101,9 @@ class StoryTest {
   @Test
   @DisplayName("Should get passages")
   void shouldGetPassages() {
-    story.addPassage(createDefualtPassage());
+    story.addPassage(passage);
     List<Passage> expectedPassages = new ArrayList<>();
-    expectedPassages.add(createDefualtPassage());
+    expectedPassages.add(passage);
     assertTrue(expectedPassages.containsAll(story.getPassages()));
-  }
-
-  /**
-   * Creates a default passage that can be used in the test methods.
-   *
-   * @return default passage.
-   */
-  private Passage createDefualtPassage() {
-    return new Passage("Test title", "Test content");
   }
 }
