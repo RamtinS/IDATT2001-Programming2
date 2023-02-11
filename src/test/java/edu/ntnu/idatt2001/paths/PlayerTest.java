@@ -21,6 +21,47 @@ class PlayerTest {
     player = new Player("Name", 1, 2, 3);
   }
 
+@Test
+@DisplayName("Test constructor with invalid input throws IllegalArgumentException")
+  void testConstructorWithInvalidInputThrowsIllegalArgumentException(){
+    String validName = "testName";
+    int validHealth = 1;
+    int validGold = 2;
+    int validScore = 3;
+
+    int inValidHealth = -1;
+    int inValidGold = -1;
+    int inValidScore = -1;
+
+    assertThrows(IllegalArgumentException.class, () -> new Player(validName, inValidHealth, validGold, validScore));
+    assertThrows(IllegalArgumentException.class, () -> new Player(validName, validHealth, inValidGold, validScore));
+    assertThrows(IllegalArgumentException.class, () -> new Player(validName, validHealth, validGold, inValidScore));
+}
+
+@Test
+@DisplayName("Test constructor with invalid input throws NullPointerException")
+  void testConstructorWithInvalidInputThrowsNullPointerException(){
+  String inValidName = null;
+  int validHealth = 1;
+  int validGold = 2;
+  int validScore = 3;
+  assertThrows(NullPointerException.class, () -> new Player(inValidName, validHealth, validScore, validGold));
+}
+
+@Test
+@DisplayName("Test constructor with valid input")
+  void testConstructorWithValidInput(){
+    String validName = "testName";
+    int validHealth = 1;
+    int validGold = 2;
+    int validScore = 3;
+
+    Player player = new Player(validName, validHealth, validScore, validGold);
+    assertEquals(validHealth, player.getHealth());
+    assertEquals(validGold, player.getGold());
+    assertEquals(validScore, player.getScore());
+}
+
   @Test
   @DisplayName("Should get name")
   void shouldGetName() {
@@ -43,7 +84,6 @@ class PlayerTest {
   @DisplayName("Should not add health, throws IllegalArgumentException")
   void shouldNotAddHealthAndThrowIllegalArgumentException(){
     assertThrows(IllegalArgumentException.class, () -> player.addHealth(-1));
-
   }
 
   @Test
@@ -84,7 +124,6 @@ class PlayerTest {
     int expected = 4;
     int actual = player.getGold();
     assertEquals(expected,actual);
-
   }
 
   @Test
@@ -111,15 +150,15 @@ class PlayerTest {
   @Test
   @DisplayName("Should not add to inventory, throws IllegalArgumentException")
   void shouldNotAddToInventoryThrowsIllegalArgumentException(){
-    assertThrows(IllegalArgumentException.class, () -> player.addToInventory(""));
-
-
+    String item = "";
+    assertThrows(IllegalArgumentException.class, () -> player.addToInventory(item));
   }
+
   @Test
   @DisplayName("Should not add to inventory, throws NullPointerException")
   void shouldNotAddToInventoryThrowsNullPointerException(){
-    assertThrows(NullPointerException.class, () -> player.addToInventory(null));
-
+    String item = null;
+    assertThrows(NullPointerException.class, () -> player.addToInventory(item));
   }
 
   @Test
@@ -132,6 +171,5 @@ class PlayerTest {
     List<String> actual = player.getInventory();
 
     assertEquals(expected,actual);
-
   }
 }
