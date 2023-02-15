@@ -25,6 +25,15 @@ public class InventoryAction implements Action {
   }
 
   /**
+   * Gets the item that the action will add to the players inventory.
+   *
+   * @return The item that will be added to the player's inventory by this action.
+   */
+  public String getItem() {
+    return item;
+  }
+
+  /**
    * Performs the action, adding the item to the inventory of
    * the specified player.
    *

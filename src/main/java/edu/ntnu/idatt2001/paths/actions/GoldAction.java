@@ -23,6 +23,15 @@ public class GoldAction implements Action {
   }
 
   /**
+   * Gets the amount of gold awarded by the action, and returns it.
+   *
+   * @return The amount of gold awarded by the action.
+   */
+  public int getGold() {
+    return gold;
+  }
+
+  /**
    * Executes the gold action on the given player.
    *
    * @param player The player that the action will be performed on.

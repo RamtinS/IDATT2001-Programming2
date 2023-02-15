@@ -27,6 +27,15 @@ public class ScoreAction implements Action {
   }
 
   /**
+   * Gets the amount of points awarded for this action.
+   *
+   * @return Returns the amount of points awarded for this action.
+   */
+  public int getPoints() {
+    return points;
+  }
+
+  /**
    * Executes the score action on a player.
    *
    * @param player The player performs the action.

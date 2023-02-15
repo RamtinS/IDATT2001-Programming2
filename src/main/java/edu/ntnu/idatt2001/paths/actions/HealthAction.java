@@ -24,6 +24,15 @@ public class HealthAction implements Action {
   }
 
   /**
+   * Gets the health that will be awarded by this action.
+   *
+   * @return The health awarded by this action.
+   */
+  public int getHealth() {
+    return health;
+  }
+
+  /**
    * Performs the health action on the specified player. The action changes the
    * player`s health.
    *
