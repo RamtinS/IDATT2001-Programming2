@@ -38,6 +38,14 @@ class HealthGoalTest {
   }
 
   @Test
+  @DisplayName("Should get minimum health")
+  void shouldGetMinimumHealth() {
+    int expectedHealth = 10;
+    int actualHealth = healthGoal.getMinimumHealth();
+    assertEquals(expectedHealth, actualHealth);
+  }
+
+  @Test
   @DisplayName("Goal is fulfilled")
   void goalIsFulfilled() {
     Player player = new Player("Test name", 100, 100, 50);

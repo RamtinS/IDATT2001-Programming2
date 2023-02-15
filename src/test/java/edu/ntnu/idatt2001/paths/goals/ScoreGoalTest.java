@@ -38,6 +38,14 @@ class ScoreGoalTest {
   }
 
   @Test
+  @DisplayName("Should get minimum points")
+  void shouldGetMinimumPoints() {
+    int expectedScore = 50;
+    int actualScore = scoreGoal.getMinimumPoints();
+    assertEquals(expectedScore, actualScore);
+  }
+
+  @Test
   @DisplayName("Goal is fulfilled")
   void goalIsFulfilled() {
     Player player = new Player("Test name", 100, 60, 50);

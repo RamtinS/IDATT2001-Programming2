@@ -38,6 +38,14 @@ class GoldGoalTest {
   }
 
   @Test
+  @DisplayName("Should get minimum gold")
+  void shouldGetMinimumGold() {
+    int expectedGold = 10;
+    int actualGold = goldGoal.getMinimumGold();
+    assertEquals(expectedGold, actualGold);
+  }
+
+  @Test
   @DisplayName("Goal is fulfilled")
   void goalIsFulfilled() {
     Player player = new Player("Test name", 100, 100, 15);

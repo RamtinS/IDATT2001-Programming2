@@ -47,6 +47,16 @@ class InventoryGoalTest {
   }
 
   @Test
+  @DisplayName("Should get list of mandatory items")
+  void shouldGetListMandatoryItems() {
+    List<String> expectedList = new ArrayList<>();
+    expectedList.add("Sword");
+    expectedList.add("Hammer");
+    List<String> actualList = inventoryGoal.getMandatoryItems();
+    assertEquals(expectedList, actualList);
+  }
+
+  @Test
   @DisplayName("Goal is fulfilled")
   void goalIsFulfilled() {
     player.addToInventory("Sword");
