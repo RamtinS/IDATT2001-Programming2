@@ -24,14 +24,10 @@ public class Story {
    * @throws NullPointerException If either the title or opening passage is null.
    * @throws IllegalArgumentException If the title is blank.
    */
-  public Story(String title, Passage openingPassage) throws NullPointerException,
-          IllegalArgumentException {
-
-    Objects.requireNonNull(title, "\nTitle cannot be blank");
-    Objects.requireNonNull(openingPassage, "\nopeningPassage cannot be null.");
-    if (title.isBlank()) throw new IllegalArgumentException("\nTitle cannot be blank");
-    this.title = title;
-    this.openingPassage = openingPassage;
+  public Story(String title, Passage openingPassage) throws IllegalArgumentException, NullPointerException {
+    if (title.isBlank()) throw new IllegalArgumentException("Title cannot be blank.");
+    this.title = Objects.requireNonNull(title, "Title cannot be blank.");
+    this.openingPassage = Objects.requireNonNull(openingPassage, "Opening passage cannot be null.");
     this.passages = new HashMap<>();
   }
 

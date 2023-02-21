@@ -26,13 +26,10 @@ public class Game {
    * @throws NullPointerException if player or story is null.
    */
   public Game(Player player, Story story, List<Goal> goals) throws NullPointerException {
-    Objects.requireNonNull(player, "\nPlayer cannot be null");
-    Objects.requireNonNull(story, "\nStory cannot be null");
-    Objects.requireNonNull(goals, "\nGoals cannot be null");
-    this.player = player;
-    this.story = story;
+    this.player = Objects.requireNonNull(player, "Player cannot be null");
+    this.story = Objects.requireNonNull(story, "Story cannot be null");
     this.goals = new ArrayList<>();
-    this.goals.addAll(goals);
+    this.goals.addAll(Objects.requireNonNull(goals, "Goals cannot be null"));
   }
 
   /**

@@ -25,13 +25,11 @@ public class Link {
    * @throws NullPointerException if text or reference is null.
    * @throws IllegalArgumentException if text or reference is blank.
    */
-  public Link(String text, String reference) throws NullPointerException, IllegalArgumentException {
-    Objects.requireNonNull(text, "\nText cannot be null.");
-    Objects.requireNonNull(reference, "\nReference cannot be null.");
-    if (text.isBlank()) throw new IllegalArgumentException("\nText cannot be blank.");
-    if (reference.isBlank()) throw new IllegalArgumentException("\nReference cannot be blank.");
-    this.text = text;
-    this.reference = reference;
+  public Link(String text, String reference) throws IllegalArgumentException, NullPointerException {
+    if (text.isBlank()) throw new IllegalArgumentException("Text cannot be blank.");
+    if (reference.isBlank()) throw new IllegalArgumentException("Reference cannot be blank.");
+    this.text = Objects.requireNonNull(text, "Text cannot be null.");
+    this.reference = Objects.requireNonNull(reference, "Reference cannot be null.");
     this.actions = new ArrayList<>();
   }
 

@@ -23,14 +23,11 @@ public class Passage {
    * @throws NullPointerException     if title or content is null.
    * @throws IllegalArgumentException if title or content is blank.
    */
-  public Passage(String title, String content) throws NullPointerException,
-          IllegalArgumentException {
-    Objects.requireNonNull(title, "\nTitle cannot be null");
-    Objects.requireNonNull(content, "\nContent cannot be null");
-    if (title.isBlank()) throw new IllegalArgumentException("\nTitle cannot be blank");
-    if (content.isBlank()) throw new IllegalArgumentException("\nContent cannot be blank");
-    this.title = title;
-    this.content = content;
+  public Passage(String title, String content) throws IllegalArgumentException, NullPointerException {
+    if (title.isBlank()) throw new IllegalArgumentException("Title cannot be blank");
+    if (content.isBlank()) throw new IllegalArgumentException("Content cannot be blank");
+    this.title = Objects.requireNonNull(title, "Title cannot be null");
+    this.content = Objects.requireNonNull(content, "Content cannot be null");
     this.links = new ArrayList<>();
   }
 

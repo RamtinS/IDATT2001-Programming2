@@ -21,9 +21,8 @@ public class InventoryGoal implements Goal {
    * @param mandatoryItems mandatory items for the player.
    */
   public InventoryGoal(List<String> mandatoryItems) {
-    Objects.requireNonNull(mandatoryItems, "\nMandatory items cannot be null.");
     this.mandatoryItems = new ArrayList<>();
-    this.mandatoryItems.addAll(mandatoryItems);
+    this.mandatoryItems.addAll(Objects.requireNonNull(mandatoryItems, "Mandatory items cannot be null."));
   }
 
   /**

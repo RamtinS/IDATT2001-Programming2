@@ -20,8 +20,7 @@ public class InventoryAction implements Action {
    * @throws NullPointerException If the item given is null.
    */
   public InventoryAction(String item) throws NullPointerException {
-    Objects.requireNonNull(item);
-    this.item = item;
+    this.item = Objects.requireNonNull(item, "Item cannot be null");
   }
 
   /**

@@ -31,14 +31,11 @@ public class Player {
    *        is a negative number or if the amount of gold is a negative number.
    */
   public Player(String name, int health, int score, int gold)
-          throws NullPointerException, IllegalArgumentException {
-    Objects.requireNonNull(name, "\nName cannot be null");
-
-    if (health <= 0) throw new IllegalArgumentException("\nHealth has to be greater than 0");
-    if (score < 0) throw new IllegalArgumentException("\nScore cannot be a negative number");
-    if (gold < 0) throw new IllegalArgumentException("\n gold cannot be a negative number");
-
-    this.name = name;
+          throws IllegalArgumentException, NullPointerException {
+    if (health <= 0) throw new IllegalArgumentException("Health has to be greater than 0");
+    if (score < 0) throw new IllegalArgumentException("Score cannot be a negative number");
+    if (gold < 0) throw new IllegalArgumentException("Gold cannot be a negative number");
+    this.name = Objects.requireNonNull(name, "Name cannot be null");
     this.health = health;
     this.score = score;
     this.gold = gold;
