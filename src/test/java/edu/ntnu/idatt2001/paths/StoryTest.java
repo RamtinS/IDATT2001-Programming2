@@ -5,8 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -114,9 +113,12 @@ class StoryTest {
     @DisplayName("Should get passages")
     void shouldGetPassages() {
       story.addPassage(passage);
-      List<Passage> expectedPassages = new ArrayList<>();
-      expectedPassages.add(passage);
-      assertTrue(expectedPassages.containsAll(story.getPassages()));
+      Map<Link, Passage> passages = new HashMap<>();
+      Link link = new Link(passage.getTitle(), passage.getTitle());
+      passages.put(link, passage);
+      Collection<Passage> expectedPassages = passages.values();
+      Collection<Passage> actualPassages = story.getPassages();
+      assertTrue(expectedPassages.containsAll(actualPassages));
     }
   }
 }
