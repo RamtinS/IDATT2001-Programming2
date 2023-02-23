@@ -121,9 +121,10 @@ public class Player {
    * @throws IllegalArgumentException If the String describing the item is blank.
    */
   public void addToInventory(String item) throws NullPointerException, IllegalArgumentException {
-    Objects.requireNonNull(item, "Item cannot be null");
+    if (item == null) {
+      throw new NullPointerException("Item cannot be null");
+    }
     if (item.isBlank()) throw new IllegalArgumentException("Item cannot be blank");
-
     inventory.add(item);
   }
 

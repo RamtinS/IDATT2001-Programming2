@@ -76,7 +76,9 @@ public class Game {
    * @throws NullPointerException If the link is null.
    */
   public Passage go(Link link) throws NullPointerException {
-    Objects.requireNonNull(link, "\nLink cannot be null");
+    if (link == null) {
+      throw new NullPointerException("Link cannot be null");
+    }
     return story.getPassage(link);
   }
 }

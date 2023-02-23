@@ -57,7 +57,9 @@ public class Passage {
    * @throws NullPointerException if link is null.
    */
   public boolean addLink(Link link) throws NullPointerException {
-    Objects.requireNonNull(link, "\nLink cannot be null");
+    if (link == null) {
+      throw new NullPointerException("Link cannot be null");
+    }
     return links.add(link);
   }
 

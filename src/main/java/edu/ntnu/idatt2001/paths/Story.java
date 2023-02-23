@@ -56,7 +56,9 @@ public class Story {
    * @throws NullPointerException If the given passage is null.
    */
   public void addPassage(Passage passage) throws NullPointerException {
-    Objects.requireNonNull(passage, "\nPassage cannot be null");
+    if (passage == null) {
+      throw new NullPointerException("Passage cannot be null.");
+    }
     Link link = new Link(passage.getTitle(), passage.getTitle());
     passages.put(link, passage);
   }
@@ -69,7 +71,9 @@ public class Story {
    * @throws NullPointerException If the link is null.
    */
   public Passage getPassage(Link link) throws NullPointerException {
-    Objects.requireNonNull(link, "\nLink cannot be null.");
+    if (link == null) {
+      throw new NullPointerException("Link cannot be null.");
+    }
     return this.passages.get(link);
   }
 

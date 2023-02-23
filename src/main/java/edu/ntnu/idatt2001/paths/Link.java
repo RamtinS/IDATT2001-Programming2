@@ -58,7 +58,9 @@ public class Link {
    * @throws NullPointerException if action is null.
    */
   public void addAction(Action action) throws NullPointerException {
-    Objects.requireNonNull(action, "\nAction cannot be null.");
+    if (action == null) {
+      throw new NullPointerException("Action cannot be null");
+    }
     actions.add(action);
   }
 
