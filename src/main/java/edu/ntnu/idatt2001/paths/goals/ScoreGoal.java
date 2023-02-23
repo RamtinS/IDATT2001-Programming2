@@ -2,8 +2,6 @@ package edu.ntnu.idatt2001.paths.goals;
 
 import edu.ntnu.idatt2001.paths.Player;
 
-import java.util.Objects;
-
 /**
  * The class represents an expected minimum score.
  *
@@ -42,7 +40,9 @@ public class ScoreGoal implements Goal {
    */
   @Override
   public boolean isFulfilled(Player player) throws NullPointerException {
-    Objects.requireNonNull(player, "\nPlayer cannot be null.");
+    if (player == null) {
+      throw new NullPointerException("Player cannot be null");
+    }
     return player.getScore() > getMinimumPoints();
   }
 }

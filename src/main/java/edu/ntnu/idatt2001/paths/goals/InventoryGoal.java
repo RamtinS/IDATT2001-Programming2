@@ -43,7 +43,9 @@ public class InventoryGoal implements Goal {
    */
   @Override
   public boolean isFulfilled(Player player) throws NullPointerException {
-    Objects.requireNonNull(player, "\nPlayer cannot be null");
+    if (player == null) {
+      throw new NullPointerException("Player cannot be null");
+    }
     return player.getInventory().containsAll(getMandatoryItems());
   }
 }
