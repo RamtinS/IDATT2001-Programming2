@@ -2,8 +2,6 @@ package edu.ntnu.idatt2001.paths.actions;
 
 import edu.ntnu.idatt2001.paths.Player;
 
-import java.util.Objects;
-
 /**
  * The class represents an action where a player scores points.
  *
@@ -43,7 +41,9 @@ public class ScoreAction implements Action {
    */
   @Override
   public void execute(Player player) throws NullPointerException {
-    Objects.requireNonNull(player, "Player cannot be null");
+    if (player == null) {
+      throw new NullPointerException("Player cannot be null");
+    }
     player.addScore(this.points);
   }
 }

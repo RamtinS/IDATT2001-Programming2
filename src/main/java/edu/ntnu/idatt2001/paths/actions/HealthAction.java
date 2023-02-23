@@ -2,8 +2,6 @@ package edu.ntnu.idatt2001.paths.actions;
 
 import edu.ntnu.idatt2001.paths.Player;
 
-import java.util.Objects;
-
 /**
  * The class represents a health action.
  *
@@ -41,7 +39,9 @@ public class HealthAction implements Action {
    */
   @Override
   public void execute(Player player) throws NullPointerException {
-    Objects.requireNonNull(player, "Player cannot be null");
+    if (player == null) {
+      throw new NullPointerException("Player cannot be null");
+    }
     player.addHealth(this.health);
   }
 }
