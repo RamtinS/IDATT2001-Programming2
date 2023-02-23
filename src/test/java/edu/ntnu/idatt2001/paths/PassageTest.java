@@ -96,6 +96,12 @@ class PassageTest {
       passage.addLink(link);
       assertTrue(passage.hasLinks());
     }
+
+    @Test
+    @DisplayName("Should not have links")
+    void ShouldNotHaveLinks() {
+      assertFalse(passage.hasLinks());
+    }
   }
 
   @Nested
