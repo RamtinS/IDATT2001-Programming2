@@ -30,7 +30,6 @@ class HealthActionTest {
     HealthAction healthActionTest = new HealthAction(10);
     int expected  = 10;
     int actual = healthActionTest.getHealth();
-
     assertEquals(expected, actual);
   }
 
@@ -39,17 +38,22 @@ class HealthActionTest {
   void shouldGetHealth() {
     int actual = player.getHealth();
     int expected = 20;
-
     assertEquals(actual, expected);
   }
 
   @Test
   @DisplayName("Should execute and add health")
-  void execute() {
+  void shouldExecuteAndAddHealth() {
     healthAction.execute(player);
     int actual = player.getHealth();
     int expected = 30;
-
     assertEquals(expected, actual);
+  }
+
+  @Test
+  @DisplayName("Should not execute throws NullPointerException")
+  void shouldNotExecuteThrowsNullPointerException() {
+    Player notValidPlayer = null;
+    assertThrows(NullPointerException.class, () -> healthAction.execute(notValidPlayer));
   }
 }
