@@ -19,8 +19,9 @@ public class ScoreAction implements Action {
    */
 
   public ScoreAction(int points) throws IllegalArgumentException {
-    if (points <= 0) throw new IllegalArgumentException("The points of a score action"
-            + " has to be larger than 0");
+    if (points <= 0) {
+      throw new IllegalArgumentException("The points of a score action has to be larger than 0");
+    }
     this.points = points;
   }
 

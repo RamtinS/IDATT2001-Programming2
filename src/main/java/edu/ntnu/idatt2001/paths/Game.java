@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2001.paths;
 
 import edu.ntnu.idatt2001.paths.goals.Goal;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

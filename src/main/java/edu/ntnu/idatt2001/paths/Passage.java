@@ -23,9 +23,14 @@ public class Passage {
    * @throws NullPointerException     if title or content is null.
    * @throws IllegalArgumentException if title or content is blank.
    */
-  public Passage(String title, String content) throws IllegalArgumentException, NullPointerException {
-    if (title.isBlank()) throw new IllegalArgumentException("Title cannot be blank");
-    if (content.isBlank()) throw new IllegalArgumentException("Content cannot be blank");
+  public Passage(String title, String content)
+          throws IllegalArgumentException, NullPointerException {
+    if (title.isBlank()) {
+      throw new IllegalArgumentException("Title cannot be blank");
+    }
+    if (content.isBlank()) {
+      throw new IllegalArgumentException("Content cannot be blank");
+    }
     this.title = Objects.requireNonNull(title, "Title cannot be null");
     this.content = Objects.requireNonNull(content, "Content cannot be null");
     this.links = new ArrayList<>();
@@ -101,8 +106,12 @@ public class Passage {
    */
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     Passage passage = (Passage) o;
     return getTitle().equals(passage.getTitle())
             && getContent().equals(passage.getContent())

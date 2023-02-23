@@ -18,7 +18,9 @@ public class ScoreGoal implements Goal {
    * @throws IllegalArgumentException if the minimumPoints is less than zero.
    */
   public ScoreGoal(int minimumPoints) throws IllegalArgumentException {
-    if (minimumPoints < 0) throw new IllegalArgumentException("\nMinimum points cannot be less than zero.");
+    if (minimumPoints < 0) {
+      throw new IllegalArgumentException("\nMinimum points cannot be less than zero.");
+    }
     this.minimumPoints = minimumPoints;
   }
 

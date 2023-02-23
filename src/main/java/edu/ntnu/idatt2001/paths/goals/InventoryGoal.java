@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2001.paths.goals;
 
 import edu.ntnu.idatt2001.paths.Player;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +21,8 @@ public class InventoryGoal implements Goal {
    */
   public InventoryGoal(List<String> mandatoryItems) {
     this.mandatoryItems = new ArrayList<>();
-    this.mandatoryItems.addAll(Objects.requireNonNull(mandatoryItems, "Mandatory items cannot be null."));
+    this.mandatoryItems.addAll(Objects.requireNonNull(mandatoryItems,
+            "Mandatory items cannot be null."));
   }
 
   /**

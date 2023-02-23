@@ -32,9 +32,15 @@ public class Player {
    */
   public Player(String name, int health, int score, int gold)
           throws IllegalArgumentException, NullPointerException {
-    if (health <= 0) throw new IllegalArgumentException("Health has to be greater than 0");
-    if (score < 0) throw new IllegalArgumentException("Score cannot be a negative number");
-    if (gold < 0) throw new IllegalArgumentException("Gold cannot be a negative number");
+    if (health <= 0) {
+      throw new IllegalArgumentException("Health has to be greater than 0");
+    }
+    if (score < 0) {
+      throw new IllegalArgumentException("Score cannot be a negative number");
+    }
+    if (gold < 0) {
+      throw new IllegalArgumentException("Gold cannot be a negative number");
+    }
     this.name = Objects.requireNonNull(name, "Name cannot be null");
     this.health = health;
     this.score = score;
@@ -59,8 +65,10 @@ public class Player {
    *        than 0.
    */
   public void addHealth(int health) throws IllegalArgumentException {
-    if (health <= 0) throw new IllegalArgumentException("Health increase has"
-            + " to be a positive number");
+    if (health <= 0) {
+      throw new IllegalArgumentException("Health increase has"
+              + " to be a positive number");
+    }
     this.health += health;
   }
 
@@ -80,7 +88,9 @@ public class Player {
    * @throws IllegalArgumentException If the point increase is not a positive number.
    */
   public void addScore(int points) throws IllegalArgumentException {
-    if (points <= 0) throw new IllegalArgumentException("Point increase has to be positive");
+    if (points <= 0) {
+      throw new IllegalArgumentException("Point increase has to be positive");
+    }
     this.score += points;
   }
 
@@ -100,7 +110,9 @@ public class Player {
    * @throws IllegalArgumentException If the increase of gold is not a positive number.
    */
   public void addGold(int gold) throws IllegalArgumentException {
-    if (gold <= 0) throw new IllegalArgumentException("\nGold increase has to be positive.");
+    if (gold <= 0) {
+      throw new IllegalArgumentException("\nGold increase has to be positive.");
+    }
     this.gold += gold;
   }
 
@@ -124,7 +136,9 @@ public class Player {
     if (item == null) {
       throw new NullPointerException("Item cannot be null");
     }
-    if (item.isBlank()) throw new IllegalArgumentException("Item cannot be blank");
+    if (item.isBlank()) {
+      throw new IllegalArgumentException("Item cannot be blank");
+    }
     inventory.add(item);
   }
 

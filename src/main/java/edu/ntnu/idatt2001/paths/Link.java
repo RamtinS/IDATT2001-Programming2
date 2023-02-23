@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2001.paths;
 
 import edu.ntnu.idatt2001.paths.actions.Action;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,8 +25,12 @@ public class Link {
    * @throws IllegalArgumentException if text or reference is blank.
    */
   public Link(String text, String reference) throws IllegalArgumentException, NullPointerException {
-    if (text.isBlank()) throw new IllegalArgumentException("Text cannot be blank.");
-    if (reference.isBlank()) throw new IllegalArgumentException("Reference cannot be blank.");
+    if (text.isBlank()) {
+      throw new IllegalArgumentException("Text cannot be blank.");
+    }
+    if (reference.isBlank()) {
+      throw new IllegalArgumentException("Reference cannot be blank.");
+    }
     this.text = Objects.requireNonNull(text, "Text cannot be null.");
     this.reference = Objects.requireNonNull(reference, "Reference cannot be null.");
     this.actions = new ArrayList<>();
@@ -67,7 +70,7 @@ public class Link {
   /**
    * The method retrieves the list actions, which
    * contains objects that make it possible to
-   * influence the characteristics of a player
+   * influence the characteristics of a player.
    *
    * @return list of actions.
    */
@@ -95,8 +98,12 @@ public class Link {
    */
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     Link link = (Link) o;
     return getText().equals(link.getText())
             && getReference().equals(link.getReference())

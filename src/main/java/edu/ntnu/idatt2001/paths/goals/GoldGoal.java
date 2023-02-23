@@ -18,7 +18,9 @@ public class GoldGoal implements Goal {
    * @throws IllegalArgumentException if minimumGold is less than zero.
    */
   public GoldGoal(int minimumGold) throws IllegalArgumentException {
-    if (minimumGold < 0) throw new IllegalArgumentException("\nMinimum gold cannot be less than zero.");
+    if (minimumGold < 0) {
+      throw new IllegalArgumentException("\nMinimum gold cannot be less than zero.");
+    }
     this.minimumGold = minimumGold;
   }
 

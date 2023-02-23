@@ -17,8 +17,10 @@ public class HealthGoal implements Goal {
    * @param minimumHealth minimum health value.
    * @throws IllegalArgumentException if minimumHealth is less than zero.
    */
-  public HealthGoal(int minimumHealth) throws IllegalArgumentException{
-    if (minimumHealth < 0) throw new IllegalArgumentException("\nMinimum health cannot be less than zero.");
+  public HealthGoal(int minimumHealth) throws IllegalArgumentException {
+    if (minimumHealth < 0) {
+      throw new IllegalArgumentException("\nMinimum health cannot be less than zero.");
+    }
     this.minimumHealth = minimumHealth;
   }
 
