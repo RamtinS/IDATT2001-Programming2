@@ -48,21 +48,21 @@ class ScoreGoalTest {
   @Test
   @DisplayName("Goal is fulfilled")
   void goalIsFulfilled() {
-    Player player = new Player("Test name", 100, 60, 50);
-    assertTrue(scoreGoal.isFulfilled(player));
+    Player validPlayer = new Player("Test name", 100, 60, 50);
+    assertTrue(scoreGoal.isFulfilled(validPlayer));
   }
 
   @Test
   @DisplayName("Goal is not fulfilled")
   void goalIsNotFulfilled() {
-    Player player = new Player("Test name", 100, 40, 50);
-    assertFalse(scoreGoal.isFulfilled(player));
+    Player invalidPlayer = new Player("Test name", 100, 40, 50);
+    assertFalse(scoreGoal.isFulfilled(invalidPlayer));
   }
 
   @Test
   @DisplayName("Goal is not fulfilled throws NullPointerException")
   void goalIsNotFulfilledThrowsNullPointerException() {
-    Player player = null;
-    assertThrows(NullPointerException.class, () -> scoreGoal.isFulfilled(player));
+    Player invalidPlayer = null;
+    assertThrows(NullPointerException.class, () -> scoreGoal.isFulfilled(invalidPlayer));
   }
 }

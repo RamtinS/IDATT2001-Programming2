@@ -31,8 +31,18 @@ class PassageTest {
   @DisplayName("Constructor tests")
   class ConstructorTests {
     @Test
-    @DisplayName("Test constructor with invalid input throws NullPointerException")
-    void testConstructorWithInvalidInputThrowsNullPointerException(){
+    @DisplayName("Test constructor valid input")
+    void testConstructorValidInput(){
+      String expectedTitle = "Test title";
+      String expectedContent = "Test content";
+      Passage passage = new Passage(expectedTitle, expectedContent);
+      assertEquals(expectedTitle, passage.getTitle());
+      assertEquals(expectedContent, passage.getContent());
+    }
+
+    @Test
+    @DisplayName("Test constructor invalid input throws NullPointerException")
+    void testConstructorInvalidInputThrowsNullPointerException(){
       String validTitle = "Test title";
       String validContent = "Test content";
       String invalidTitle = null;
@@ -42,24 +52,14 @@ class PassageTest {
     }
 
     @Test
-    @DisplayName("Test constructor with invalid input throws IllegalArgumentException")
-    void testConstructorWithInvalidInputThrowsIllegalArgumentException(){
+    @DisplayName("Test constructor invalid input throws IllegalArgumentException")
+    void testConstructorInvalidInputThrowsIllegalArgumentException(){
       String validTitle = "Test title";
       String validContent = "Test content";
       String invalidTitle = "";
       String invalidContent = "";
       assertThrows(IllegalArgumentException.class, () -> new Passage(invalidTitle, validContent));
       assertThrows(IllegalArgumentException.class, () -> new Passage(validTitle, invalidContent));
-    }
-
-    @Test
-    @DisplayName("Test constructor with valid input")
-    void testConstructorWithValidInput(){
-      String expectedTitle = "Test title";
-      String expectedContent = "Test content";
-      Passage passage = new Passage(expectedTitle, expectedContent);
-      assertEquals(expectedTitle, passage.getTitle());
-      assertEquals(expectedContent, passage.getContent());
     }
   }
 
@@ -74,8 +74,8 @@ class PassageTest {
     }
 
     @Test
-    @DisplayName("Should not add link, should throw exception")
-    void shouldNotAddLinkAndThrowException(){
+    @DisplayName("Should not add link throws NullPointerException")
+    void shouldNotAddLinkThrowsNullPointerException(){
       assertThrows(NullPointerException.class,() -> passage.addLink(null));
     }
 
@@ -83,10 +83,10 @@ class PassageTest {
     @DisplayName("Should get links")
     void shouldGetLinks() {
       passage.addLink(testLink);
-      List<Link> actual = passage.getLinks();
-      List<Link> expected = new ArrayList<>();
-      expected.add(testLink);
-      assertEquals(expected, actual);
+      List<Link> actualLinks = passage.getLinks();
+      List<Link> expectedLinks = new ArrayList<>();
+      expectedLinks.add(testLink);
+      assertEquals(expectedLinks, actualLinks);
     }
 
     @Test
@@ -94,8 +94,7 @@ class PassageTest {
     void ShouldHaveLinks() {
       Link link = new Link("Link text", "Link reference");
       passage.addLink(link);
-      boolean actual = passage.hasLinks();
-      assertTrue(actual);
+      assertTrue(passage.hasLinks());
     }
   }
 
@@ -105,17 +104,17 @@ class PassageTest {
     @Test
     @DisplayName("Should get title")
     void shouldGetTitle() {
-      String expected = "Passage title";
-      String actual = passage.getTitle();
-      assertEquals(expected, actual);
+      String expectedTitle = "Passage title";
+      String actualTitle = passage.getTitle();
+      assertEquals(expectedTitle, actualTitle);
     }
 
     @Test
     @DisplayName("Should get content")
     void shouldGetContent() {
-      String expected = "Passage content";
-      String actual = passage.getContent();
-      assertEquals(expected, actual);
+      String expectedContent = "Passage content";
+      String actualContent = passage.getContent();
+      assertEquals(expectedContent, actualContent);
     }
   }
 

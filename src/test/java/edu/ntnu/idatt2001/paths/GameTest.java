@@ -108,8 +108,8 @@ class GameTest {
     @Test
     @DisplayName("Should not go throws NullPointerException")
     void shouldNotGoThrowsNullPointerException() {
-      Link link = null;
-      assertThrows(NullPointerException.class, () -> game.go(link));
+      Link invalidLink = null;
+      assertThrows(NullPointerException.class, () -> game.go(invalidLink));
     }
   }
 }

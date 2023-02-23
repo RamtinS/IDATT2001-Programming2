@@ -4,7 +4,6 @@ import edu.ntnu.idatt2001.paths.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,11 +48,11 @@ class InventoryGoalTest {
   @Test
   @DisplayName("Should get list of mandatory items")
   void shouldGetListMandatoryItems() {
-    List<String> expectedList = new ArrayList<>();
-    expectedList.add("Sword");
-    expectedList.add("Hammer");
-    List<String> actualList = inventoryGoal.getMandatoryItems();
-    assertEquals(expectedList, actualList);
+    List<String> expectedMandatoryItems = new ArrayList<>();
+    expectedMandatoryItems.add("Sword");
+    expectedMandatoryItems.add("Hammer");
+    List<String> actualMandatoryItems = inventoryGoal.getMandatoryItems();
+    assertEquals(expectedMandatoryItems, actualMandatoryItems);
   }
 
   @Test
@@ -74,7 +73,7 @@ class InventoryGoalTest {
   @Test
   @DisplayName("Goal is not fulfilled throws NullPointerException")
   void goalIsNotFulfilledThrowsNullPointerException() {
-    Player player = null;
-    assertThrows(NullPointerException.class, () -> inventoryGoal.isFulfilled(player));
+    Player invalidPlayer = null;
+    assertThrows(NullPointerException.class, () -> inventoryGoal.isFulfilled(invalidPlayer));
   }
 }

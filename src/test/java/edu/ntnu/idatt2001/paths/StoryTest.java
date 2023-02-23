@@ -61,9 +61,9 @@ class StoryTest {
     @Test
     @DisplayName("Should get the title of the story.")
     void shouldGetTitle() {
-      String expected = "Test title";
-      String actual = story.getTitle();
-      assertEquals(expected, actual);
+      String expectedTitle = "Test title";
+      String actualTitle = story.getTitle();
+      assertEquals(expectedTitle, actualTitle);
     }
 
     @Test
@@ -88,8 +88,8 @@ class StoryTest {
     @Test
     @DisplayName("Should not add passage")
     void shouldNotAddPassage() {
-      Passage passage = null;
-      assertThrows(NullPointerException.class, () -> story.addPassage(passage));
+      Passage invalidPassage = null;
+      assertThrows(NullPointerException.class, () -> story.addPassage(invalidPassage));
     }
 
     @Test
@@ -97,16 +97,16 @@ class StoryTest {
     void shouldGetPassage() {
       story.addPassage(passage);
       Link link = new Link (passage.getTitle(), passage.getTitle());
-      Passage expected = passage;
-      Passage actual = story.getPassage(link);
-      assertEquals(expected, actual);
+      Passage expectedPassage = passage;
+      Passage actualPassage = story.getPassage(link);
+      assertEquals(expectedPassage, actualPassage);
     }
 
     @Test
     @DisplayName("Should not get passage")
     void shouldNotGetPassage() {
-      Link link = null;
-      assertThrows(NullPointerException.class, () -> story.getPassage(link));
+      Link invalidLink = null;
+      assertThrows(NullPointerException.class, () -> story.getPassage(invalidLink));
     }
 
     @Test

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Nested;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -66,17 +67,17 @@ class LinkTest {
     @Test
     @DisplayName("Should get the text of the link.")
     void shouldGetTextOfLink() {
-      String expected = "Test text";
-      String actual = link.getText();
-      assertEquals(expected, actual);
+      String expectedText = "Test text";
+      String actualText = link.getText();
+      assertEquals(expectedText, actualText);
     }
 
     @Test
     @DisplayName("Should get the reference of the link.")
     void shouldGetReferenceOfLink() {
-      String expected = "Test reference";
-      String actual = link.getReference();
-      assertEquals(expected, actual);
+      String expectedReference = "Test reference";
+      String actualReference = link.getReference();
+      assertEquals(expectedReference, actualReference);
     }
   }
 
@@ -92,10 +93,10 @@ class LinkTest {
     }
 
     @Test
-    @DisplayName("Should not add action and throw Exception")
-    void shouldNotAddActionAndThrowException() {
-      GoldAction goldAction = null;
-      assertThrows(NullPointerException.class, () -> link.addAction(goldAction));
+    @DisplayName("Should not add action throws NullPointerException")
+    void shouldNotAddActionThrowsNullPointerException() {
+      GoldAction invalidAction = null;
+      assertThrows(NullPointerException.class, () -> link.addAction(invalidAction));
     }
 
     @Test

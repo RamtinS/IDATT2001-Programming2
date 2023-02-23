@@ -1,6 +1,5 @@
 package edu.ntnu.idatt2001.paths;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -73,43 +72,43 @@ class PlayerTest {
     @Test
     @DisplayName("Should get name")
     void shouldGetName() {
-      String expected = "Name";
-      String actual = player.getName();
-      assertEquals(expected, actual);
+      String expectedName = "Name";
+      String actualName = player.getName();
+      assertEquals(expectedName, actualName);
     }
 
     @Test
     @DisplayName("Should get health")
     void shouldGetHealth() {
-      int expected = 1;
-      int actual = player.getHealth();
-      assertEquals(expected, actual);
+      int expectedHealth = 1;
+      int actualHealth = player.getHealth();
+      assertEquals(expectedHealth, actualHealth);
     }
 
     @Test
     @DisplayName("Should get score")
     void shouldGetScore() {
-      int expected = 2;
-      int actual = player.getScore();
-      assertEquals(expected, actual);
+      int expectedScore = 2;
+      int actualScore = player.getScore();
+      assertEquals(expectedScore, actualScore);
     }
 
     @Test
     @DisplayName("Should get gold")
     void shouldGetGold() {
-      int expected = 3;
-      int actual = player.getGold();
-      assertEquals(expected, actual);
+      int expectedGold = 3;
+      int actualGold = player.getGold();
+      assertEquals(expectedGold, actualGold);
     }
 
     @Test
     @DisplayName("Should get inventory")
     void shouldGetInventory() {
-      List<String> expected = new ArrayList<>();
-      expected.add("Sword");
+      List<String> expectedInventory = new ArrayList<>();
+      expectedInventory.add("Sword");
       player.addToInventory("Sword");
-      List<String> actual = player.getInventory();
-      assertEquals(expected,actual);
+      List<String> actualInventory = player.getInventory();
+      assertEquals(expectedInventory,actualInventory);
     }
   }
 
@@ -120,27 +119,27 @@ class PlayerTest {
     @DisplayName("Should add health")
     void addHealth() {
       player.addHealth(1);
-      int expected = 2;
-      int actual = player.getHealth();
-      assertEquals(expected, actual);
+      int expectedHealth = 2;
+      int actualHealth = player.getHealth();
+      assertEquals(expectedHealth, actualHealth);
     }
 
     @Test
     @DisplayName("Should add score")
     void shouldAddScore() {
       player.addScore(1);
-      int expected = 3;
-      int actual = player.getScore();
-      assertEquals(expected, actual);
+      int expectedScore = 3;
+      int actualScore = player.getScore();
+      assertEquals(expectedScore, actualScore);
     }
 
     @Test
     @DisplayName("Should add gold")
     void shouldAddGold() {
       player.addGold(1);
-      int expected = 4;
-      int actual = player.getGold();
-      assertEquals(expected, actual);
+      int expectedGold = 4;
+      int actualGold = player.getGold();
+      assertEquals(expectedGold, actualGold);
     }
 
     @Test
@@ -152,40 +151,41 @@ class PlayerTest {
   }
 
   @Nested
-  @DisplayName("Does not add to player information tests")
+  @DisplayName("Should not add to player information tests")
   class DoesNotAddToPlayerInformationTests {
     @Test
     @DisplayName("Should not add health throws IllegalArgumentException")
     void shouldNotAddHealthThrowIllegalArgumentException(){
-      assertThrows(IllegalArgumentException.class, () -> player.addHealth(-1));
+      int invalidHealth = -1;
+      assertThrows(IllegalArgumentException.class, () -> player.addHealth(invalidHealth));
     }
 
     @Test
     @DisplayName("Should not add score throws IllegalArgumentException")
     void shouldNotAddScoreThrowsIllegalArgumentException(){
-      int points = -1;
-      assertThrows(IllegalArgumentException.class, () -> player.addScore(points));
+      int invalidPoints = -1;
+      assertThrows(IllegalArgumentException.class, () -> player.addScore(invalidPoints));
     }
 
     @Test
     @DisplayName("Should not add gold throws IllegalArgumentException")
     void shouldNotAddGoldThrowsIllegalArgumentException(){
-      int gold = -1;
-      assertThrows(IllegalArgumentException.class, () -> player.addGold(gold));
+      int invalidGold = -1;
+      assertThrows(IllegalArgumentException.class, () -> player.addGold(invalidGold));
     }
 
     @Test
     @DisplayName("Should not add to inventory throws IllegalArgumentException")
     void shouldNotAddToInventoryThrowsIllegalArgumentException(){
-      String item = "";
-      assertThrows(IllegalArgumentException.class, () -> player.addToInventory(item));
+      String invalidItem = "";
+      assertThrows(IllegalArgumentException.class, () -> player.addToInventory(invalidItem));
     }
 
     @Test
     @DisplayName("Should not add to inventory throws NullPointerException")
     void shouldNotAddToInventoryThrowsNullPointerException(){
-      String item = null;
-      assertThrows(NullPointerException.class, () -> player.addToInventory(item));
+      String invalidItem = null;
+      assertThrows(NullPointerException.class, () -> player.addToInventory(invalidItem));
     }
   }
 }
