@@ -24,10 +24,16 @@ class GoldActionTest {
     GoldAction goldActionTest = new GoldAction(10);
     int expected = 10;
     int actual = goldActionTest.getGold();
-
     assertEquals(expected, actual);
   }
 
+  @Test
+  @DisplayName("Should get gold")
+  void shouldGetGold(){
+    int actual = player.getGold();
+    int expected = 40;
+    assertEquals(expected, actual);
+  }
 
   @Test
   @DisplayName("Should execute and add gold")
@@ -39,13 +45,9 @@ class GoldActionTest {
   }
 
   @Test
-  @DisplayName("Should get gold")
-  void shouldGetGold(){
-    int actual = player.getGold();
-    int expected = 40;
-
-    assertEquals(expected, actual);
+  @DisplayName("Should not execute throws NullPointerException")
+  void shouldNotExecuteThrowsNullPointerException() {
+    Player notValidPlayer = null;
+    assertThrows(NullPointerException.class, () -> goldAction.execute(notValidPlayer));
   }
-
-
 }
