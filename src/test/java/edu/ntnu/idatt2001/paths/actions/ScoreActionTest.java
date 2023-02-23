@@ -25,8 +25,8 @@ class ScoreActionTest {
   @DisplayName("Test constructor valid input")
   void testConstructorValidInput() {
     ScoreAction scoreActionTest = new ScoreAction(10);
-    int actual = scoreActionTest.getPoints();
     int expected = 10;
+    int actual = scoreActionTest.getPoints();
     assertEquals(expected, actual);
   }
 
@@ -40,24 +40,24 @@ class ScoreActionTest {
   @Test
   @DisplayName("Should get points")
   void shouldGetPoints() {
-    int expected = 10;
-    int actual = scoreAction.getPoints();
-    assertEquals(expected, actual);
+    int expectedPoints = 10;
+    int actualPoints = scoreAction.getPoints();
+    assertEquals(expectedPoints, actualPoints);
   }
 
   @Test
   @DisplayName("Should execute and add score")
   void shouldExecuteAndAddScore() {
     scoreAction.execute(player);
-    int expected = 30;
-    int actual = player.getScore();
-    assertEquals(expected, actual);
+    int expectedScore = 30;
+    int actualScore = player.getScore();
+    assertEquals(expectedScore, actualScore);
   }
 
   @Test
   @DisplayName("Should not execute throws NullPointerException")
   void shouldNotExecuteThrowsNullPointerException() {
-    Player notValidPlayer = null;
-    assertThrows(NullPointerException.class, () -> scoreAction.execute(notValidPlayer));
+    Player invalidPlayer = null;
+    assertThrows(NullPointerException.class, () -> scoreAction.execute(invalidPlayer));
   }
 }

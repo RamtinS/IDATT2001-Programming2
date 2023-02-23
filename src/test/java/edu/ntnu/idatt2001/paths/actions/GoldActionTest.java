@@ -21,33 +21,33 @@ class GoldActionTest {
   @Test
   @DisplayName("Test constructor valid input")
   void testConstructorValidInput(){
-    GoldAction goldActionTest = new GoldAction(10);
+    GoldAction testGoldActionConstructor = new GoldAction(10);
     int expected = 10;
-    int actual = goldActionTest.getGold();
+    int actual = testGoldActionConstructor.getGold();
     assertEquals(expected, actual);
   }
 
   @Test
   @DisplayName("Should get gold")
   void shouldGetGold(){
-    int actual = player.getGold();
-    int expected = 40;
-    assertEquals(expected, actual);
+    int expectedGold = 40;
+    int actualGold = player.getGold();
+    assertEquals(expectedGold, actualGold);
   }
 
   @Test
   @DisplayName("Should execute and add gold")
   void shouldExecuteAndAddGold() {
     goldAction.execute(player);
-    int actual = player.getGold();
-    int expected = 50;
-    assertEquals(expected, actual);
+    int expectedAmount = 50;
+    int actualAmount = player.getGold();
+    assertEquals(expectedAmount, actualAmount);
   }
 
   @Test
   @DisplayName("Should not execute throws NullPointerException")
   void shouldNotExecuteThrowsNullPointerException() {
-    Player notValidPlayer = null;
-    assertThrows(NullPointerException.class, () -> goldAction.execute(notValidPlayer));
+    Player invalidPlayer = null;
+    assertThrows(NullPointerException.class, () -> goldAction.execute(invalidPlayer));
   }
 }
