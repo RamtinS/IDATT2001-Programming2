@@ -38,7 +38,7 @@ class HealthActionTest {
   void shouldGetHealth() {
     int actual = player.getHealth();
     int expected = 20;
-    assertEquals(actual, expected);
+    assertEquals(expected, actual);
   }
 
   @Test
