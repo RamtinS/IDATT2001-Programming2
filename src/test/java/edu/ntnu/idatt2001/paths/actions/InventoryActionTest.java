@@ -26,37 +26,49 @@ class InventoryActionTest {
   }
 
   @Test
-  @DisplayName("Should get item")
-  void shouldGetItem() {
-    String actual = inventoryAction.getItem();
-    String expected = "Test Item";
-
-    assertEquals(actual, expected);
-  }
-
-  @Test
-  @DisplayName("Should execute and add to inventory")
-  void shouldExecute() {
-    inventoryAction.execute(player);
-    String expected = "Test Item";
-    String actual = player.getInventory().get(0);
-
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  @DisplayName("Test constructor with valid input")
+  @DisplayName("Test constructor valid input")
   void testConstructorValidInput() {
     InventoryAction inventoryActionTest = new InventoryAction("item");
     String expected = "item";
     String actual = inventoryActionTest.getItem();
-
-    assertEquals(actual, expected);
+    assertEquals(expected, actual);
   }
 
   @Test
-  @DisplayName("Test constructor with invalid input throws NullPointerException")
-  void testConstructorWithInvalidInput() {
-    assertThrows(NullPointerException.class, () -> new InventoryAction(null));
+  @DisplayName("Test constructor invalid input throws IllegalArgumentException")
+  void testConstructorInvalidInputThrowsIllegalArgumentException() {
+    String invalidItem = "";
+    assertThrows(IllegalArgumentException.class, () -> new InventoryAction(invalidItem));
+  }
+
+  @Test
+  @DisplayName("Test constructor invalid input throws NullPointerException")
+  void testConstructorInvalidInputThrowsNullPointerException() {
+    String invalidItem = null;
+    assertThrows(NullPointerException.class, () -> new InventoryAction(invalidItem));
+  }
+
+  @Test
+  @DisplayName("Should get item")
+  void shouldGetItem() {
+    String actual = inventoryAction.getItem();
+    String expected = "Test Item";
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  @DisplayName("Should execute and add to inventory")
+  void shouldExecuteAndAddToInventory() {
+    inventoryAction.execute(player);
+    String expected = "Test Item";
+    String actual = player.getInventory().get(0);
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  @DisplayName("Should not execute throws NullPointerException")
+  void shouldNotExecuteThrowsNullPointerException() {
+    Player invalidPlayer = null;
+    assertThrows(NullPointerException.class, () -> inventoryAction.execute(invalidPlayer));
   }
 }
