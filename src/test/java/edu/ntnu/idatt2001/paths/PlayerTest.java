@@ -30,11 +30,12 @@ class PlayerTest {
     @Test
     @DisplayName("Test constructor with valid input")
     void testConstructorWithValidInput(){
-      String validName = "testName";
+      String validName = "Test name";
       int validHealth = 1;
       int validGold = 2;
       int validScore = 3;
       Player player = new Player(validName, validHealth, validScore, validGold);
+      assertEquals(validName, player.getName());
       assertEquals(validHealth, player.getHealth());
       assertEquals(validGold, player.getGold());
       assertEquals(validScore, player.getScore());
@@ -53,13 +54,15 @@ class PlayerTest {
     @Test
     @DisplayName("Test constructor with invalid input throws IllegalArgumentException")
     void testConstructorWithInvalidInputThrowsIllegalArgumentException(){
-      String validName = "testName";
+      String validName = "Test name";
+      String invalidName = "";
       int validHealth = 1;
       int validGold = 2;
       int validScore = 3;
       int invalidHealth = -1;
       int invalidGold = -1;
       int invalidScore = -1;
+      assertThrows(IllegalArgumentException.class, () -> new Player(invalidName, validHealth, validGold, validScore));
       assertThrows(IllegalArgumentException.class, () -> new Player(validName, invalidHealth, validGold, validScore));
       assertThrows(IllegalArgumentException.class, () -> new Player(validName, validHealth, invalidGold, validScore));
       assertThrows(IllegalArgumentException.class, () -> new Player(validName, validHealth, validGold, invalidScore));
