@@ -17,7 +17,6 @@ public class HealthAction implements Action {
    * @param health The health change that is given to the player.
    */
   public HealthAction(int health) {
-
     this.health = health;
   }
 
@@ -42,6 +41,10 @@ public class HealthAction implements Action {
     if (player == null) {
       throw new NullPointerException("Player cannot be null");
     }
-    player.addHealth(this.health);
+    if (getHealth() >= 0) {
+      player.addHealth(getHealth());
+    } else {
+     player.removeHealth(getHealth());
+    }
   }
 }
