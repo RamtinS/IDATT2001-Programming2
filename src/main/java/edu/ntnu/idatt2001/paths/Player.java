@@ -32,6 +32,9 @@ public class Player {
    */
   public Player(String name, int health, int score, int gold)
           throws IllegalArgumentException, NullPointerException {
+    if (name.isBlank()) {
+      throw new IllegalArgumentException("Name cannot be blank");
+    }
     if (health <= 0) {
       throw new IllegalArgumentException("Health has to be greater than 0");
     }
