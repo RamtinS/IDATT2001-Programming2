@@ -30,7 +30,8 @@ public class GoldAction implements Action {
   }
 
   /**
-   * Executes the gold action on the given player.
+   * Executes the gold action on the given player. Either removing
+   * or adding gold to the player.
    *
    * @param player The player that the action will be performed on.
    * @throws NullPointerException If the player is null.
@@ -40,6 +41,10 @@ public class GoldAction implements Action {
     if (player == null) {
       throw new NullPointerException("Player cannot be null");
     }
-    player.addGold(this.gold);
+    if (getGold() >= 0) {
+      player.addGold(getGold());
+    } else {
+      player.removeGold(getGold());
+    }
   }
 }
