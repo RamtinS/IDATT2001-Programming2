@@ -61,16 +61,27 @@ public class Player {
   }
 
   /**
-   * Adds health to the player.
+   * The method adds health to the player.
    *
    * @param health The amount of health to be added to the player.
-   * @throws IllegalArgumentException If the change in health is not greater
-   *        than 0.
+   * @throws IllegalArgumentException If the change in health is not greater than zero.
    */
   public void addHealth(int health) throws IllegalArgumentException {
-    if (health <= 0) {
-      throw new IllegalArgumentException("Health increase has"
-              + " to be a positive number");
+    if (health < 0) {
+      throw new IllegalArgumentException("Health increase has to be a positive number");
+    }
+    this.health += health;
+  }
+
+  /**
+   * The method removes health from the player.
+   *
+   * @param health The amount of health to be removed from the player.
+   * @throws IllegalArgumentException if the change is greater than zero.
+   */
+  public void removeHealth(int health) throws IllegalArgumentException {
+    if (health > 0) {
+      throw new IllegalArgumentException("Health decrease has to be a negative number ");
     }
     this.health += health;
   }
