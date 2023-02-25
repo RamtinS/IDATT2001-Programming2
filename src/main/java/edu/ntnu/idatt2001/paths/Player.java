@@ -124,8 +124,25 @@ public class Player {
    * @throws IllegalArgumentException If the increase of gold is not a positive number.
    */
   public void addGold(int gold) throws IllegalArgumentException {
-    if (gold <= 0) {
+    if (gold < 0) {
       throw new IllegalArgumentException("\nGold increase has to be positive.");
+    }
+    this.gold += gold;
+  }
+
+  /**
+   * Removes gold from the amount of gold the player has.
+   *
+   * @param gold The amount of gold to be removed.
+   * @throws IllegalArgumentException If the decrease of gold is not a negative number. If
+   *        the gold of the player is less than zero.
+   */
+  public void removeGold(int gold) throws IllegalArgumentException {
+    if (gold > 0) {
+      throw new IllegalArgumentException("Gold decrease has to be negative");
+    }
+    if (getGold() + gold < 0) {
+      throw new IllegalArgumentException("Gold cannot be less than 0");
     }
     this.gold += gold;
   }
@@ -164,8 +181,4 @@ public class Player {
   public List<String> getInventory() {
     return inventory;
   }
-
-
-
-
 }

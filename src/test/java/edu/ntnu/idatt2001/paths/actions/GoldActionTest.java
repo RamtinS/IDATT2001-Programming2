@@ -45,6 +45,16 @@ class GoldActionTest {
   }
 
   @Test
+  @DisplayName("Should execute and remove gold")
+  void shouldExecuteAndRemoveGold() {
+    GoldAction negativeGoldAction = new GoldAction(-10);
+    negativeGoldAction.execute(player);
+    int expectedAmount = 30;
+    int actualAmount = player.getGold();
+    assertEquals(expectedAmount, actualAmount);
+  }
+
+  @Test
   @DisplayName("Should not execute throws NullPointerException")
   void shouldNotExecuteThrowsNullPointerException() {
     Player invalidPlayer = null;
