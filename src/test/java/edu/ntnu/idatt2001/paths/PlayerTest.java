@@ -143,6 +143,15 @@ class PlayerTest {
     }
 
     @Test
+    @DisplayName("Should remove gold")
+    void shouldRemoveGold() {
+      player.removeGold(-1);
+      int expectedGold = 2;
+      int actualGold = player.getGold();
+      assertEquals(expectedGold, actualGold);
+    }
+
+    @Test
     @DisplayName("Should add to inventory")
     void shouldAddToInventory() {
       player.addToInventory("Sword");
@@ -172,6 +181,13 @@ class PlayerTest {
     void shouldNotAddGoldThrowsIllegalArgumentException(){
       int invalidGold = -1;
       assertThrows(IllegalArgumentException.class, () -> player.addGold(invalidGold));
+    }
+
+    @Test
+    @DisplayName("Should not remove gold throws IllegalArgumentException")
+    void shouldNotRemoveGoldThrowsIllegalArgumentException(){
+      int invalidGold = 1;
+      assertThrows(IllegalArgumentException.class, () -> player.removeGold(invalidGold));
     }
 
     @Test
