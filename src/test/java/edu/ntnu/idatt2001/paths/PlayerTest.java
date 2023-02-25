@@ -21,7 +21,7 @@ class PlayerTest {
   Player player;
   @BeforeEach
   void setUp() {
-    player = new Player("Name", 1, 2, 3);
+    player = new Player("Name", 10, 2, 3);
   }
 
   @Nested
@@ -116,13 +116,22 @@ class PlayerTest {
   }
 
   @Nested
-  @DisplayName("Add to player information tests")
+  @DisplayName("Change player information tests")
   class AddToPlayerInformationTests {
     @Test
     @DisplayName("Should add health")
-    void addHealth() {
-      player.addHealth(1);
-      int expectedHealth = 2;
+    void shouldAddHealth() {
+      player.addHealth(5);
+      int expectedHealth = 15;
+      int actualHealth = player.getHealth();
+      assertEquals(expectedHealth, actualHealth);
+    }
+
+    @Test
+    @DisplayName("Should remove health")
+    void shouldRemoveHealth() {
+      player.removeHealth(-5);
+      int expectedHealth = 5;
       int actualHealth = player.getHealth();
       assertEquals(expectedHealth, actualHealth);
     }
@@ -154,13 +163,20 @@ class PlayerTest {
   }
 
   @Nested
-  @DisplayName("Should not add to player information tests")
+  @DisplayName("Should not change player information tests")
   class DoesNotAddToPlayerInformationTests {
     @Test
     @DisplayName("Should not add health throws IllegalArgumentException")
     void shouldNotAddHealthThrowIllegalArgumentException(){
       int invalidHealth = -1;
       assertThrows(IllegalArgumentException.class, () -> player.addHealth(invalidHealth));
+    }
+
+    @Test
+    @DisplayName("Should not remove health throws IllegalArgumentException")
+    void shouldNotRemoveHealthThrowIllegalArgumentException(){
+      int invalidHealth = 1;
+      assertThrows(IllegalArgumentException.class, () -> player.removeHealth(invalidHealth));
     }
 
     @Test
