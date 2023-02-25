@@ -83,7 +83,7 @@ class PlayerTest {
     @Test
     @DisplayName("Should get health")
     void shouldGetHealth() {
-      int expectedHealth = 1;
+      int expectedHealth = 10;
       int actualHealth = player.getHealth();
       assertEquals(expectedHealth, actualHealth);
     }
