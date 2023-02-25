@@ -7,6 +7,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * The class tests the GoldAction class
+ *
+ * @author  ...
+ * @version JDK 17
+ */
 class GoldActionTest {
 
   GoldAction goldAction;

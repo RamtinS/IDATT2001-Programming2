@@ -9,6 +9,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * The class tests the ScoreAction class.
+ *
+ * @author ...
+ * @version JDK 17
  */
 class ScoreActionTest {
 
