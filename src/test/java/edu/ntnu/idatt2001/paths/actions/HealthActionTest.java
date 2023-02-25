@@ -51,6 +51,16 @@ class HealthActionTest {
   }
 
   @Test
+  @DisplayName("Should execute and remove health")
+  void shouldExecuteAndRemoveHealth() {
+    HealthAction negativeHealthAction = new HealthAction(-10);
+    negativeHealthAction.execute(player);
+    int expectedAmount = 10;
+    int actualAmount = player.getHealth();
+    assertEquals(expectedAmount, actualAmount);
+  }
+
+  @Test
   @DisplayName("Should not execute throws NullPointerException")
   void shouldNotExecuteThrowsNullPointerException() {
     Player invalidPlayer = null;
