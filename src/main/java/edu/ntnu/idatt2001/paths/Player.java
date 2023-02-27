@@ -74,12 +74,12 @@ public class Player {
   }
 
   /**
-   * The method removes health from the player.
+   * The method decreases the health of the player.
    *
-   * @param health The amount of health to be removed from the player.
+   * @param health The amount of health to be decreased from the player.
    * @throws IllegalArgumentException if the change is greater than zero.
    */
-  public void removeHealth(int health) throws IllegalArgumentException {
+  public void decreaseHealth(int health) throws IllegalArgumentException {
     if (health > 0) {
       throw new IllegalArgumentException("Health decrease has to be a negative number ");
     }
@@ -131,13 +131,13 @@ public class Player {
   }
 
   /**
-   * Removes gold from the amount of gold the player has.
+   * The method decreases the amount of gold the player has.
    *
-   * @param gold The amount of gold to be removed.
+   * @param gold The amount of gold to be decreased.
    * @throws IllegalArgumentException If the decrease of gold is not a negative number. If
    *        the gold of the player is less than zero.
    */
-  public void removeGold(int gold) throws IllegalArgumentException {
+  public void decreaseGold(int gold) throws IllegalArgumentException {
     if (gold > 0) {
       throw new IllegalArgumentException("Gold decrease has to be negative");
     }

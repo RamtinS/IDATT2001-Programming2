@@ -51,8 +51,8 @@ class GoldActionTest {
   }
 
   @Test
-  @DisplayName("Should execute and remove gold")
-  void shouldExecuteAndRemoveGold() {
+  @DisplayName("Should execute and decrease gold")
+  void shouldExecuteAndDecreaseGold() {
     GoldAction negativeGoldAction = new GoldAction(-10);
     negativeGoldAction.execute(player);
     int expectedAmount = 30;

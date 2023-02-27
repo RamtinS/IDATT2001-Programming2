@@ -51,8 +51,8 @@ class HealthActionTest {
   }
 
   @Test
-  @DisplayName("Should execute and remove health")
-  void shouldExecuteAndRemoveHealth() {
+  @DisplayName("Should execute and decrease health")
+  void shouldExecuteAndDecreaseHealth() {
     HealthAction negativeHealthAction = new HealthAction(-10);
     negativeHealthAction.execute(player);
     int expectedAmount = 10;

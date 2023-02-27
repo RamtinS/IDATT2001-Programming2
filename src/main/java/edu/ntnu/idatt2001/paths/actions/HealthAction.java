@@ -44,7 +44,7 @@ public class HealthAction implements Action {
     if (getHealth() >= 0) {
       player.addHealth(getHealth());
     } else {
-     player.removeHealth(getHealth());
+     player.decreaseHealth(getHealth());
     }
   }
 }

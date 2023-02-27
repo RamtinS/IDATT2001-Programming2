@@ -44,7 +44,7 @@ public class GoldAction implements Action {
     if (getGold() >= 0) {
       player.addGold(getGold());
     } else {
-      player.removeGold(getGold());
+      player.decreaseGold(getGold());
     }
   }
 }

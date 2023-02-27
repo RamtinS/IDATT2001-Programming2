@@ -130,7 +130,7 @@ class PlayerTest {
     @Test
     @DisplayName("Should remove health")
     void shouldRemoveHealth() {
-      player.removeHealth(-5);
+      player.decreaseHealth(-5);
       int expectedHealth = 5;
       int actualHealth = player.getHealth();
       assertEquals(expectedHealth, actualHealth);
@@ -157,7 +157,7 @@ class PlayerTest {
     @Test
     @DisplayName("Should remove gold")
     void shouldRemoveGold() {
-      player.removeGold(-1);
+      player.decreaseGold(-1);
       int expectedGold = 2;
       int actualGold = player.getGold();
       assertEquals(expectedGold, actualGold);
@@ -185,7 +185,7 @@ class PlayerTest {
     @DisplayName("Should not remove health throws IllegalArgumentException")
     void shouldNotRemoveHealthThrowIllegalArgumentException(){
       int invalidHealth = 1;
-      assertThrows(IllegalArgumentException.class, () -> player.removeHealth(invalidHealth));
+      assertThrows(IllegalArgumentException.class, () -> player.decreaseHealth(invalidHealth));
     }
 
     @Test
@@ -206,7 +206,7 @@ class PlayerTest {
     @DisplayName("Should not remove gold throws IllegalArgumentException")
     void shouldNotRemoveGoldThrowsIllegalArgumentException(){
       int invalidGold = 1;
-      assertThrows(IllegalArgumentException.class, () -> player.removeGold(invalidGold));
+      assertThrows(IllegalArgumentException.class, () -> player.decreaseGold(invalidGold));
     }
 
     @Test
