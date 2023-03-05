@@ -19,11 +19,10 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version JDK 17
  */
 class GameTest {
-
-  Player player;
-  Story story;
-  List<Goal> goals;
-  Game game;
+  private Player player;
+  private Story story;
+  private List<Goal> goals;
+  private Game game;
 
   @BeforeEach
   void setUp() {

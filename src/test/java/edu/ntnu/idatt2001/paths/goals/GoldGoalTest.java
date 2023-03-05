@@ -14,8 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version JDK 17
  */
 class GoldGoalTest {
-
-  GoldGoal goldGoal;
+  private GoldGoal goldGoal;
 
   @BeforeEach
   void setUp() {

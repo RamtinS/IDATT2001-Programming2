@@ -15,8 +15,8 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class HealthActionTest {
 
-  HealthAction healthAction;
-  Player player;
+  private HealthAction healthAction;
+  private Player player;
 
   @BeforeEach
   void setUp() {

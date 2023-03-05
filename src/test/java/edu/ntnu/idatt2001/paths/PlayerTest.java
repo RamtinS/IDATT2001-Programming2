@@ -17,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version JDK 17
  */
 class PlayerTest {
+  private Player player;
 
-  Player player;
   @BeforeEach
   void setUp() {
     player = new Player("Name", 10, 2, 3);

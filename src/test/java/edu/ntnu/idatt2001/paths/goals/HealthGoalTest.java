@@ -14,8 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version JDK 17
  */
 class HealthGoalTest {
-
-  HealthGoal healthGoal;
+  private HealthGoal healthGoal;
 
   @BeforeEach
   void setUp() {

@@ -14,10 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version JDK 17
  */
 class InventoryActionTest {
-
-
-  InventoryAction inventoryAction;
-  Player player;
+  private InventoryAction inventoryAction;
+  private Player player;
 
   @BeforeEach
   void setUp() {
