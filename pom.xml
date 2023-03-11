@@ -20,7 +20,7 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>19</version>
+            <version>20-ea+9</version>
         </dependency>
         <!-- The JUnit Jupiter dependency for testing -->
         <dependency>
