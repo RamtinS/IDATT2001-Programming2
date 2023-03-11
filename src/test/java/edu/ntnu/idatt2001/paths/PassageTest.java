@@ -19,8 +19,9 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version JDK 17
  */
 class PassageTest {
-  Passage passage;
-  Link testLink;
+  private Passage passage;
+  private Link testLink;
+
   @BeforeEach
   void setUp() {
     passage = new Passage("Passage title", "Passage content");

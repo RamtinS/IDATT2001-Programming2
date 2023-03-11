@@ -16,9 +16,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version JDK 17
  */
 class StoryTest {
-
-  Story story;
-  Passage passage;
+  private Story story;
+  private Passage passage;
 
   @BeforeEach
   void setUp() {

@@ -19,8 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version JDK 17
  */
 class LinkTest {
-
-  Link link;
+  private Link link;
 
   @BeforeEach
   void setUp() {

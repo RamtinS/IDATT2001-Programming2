@@ -14,9 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version JDK 17
  */
 class GoldActionTest {
-
-  GoldAction goldAction;
-  Player player;
+  private GoldAction goldAction;
+  private Player player;
 
   @BeforeEach
   void setUp() {

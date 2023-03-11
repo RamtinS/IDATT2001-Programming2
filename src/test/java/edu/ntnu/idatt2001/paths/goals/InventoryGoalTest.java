@@ -16,10 +16,9 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version JDK 17
  */
 class InventoryGoalTest {
-
-  InventoryGoal inventoryGoal;
-  List<String> mandatoryItems;
-  Player player;
+  private InventoryGoal inventoryGoal;
+  private List<String> mandatoryItems;
+  private Player player;
 
   @BeforeEach
   void setUp() {

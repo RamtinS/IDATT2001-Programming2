@@ -14,9 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version JDK 17
  */
 class ScoreActionTest {
-
-  ScoreAction scoreAction;
-  Player player;
+  private ScoreAction scoreAction;
+  private Player player;
 
   @BeforeEach
   void setUp() {

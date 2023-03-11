@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ScoreGoalTest {
 
-  ScoreGoal scoreGoal;
+  private ScoreGoal scoreGoal;
 
   @BeforeEach
   void setUp() {
