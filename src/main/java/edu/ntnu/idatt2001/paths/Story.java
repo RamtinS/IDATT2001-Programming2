@@ -88,4 +88,31 @@ public class Story {
   public Collection<Passage> getPassages() {
     return this.passages.values();
   }
+
+  /**
+   * The method removes a passage with the given link from the map of passages.
+   * The link cannot remove a passage if other passages link to it.
+   *
+   * @param link the link representing the passage to be removed.
+   * @throws NullPointerException if the link is null;
+   * @throws IllegalStateException if the passage cannot be removed because of the state.
+   */
+  public void removePassage(Link link) throws NullPointerException, IllegalStateException {
+    if (link == null) {
+      throw new NullPointerException("Link cannot be null");
+    }
+    boolean invalidLink = getPassages()
+            .stream()
+            .anyMatch(p -> p.getLinks()
+                    .stream()
+                    .anyMatch(l -> !l.equals(link)
+                            && l.getReference().equalsIgnoreCase(link.getReference())));
+    if (invalidLink) {
+      throw new IllegalStateException("Passage cannot be removed since other passages link to it.");
+    }
+    Link validLink = new Link(link.getReference(), link.getReference());
+    this.passages.remove(validLink);
+  }
 }
+
+
