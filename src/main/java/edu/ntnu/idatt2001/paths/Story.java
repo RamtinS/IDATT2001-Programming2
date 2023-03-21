@@ -2,8 +2,10 @@ package edu.ntnu.idatt2001.paths;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Class that represents a story.
@@ -112,6 +114,22 @@ public class Story {
     }
     Link validLink = new Link(link.getReference(), link.getReference());
     this.passages.remove(validLink);
+  }
+
+  /**
+   * The method finds and returns a list of broken links,
+   * links that reference a non-existent passage.
+   *
+   * @return a list of broken links.
+   */
+  public List<Link> getBrokenLinks() {
+    return getPassages().stream()
+            .flatMap(passage -> passage.getLinks()
+                    .stream()
+                    .filter(link -> getPassages()
+                            .stream()
+                            .noneMatch(p -> p.getTitle().equals(link.getReference()))))
+            .collect(Collectors.toList());
   }
 }
 
