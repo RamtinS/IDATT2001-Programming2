@@ -47,4 +47,9 @@ public class HealthAction implements Action {
      player.decreaseHealth(getHealth());
     }
   }
+
+  @Override
+  public String toString() {
+    return "{Health:" + getHealth() + "}";
+  }
 }

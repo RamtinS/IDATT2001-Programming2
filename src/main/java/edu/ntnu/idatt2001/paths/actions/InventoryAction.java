@@ -49,4 +49,9 @@ public class InventoryAction implements Action {
     }
     player.addToInventory(this.item);
   }
+
+  @Override
+  public String toString() {
+    return "{Inventory:" + getItem() + "}";
+  }
 }

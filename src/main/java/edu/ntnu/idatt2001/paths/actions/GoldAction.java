@@ -47,4 +47,9 @@ public class GoldAction implements Action {
       player.decreaseGold(getGold());
     }
   }
+
+  @Override
+  public String toString() {
+    return "{Gold:" + getGold() + "}";
+  }
 }
