@@ -10,8 +10,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * The class tests the GoldAction class
  *
- * @author  ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since March 24, 2023.
  */
 class GoldActionTest {
   private GoldAction goldAction;
@@ -64,5 +65,13 @@ class GoldActionTest {
   void shouldNotExecuteThrowsNullPointerException() {
     Player invalidPlayer = null;
     assertThrows(NullPointerException.class, () -> goldAction.execute(invalidPlayer));
+  }
+
+  @Test
+  @DisplayName("Test toString")
+  void testToString() {
+    String expected = "{Gold:10}";
+    String actual = goldAction.toString();
+    assertEquals(expected, actual);
   }
 }
