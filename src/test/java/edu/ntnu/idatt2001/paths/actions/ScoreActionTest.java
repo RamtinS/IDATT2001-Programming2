@@ -33,13 +33,6 @@ class ScoreActionTest {
   }
 
   @Test
-  @DisplayName("Test constructor invalid input throws IllegalArgumentException")
-  void testConstructorInvalidInput() {
-    int invalidPoints = -10;
-    assertThrows(IllegalArgumentException.class, () -> new ScoreAction(invalidPoints));
-  }
-
-  @Test
   @DisplayName("Should get points")
   void shouldGetPoints() {
     int expectedPoints = 10;

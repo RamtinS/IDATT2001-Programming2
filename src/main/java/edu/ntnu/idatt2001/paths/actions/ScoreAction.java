@@ -5,8 +5,9 @@ import edu.ntnu.idatt2001.paths.Player;
 /**
  * The class represents an action where a player scores points.
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since March 24, 2023.
  */
 public class ScoreAction implements Action {
   private final int points;
@@ -15,13 +16,8 @@ public class ScoreAction implements Action {
    * Constructor to create an object of ScoreAction.
    *
    * @param points The amount of points that the player will gain from completing the action.
-   * @throws IllegalArgumentException If points is 0 or lower.
    */
-
-  public ScoreAction(int points) throws IllegalArgumentException {
-    if (points <= 0) {
-      throw new IllegalArgumentException("The points of a score action has to be larger than 0");
-    }
+  public ScoreAction(int points) {
     this.points = points;
   }
 
