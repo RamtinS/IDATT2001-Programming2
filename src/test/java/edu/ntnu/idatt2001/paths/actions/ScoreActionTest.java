@@ -10,8 +10,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * The class tests the ScoreAction class.
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since March 24, 2023.
  */
 class ScoreActionTest {
   private ScoreAction scoreAction;
@@ -54,5 +55,13 @@ class ScoreActionTest {
   void shouldNotExecuteThrowsNullPointerException() {
     Player invalidPlayer = null;
     assertThrows(NullPointerException.class, () -> scoreAction.execute(invalidPlayer));
+  }
+
+  @Test
+  @DisplayName("Test toString")
+  void testToString() {
+    String expected = "{Score:10}";
+    String actual = scoreAction.toString();
+    assertEquals(expected, actual);
   }
 }
