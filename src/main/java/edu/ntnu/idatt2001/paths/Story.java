@@ -69,7 +69,7 @@ public class Story {
   }
 
   /**
-   * Gets the passage that is connected to a given link.
+   * The method retrieves a passage with the specified link.
    *
    * @param link The link that will be used to search for matching passages.
    * @return The passage corresponding to the link.
@@ -79,7 +79,8 @@ public class Story {
     if (link == null) {
       throw new NullPointerException("Link cannot be null.");
     }
-    return this.passages.get(link);
+    Link passageLink = new Link(link.getReference(), link.getReference());
+    return this.passages.get(passageLink);
   }
 
   /**
