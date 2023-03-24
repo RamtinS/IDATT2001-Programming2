@@ -10,8 +10,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * The class tests the InventoryAction class.
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since March 24, 2023.
  */
 class InventoryActionTest {
   private InventoryAction inventoryAction;
@@ -68,5 +69,13 @@ class InventoryActionTest {
   void shouldNotExecuteThrowsNullPointerException() {
     Player invalidPlayer = null;
     assertThrows(NullPointerException.class, () -> inventoryAction.execute(invalidPlayer));
+  }
+
+  @Test
+  @DisplayName("Test toString")
+  void testToString() {
+    String expected = "{Inventory:Test Item}";
+    String actual = inventoryAction.toString();
+    assertEquals(expected, actual);
   }
 }
