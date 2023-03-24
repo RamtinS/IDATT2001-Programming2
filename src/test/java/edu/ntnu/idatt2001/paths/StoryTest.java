@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since March 21, 2023.
+ * @since March 24, 2023.
  */
 class StoryTest {
   private Story story;
@@ -105,10 +105,9 @@ class StoryTest {
     @Test
     @DisplayName("Should get passage")
     void shouldGetPassage() {
-      story.addPassage(passage1);
-      Link link = new Link (passage1.getTitle(), passage1.getTitle());
-      Passage actualPassage = story.getPassage(link);
-      assertEquals(passage1, actualPassage);
+      story.addPassage(passage2);
+      Passage actualPassage = story.getPassage(link1);
+      assertEquals(passage2, actualPassage);
     }
 
     @Test
