@@ -13,7 +13,7 @@ public class ScoreAction implements Action {
   private final int points;
 
   /**
-   * Constructor to create an object of ScoreAction.
+   * Constructs a ScoreAction object with the specified number of points.
    *
    * @param points The amount of points that the player will gain from completing the action.
    */
@@ -22,16 +22,17 @@ public class ScoreAction implements Action {
   }
 
   /**
-   * Gets the amount of points awarded for this action.
+   * The method retrieves the number of points awarded for this action.
    *
-   * @return Returns the amount of points awarded for this action.
+   * @return the number of points awarded for this action.
    */
   public int getPoints() {
     return points;
   }
 
   /**
-   * Executes the score action on a player.
+   * The method executes the score action on a player,
+   * adding the points to the player's score.
    *
    * @param player The player performs the action.
    * @throws NullPointerException If the player object is null.
@@ -44,6 +45,11 @@ public class ScoreAction implements Action {
     player.addScore(this.points);
   }
 
+  /**
+   * The method return a string representation of the ScoreAction.
+   *
+   * @return string representation of the ScoreAction.
+   */
   @Override
   public String toString() {
     return "{Score:" + getPoints() + "}";

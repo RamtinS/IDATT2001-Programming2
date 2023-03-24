@@ -6,8 +6,9 @@ import edu.ntnu.idatt2001.paths.Player;
  * The interface represents an action, which
  * represents a future change in the state of a player.
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since March 24, 2023.
  */
 public interface Action {
 
