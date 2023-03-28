@@ -28,13 +28,14 @@ class PlayerTest {
   @Nested
   @DisplayName("Constructor tests")
   class ConstructorTests {
+    private final String validName = "Test name";
+    private final  int validHealth = 1;
+    private final  int validGold = 2;
+    private final int validScore = 3;
+
     @Test
     @DisplayName("Test constructor with valid input")
     void testConstructorWithValidInput(){
-      String validName = "Test name";
-      int validHealth = 1;
-      int validGold = 2;
-      int validScore = 3;
       Player player = new Player(validName, validHealth, validScore, validGold);
       assertEquals(validName, player.getName());
       assertEquals(validHealth, player.getHealth());
@@ -46,20 +47,13 @@ class PlayerTest {
     @DisplayName("Test constructor with invalid input throws NullPointerException")
     void testConstructorWithInvalidInputThrowsNullPointerException(){
       String invalidName = null;
-      int validHealth = 1;
-      int validGold = 2;
-      int validScore = 3;
       assertThrows(NullPointerException.class, () -> new Player(invalidName, validHealth, validScore, validGold));
     }
 
     @Test
     @DisplayName("Test constructor with invalid input throws IllegalArgumentException")
     void testConstructorWithInvalidInputThrowsIllegalArgumentException(){
-      String validName = "Test name";
       String invalidName = "";
-      int validHealth = 1;
-      int validGold = 2;
-      int validScore = 3;
       int invalidHealth = -1;
       int invalidGold = -1;
       int invalidScore = -1;
@@ -209,7 +203,9 @@ class PlayerTest {
     @DisplayName("Should not decrease score throws IllegalArgumentException")
     void shouldNotDecreaseScoreThrowsIllegalArgumentException(){
       int invalidPoints = 1;
+      int invalidOutOfRange = -10;
       assertThrows(IllegalArgumentException.class, () -> player.decreaseScore(invalidPoints));
+      assertThrows(IllegalArgumentException.class, () -> player.decreaseScore(invalidOutOfRange));
     }
 
     @Test
@@ -223,7 +219,9 @@ class PlayerTest {
     @DisplayName("Should not decrease gold throws IllegalArgumentException")
     void shouldNotDecreaseGoldThrowsIllegalArgumentException(){
       int invalidGold = 1;
+      int invalidOutOfRange = -10;
       assertThrows(IllegalArgumentException.class, () -> player.decreaseGold(invalidGold));
+      assertThrows(IllegalArgumentException.class, () -> player.decreaseGold(invalidOutOfRange));
     }
 
     @Test
