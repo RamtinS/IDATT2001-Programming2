@@ -2,8 +2,10 @@ package edu.ntnu.idatt2001.paths;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Class that represents a story.
@@ -67,7 +69,7 @@ public class Story {
   }
 
   /**
-   * Gets the passage that is connected to a given link.
+   * The method retrieves a passage with the specified link.
    *
    * @param link The link that will be used to search for matching passages.
    * @return The passage corresponding to the link.
@@ -77,7 +79,8 @@ public class Story {
     if (link == null) {
       throw new NullPointerException("Link cannot be null.");
     }
-    return this.passages.get(link);
+    Link passageLink = new Link(link.getReference(), link.getReference());
+    return this.passages.get(passageLink);
   }
 
   /**
@@ -88,4 +91,47 @@ public class Story {
   public Collection<Passage> getPassages() {
     return this.passages.values();
   }
+
+  /**
+   * The method removes a passage with the given link from the map of passages.
+   * The link cannot remove a passage if other passages link to it.
+   *
+   * @param link the link representing the passage to be removed.
+   * @throws NullPointerException if the link is null;
+   * @throws IllegalStateException if the passage cannot be removed because of the state.
+   */
+  public void removePassage(Link link) throws NullPointerException, IllegalStateException {
+    if (link == null) {
+      throw new NullPointerException("Link cannot be null");
+    }
+    boolean invalidLink = getPassages()
+            .stream()
+            .anyMatch(p -> p.getLinks()
+                    .stream()
+                    .anyMatch(l -> !l.equals(link)
+                            && l.getReference().equalsIgnoreCase(link.getReference())));
+    if (invalidLink) {
+      throw new IllegalStateException("Passage cannot be removed since other passages link to it.");
+    }
+    Link validLink = new Link(link.getReference(), link.getReference());
+    this.passages.remove(validLink);
+  }
+
+  /**
+   * The method finds and returns a list of broken links,
+   * links that reference a non-existent passage.
+   *
+   * @return a list of broken links.
+   */
+  public List<Link> getBrokenLinks() {
+    return getPassages().stream()
+            .flatMap(passage -> passage.getLinks()
+                    .stream()
+                    .filter(link -> getPassages()
+                            .stream()
+                            .noneMatch(p -> p.getTitle().equals(link.getReference()))))
+            .collect(Collectors.toList());
+  }
 }
+
+

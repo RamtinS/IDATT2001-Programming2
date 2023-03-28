@@ -10,8 +10,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * The class tests the ScoreAction class.
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since March 24, 2023.
  */
 class ScoreActionTest {
   private ScoreAction scoreAction;
@@ -30,13 +31,6 @@ class ScoreActionTest {
     int expected = 10;
     int actual = scoreActionTest.getPoints();
     assertEquals(expected, actual);
-  }
-
-  @Test
-  @DisplayName("Test constructor invalid input throws IllegalArgumentException")
-  void testConstructorInvalidInput() {
-    int invalidPoints = -10;
-    assertThrows(IllegalArgumentException.class, () -> new ScoreAction(invalidPoints));
   }
 
   @Test
@@ -61,5 +55,20 @@ class ScoreActionTest {
   void shouldNotExecuteThrowsNullPointerException() {
     Player invalidPlayer = null;
     assertThrows(NullPointerException.class, () -> scoreAction.execute(invalidPlayer));
+  }
+
+  @Test
+  @DisplayName("Test toString")
+  void testToString() {
+    String expected = "{Score:10}";
+    String actual = scoreAction.toString();
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  @DisplayName("Test equals method")
+  void testEqualsMethod() {
+    ScoreAction scoreActionEqual = new ScoreAction(10);
+    assertEquals(scoreAction, scoreActionEqual);
   }
 }

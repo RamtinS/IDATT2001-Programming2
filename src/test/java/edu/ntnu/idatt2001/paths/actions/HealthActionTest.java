@@ -10,8 +10,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * The class tests the HealthAction class
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since March 24, 2023.
  */
 class HealthActionTest {
 
@@ -65,5 +66,20 @@ class HealthActionTest {
   void shouldNotExecuteThrowsNullPointerException() {
     Player invalidPlayer = null;
     assertThrows(NullPointerException.class, () -> healthAction.execute(invalidPlayer));
+  }
+
+  @Test
+  @DisplayName("Test toString")
+  void testToString() {
+    String expected = "{Health:10}";
+    String actual = healthAction.toString();
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  @DisplayName("Test equals method")
+  void testEqualsMethod() {
+    HealthAction healthActionEqual = new HealthAction(10);
+    assertEquals(healthAction, healthActionEqual);
   }
 }

@@ -6,10 +6,14 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * The class represents a Link.
+ * The class represents a link between two passages in a story.
+ * A link consists of a text indicating a choice or action, a reference
+ * to a passage, and a list of actions that can influence the characteristics
+ * of a player.
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since March 26, 2023.
  */
 public class Link {
   private final String text;
@@ -17,7 +21,7 @@ public class Link {
   private final List<Action> actions;
 
   /**
-   * Constructor to create an object of the type Link.
+   * Constructs a Link object with the given text and reference.
    *
    * @param text description of a choice or action in a story.
    * @param reference uniquely identifies a passage.
@@ -79,19 +83,20 @@ public class Link {
   }
 
   /**
-   * The toString collects all the information about the link,
-   * and return a textual representation of the link.
+   * The toString collects all the information about the
+   * link, and return a textual representation.
    *
-   * @return information about the link.
+   * @return textual representation of the link.
    */
   @Override
   public String toString() {
-    return "Text: " + getText() + "."
-            + "\nReference: " + getReference() + ".";
+    return "Text: " + getText()
+            + "\nReference: " + getReference()
+            + "\nActions: " + getActions();
   }
 
   /**
-   * The method checks for equality between objects.
+   * The method checks for equality between link objects.
    *
    * @param o the object to which it is being compared.
    * @return a boolean value which indicate whether they are equal or not.

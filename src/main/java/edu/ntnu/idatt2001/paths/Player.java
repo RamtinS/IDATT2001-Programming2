@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
 /**
- * The class represents a Player.
+ * The class represents a player in the game. It contains methods to manage
+ * the player's attributes such as health, score, gold and inventory.
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since March 28, 2023.
  */
 public class Player {
   private final String name;
@@ -18,9 +19,8 @@ public class Player {
   private int gold;
   private final List<String> inventory;
 
-
   /**
-   * Constructor for an object of the Player class.
+   * Constructs a Player object with the given parameters.
    *
    * @param name The name of the player.
    * @param health The starting health of the player.
@@ -52,7 +52,7 @@ public class Player {
   }
 
   /**
-   * Retrieves the name of the player and returns it.
+   * The method retrieves the name of the player and returns it.
    *
    * @return The name of the player.
    */
@@ -61,12 +61,12 @@ public class Player {
   }
 
   /**
-   * The method adds health to the player.
+   * The method increases the health of the player.
    *
    * @param health The amount of health to be added to the player.
    * @throws IllegalArgumentException If the change in health is not greater than zero.
    */
-  public void addHealth(int health) throws IllegalArgumentException {
+  public void increaseHealth(int health) throws IllegalArgumentException {
     if (health < 0) {
       throw new IllegalArgumentException("Health increase has to be a positive number");
     }
@@ -87,7 +87,7 @@ public class Player {
   }
 
   /**
-   * Retrieves the health of the player and returns it.
+   * The method retrieves the health of the player and returns it.
    *
    * @return The health of the player.
    */
@@ -96,20 +96,36 @@ public class Player {
   }
 
   /**
-   * Adds points to the score of the player.
+   * The method increases the amount of points the player has.
    *
-   * @param points The amount of points to be added.
+   * @param points The amount of points to be increased.
    * @throws IllegalArgumentException If the point increase is not a positive number.
    */
-  public void addScore(int points) throws IllegalArgumentException {
-    if (points <= 0) {
-      throw new IllegalArgumentException("Point increase has to be positive");
+  public void increaseScore(int points) throws IllegalArgumentException {
+    if (points < 0) {
+      throw new IllegalArgumentException("Point increase has to be positive.");
     }
     this.score += points;
   }
 
   /**
-   * Retrieves the score of the player and returns it.
+   * The method decreases the amount of points the player has.
+   *
+   * @param points The amount of points to be decreased.
+   * @throws IllegalArgumentException if the points or the result of the decrease is less than zero.
+   */
+  public void decreaseScore(int points) throws IllegalArgumentException {
+    if (points > 0) {
+      throw new IllegalArgumentException("Point decrease has to be negative");
+    }
+    if (getGold() + points < 0) {
+      throw new IllegalArgumentException("Score cannot be less than zero.");
+    }
+    this.score += points;
+  }
+
+  /**
+   * The method retrieves the score of the player and returns it.
    *
    * @return The current score of the player.
    */
@@ -118,12 +134,12 @@ public class Player {
   }
 
   /**
-   * Adds gold to the amount of gold the player has.
+   * The method increases the amount of gold the player has.
    *
-   * @param gold The amount of gold to be added.
+   * @param gold The amount of gold to be increased.
    * @throws IllegalArgumentException If the increase of gold is not a positive number.
    */
-  public void addGold(int gold) throws IllegalArgumentException {
+  public void increaseGold(int gold) throws IllegalArgumentException {
     if (gold < 0) {
       throw new IllegalArgumentException("\nGold increase has to be positive.");
     }
@@ -134,15 +150,14 @@ public class Player {
    * The method decreases the amount of gold the player has.
    *
    * @param gold The amount of gold to be decreased.
-   * @throws IllegalArgumentException If the decrease of gold is not a negative number. If
-   *        the gold of the player is less than zero.
+   * @throws IllegalArgumentException if the gold or the result of the decrease is less than zero.
    */
   public void decreaseGold(int gold) throws IllegalArgumentException {
     if (gold > 0) {
-      throw new IllegalArgumentException("Gold decrease has to be negative");
+      throw new IllegalArgumentException("Gold decrease has to be negative.");
     }
     if (getGold() + gold < 0) {
-      throw new IllegalArgumentException("Gold cannot be less than 0");
+      throw new IllegalArgumentException("Gold cannot be less than zero");
     }
     this.gold += gold;
   }
@@ -157,7 +172,7 @@ public class Player {
   }
 
   /**
-   * Adds an item to the inventory of the player.
+   * The method adds an item to the inventory of the player.
    *
    * @param item The item to be added to the inventory.
    * @throws NullPointerException If the item is null.
@@ -174,7 +189,7 @@ public class Player {
   }
 
   /**
-   * Retrieves the inventory of a player.
+   * The method retrieves the inventory of a player.
    *
    * @return The inventory of a player in the form of a list.
    */

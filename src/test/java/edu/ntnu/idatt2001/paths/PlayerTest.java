@@ -13,8 +13,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * The class tests the Player class.
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since March 28, 2023.
  */
 class PlayerTest {
   private Player player;
@@ -27,13 +28,14 @@ class PlayerTest {
   @Nested
   @DisplayName("Constructor tests")
   class ConstructorTests {
+    private final String validName = "Test name";
+    private final  int validHealth = 1;
+    private final  int validGold = 2;
+    private final int validScore = 3;
+
     @Test
     @DisplayName("Test constructor with valid input")
     void testConstructorWithValidInput(){
-      String validName = "Test name";
-      int validHealth = 1;
-      int validGold = 2;
-      int validScore = 3;
       Player player = new Player(validName, validHealth, validScore, validGold);
       assertEquals(validName, player.getName());
       assertEquals(validHealth, player.getHealth());
@@ -45,20 +47,13 @@ class PlayerTest {
     @DisplayName("Test constructor with invalid input throws NullPointerException")
     void testConstructorWithInvalidInputThrowsNullPointerException(){
       String invalidName = null;
-      int validHealth = 1;
-      int validGold = 2;
-      int validScore = 3;
       assertThrows(NullPointerException.class, () -> new Player(invalidName, validHealth, validScore, validGold));
     }
 
     @Test
     @DisplayName("Test constructor with invalid input throws IllegalArgumentException")
     void testConstructorWithInvalidInputThrowsIllegalArgumentException(){
-      String validName = "Test name";
       String invalidName = "";
-      int validHealth = 1;
-      int validGold = 2;
-      int validScore = 3;
       int invalidHealth = -1;
       int invalidGold = -1;
       int invalidScore = -1;
@@ -119,9 +114,9 @@ class PlayerTest {
   @DisplayName("Change player information tests")
   class AddToPlayerInformationTests {
     @Test
-    @DisplayName("Should add health")
-    void shouldAddHealth() {
-      player.addHealth(5);
+    @DisplayName("Should increase health")
+    void shouldIncreaseHealth() {
+      player.increaseHealth(5);
       int expectedHealth = 15;
       int actualHealth = player.getHealth();
       assertEquals(expectedHealth, actualHealth);
@@ -137,18 +132,27 @@ class PlayerTest {
     }
 
     @Test
-    @DisplayName("Should add score")
-    void shouldAddScore() {
-      player.addScore(1);
+    @DisplayName("Should increase score")
+    void shouldIncreaseScore() {
+      player.increaseScore(1);
       int expectedScore = 3;
       int actualScore = player.getScore();
       assertEquals(expectedScore, actualScore);
     }
 
     @Test
-    @DisplayName("Should add gold")
-    void shouldAddGold() {
-      player.addGold(1);
+    @DisplayName("Should decrease score")
+    void shouldDecreaseScore() {
+      player.decreaseScore(-1);
+      int expectedScore = 1;
+      int actualScore = player.getScore();
+      assertEquals(expectedScore, actualScore);
+    }
+
+    @Test
+    @DisplayName("Should increase gold")
+    void shouldIncreaseGold() {
+      player.increaseGold(1);
       int expectedGold = 4;
       int actualGold = player.getGold();
       assertEquals(expectedGold, actualGold);
@@ -175,10 +179,10 @@ class PlayerTest {
   @DisplayName("Should not change player information tests")
   class DoesNotAddToPlayerInformationTests {
     @Test
-    @DisplayName("Should not add health throws IllegalArgumentException")
-    void shouldNotAddHealthThrowIllegalArgumentException(){
+    @DisplayName("Should not increase health throws IllegalArgumentException")
+    void shouldNotIncreaseHealthThrowIllegalArgumentException(){
       int invalidHealth = -1;
-      assertThrows(IllegalArgumentException.class, () -> player.addHealth(invalidHealth));
+      assertThrows(IllegalArgumentException.class, () -> player.increaseHealth(invalidHealth));
     }
 
     @Test
@@ -189,24 +193,35 @@ class PlayerTest {
     }
 
     @Test
-    @DisplayName("Should not add score throws IllegalArgumentException")
-    void shouldNotAddScoreThrowsIllegalArgumentException(){
+    @DisplayName("Should not increase score throws IllegalArgumentException")
+    void shouldNotIncreaseScoreThrowsIllegalArgumentException(){
       int invalidPoints = -1;
-      assertThrows(IllegalArgumentException.class, () -> player.addScore(invalidPoints));
+      assertThrows(IllegalArgumentException.class, () -> player.increaseScore(invalidPoints));
     }
 
     @Test
-    @DisplayName("Should not add gold throws IllegalArgumentException")
+    @DisplayName("Should not decrease score throws IllegalArgumentException")
+    void shouldNotDecreaseScoreThrowsIllegalArgumentException(){
+      int invalidPoints = 1;
+      int invalidOutOfRange = -10;
+      assertThrows(IllegalArgumentException.class, () -> player.decreaseScore(invalidPoints));
+      assertThrows(IllegalArgumentException.class, () -> player.decreaseScore(invalidOutOfRange));
+    }
+
+    @Test
+    @DisplayName("Should not increase gold throws IllegalArgumentException")
     void shouldNotAddGoldThrowsIllegalArgumentException(){
       int invalidGold = -1;
-      assertThrows(IllegalArgumentException.class, () -> player.addGold(invalidGold));
+      assertThrows(IllegalArgumentException.class, () -> player.increaseGold(invalidGold));
     }
 
     @Test
     @DisplayName("Should not decrease gold throws IllegalArgumentException")
     void shouldNotDecreaseGoldThrowsIllegalArgumentException(){
       int invalidGold = 1;
+      int invalidOutOfRange = -10;
       assertThrows(IllegalArgumentException.class, () -> player.decreaseGold(invalidGold));
+      assertThrows(IllegalArgumentException.class, () -> player.decreaseGold(invalidOutOfRange));
     }
 
     @Test
