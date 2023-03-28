@@ -164,7 +164,7 @@ class FileStoryHandlerTest {
     @DisplayName("Should not read story from file throws NullPointerException")
     void shouldNotReadStoryFromFileThrowsNullPointerException() {
       assertThrows(NullPointerException.class,
-              () -> FileStoryHandler.readStoryFromFile(pathToFile));
+              () -> FileStoryHandler.readStoryFromFile(invalidPathToFileNull));
     }
 
     @Test
