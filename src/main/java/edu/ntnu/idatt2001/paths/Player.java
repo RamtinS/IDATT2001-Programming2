@@ -66,7 +66,7 @@ public class Player {
    * @param health The amount of health to be added to the player.
    * @throws IllegalArgumentException If the change in health is not greater than zero.
    */
-  public void addHealth(int health) throws IllegalArgumentException {
+  public void increaseHealth(int health) throws IllegalArgumentException {
     if (health < 0) {
       throw new IllegalArgumentException("Health increase has to be a positive number");
     }

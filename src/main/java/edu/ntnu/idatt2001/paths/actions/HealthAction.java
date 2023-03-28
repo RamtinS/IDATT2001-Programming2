@@ -45,7 +45,7 @@ public class HealthAction implements Action {
       throw new NullPointerException("Player cannot be null");
     }
     if (getHealth() >= 0) {
-      player.addHealth(getHealth());
+      player.increaseHealth(getHealth());
     } else {
       player.decreaseHealth(getHealth());
     }
