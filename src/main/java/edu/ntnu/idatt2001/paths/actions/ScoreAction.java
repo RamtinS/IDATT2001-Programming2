@@ -44,7 +44,7 @@ public class ScoreAction implements Action {
       throw new NullPointerException("Player cannot be null");
     }
     if (getPoints() >= 0) {
-      player.addScore(getPoints());
+      player.increaseScore(getPoints());
     } else {
       player.decreaseScore(getPoints());
     }

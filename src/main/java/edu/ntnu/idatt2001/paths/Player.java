@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * The class represents a Player.
+ * The class represents a player in the game. It contains methods to manage
+ * the player's attributes such as health, score, gold and inventory.
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since March 28, 2023.
  */
 public class Player {
   private final String name;
@@ -17,9 +19,8 @@ public class Player {
   private int gold;
   private final List<String> inventory;
 
-
   /**
-   * Constructor for an object of the Player class.
+   * Constructs a Player object with the given parameters.
    *
    * @param name The name of the player.
    * @param health The starting health of the player.
@@ -95,14 +96,14 @@ public class Player {
   }
 
   /**
-   * Adds points to the score of the player.
+   * The method increases the amount of points the player has.
    *
-   * @param points The amount of points to be added.
+   * @param points The amount of points to be increased.
    * @throws IllegalArgumentException If the point increase is not a positive number.
    */
-  public void addScore(int points) throws IllegalArgumentException {
-    if (points <= 0) {
-      throw new IllegalArgumentException("Point increase has to be positive");
+  public void increaseScore(int points) throws IllegalArgumentException {
+    if (points < 0) {
+      throw new IllegalArgumentException("Point increase has to be positive.");
     }
     this.score += points;
   }
