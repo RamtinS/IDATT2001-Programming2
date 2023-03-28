@@ -1,13 +1,14 @@
 package edu.ntnu.idatt2001.paths.actions;
 
 import edu.ntnu.idatt2001.paths.Player;
+import java.util.Objects;
 
 /**
  * The class represents an action where a player scores points.
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since March 24, 2023.
+ * @since March 28, 2023.
  */
 public class ScoreAction implements Action {
   private final int points;
@@ -53,5 +54,33 @@ public class ScoreAction implements Action {
   @Override
   public String toString() {
     return "{Score:" + getPoints() + "}";
+  }
+
+  /**
+   * The method checks for equality between ScoreAction objects.
+   *
+   * @param o the object to which it is being compared.
+   * @return a boolean value which indicate whether they are equal or not.
+   */
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    ScoreAction that = (ScoreAction) o;
+    return getPoints() == that.getPoints();
+  }
+
+  /**
+   * The method generates a hash value for the object.
+   *
+   * @return hash value for the object.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(getPoints());
   }
 }

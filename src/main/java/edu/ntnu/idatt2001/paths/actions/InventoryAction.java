@@ -9,7 +9,7 @@ import java.util.Objects;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since March 24, 2023.
+ * @since March 28, 2023.
  */
 public class InventoryAction implements Action {
   private final String item;
@@ -59,5 +59,33 @@ public class InventoryAction implements Action {
   @Override
   public String toString() {
     return "{Inventory:" + getItem() + "}";
+  }
+
+  /**
+   * The method checks for equality between InventoryAction objects.
+   *
+   * @param o the object to which it is being compared.
+   * @return a boolean value which indicate whether they are equal or not.
+   */
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    InventoryAction that = (InventoryAction) o;
+    return getItem().equals(that.getItem());
+  }
+
+  /**
+   * The method generates a hash value for the object.
+   *
+   * @return hash value for the object.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(getItem());
   }
 }

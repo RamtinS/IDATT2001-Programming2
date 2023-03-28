@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2001.paths.actions;
 
 import edu.ntnu.idatt2001.paths.Player;
+import java.util.Objects;
 
 /**
  * The class represents a gold that, which adds or removes gold from a player's
@@ -8,7 +9,7 @@ import edu.ntnu.idatt2001.paths.Player;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since March 24, 2023.
+ * @since March 28, 2023.
  */
 public class GoldAction implements Action {
   private final int gold;
@@ -58,5 +59,33 @@ public class GoldAction implements Action {
   @Override
   public String toString() {
     return "{Gold:" + getGold() + "}";
+  }
+
+  /**
+   * The method checks for equality between GoldAction objects.
+   *
+   * @param o the object to which it is being compared.
+   * @return a boolean value which indicate whether they are equal or not.
+   */
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    GoldAction that = (GoldAction) o;
+    return getGold() == that.getGold();
+  }
+
+  /**
+   * The method generates a hash value for the object.
+   *
+   * @return hash value for the object.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(getGold());
   }
 }
