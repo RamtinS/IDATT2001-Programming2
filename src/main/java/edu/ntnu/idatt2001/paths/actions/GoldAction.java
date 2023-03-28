@@ -45,7 +45,7 @@ public class GoldAction implements Action {
       throw new NullPointerException("Player cannot be null");
     }
     if (getGold() >= 0) {
-      player.addGold(getGold());
+      player.increaseGold(getGold());
     } else {
       player.decreaseGold(getGold());
     }

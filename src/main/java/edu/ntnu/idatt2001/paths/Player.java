@@ -61,7 +61,7 @@ public class Player {
   }
 
   /**
-   * The method adds health to the player.
+   * The method increases the health of the player.
    *
    * @param health The amount of health to be added to the player.
    * @throws IllegalArgumentException If the change in health is not greater than zero.
@@ -118,12 +118,12 @@ public class Player {
   }
 
   /**
-   * Adds gold to the amount of gold the player has.
+   * The method increases the amount of gold the player has.
    *
    * @param gold The amount of gold to be added.
    * @throws IllegalArgumentException If the increase of gold is not a positive number.
    */
-  public void addGold(int gold) throws IllegalArgumentException {
+  public void increaseGold(int gold) throws IllegalArgumentException {
     if (gold < 0) {
       throw new IllegalArgumentException("\nGold increase has to be positive.");
     }
