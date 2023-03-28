@@ -78,4 +78,11 @@ class InventoryActionTest {
     String actual = inventoryAction.toString();
     assertEquals(expected, actual);
   }
+
+  @Test
+  @DisplayName("Test equals method")
+  void testEqualsMethod() {
+    InventoryAction inventoryActionEqual = new InventoryAction("Test Item");
+    assertEquals(inventoryAction, inventoryActionEqual);
+  }
 }

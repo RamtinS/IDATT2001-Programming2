@@ -4,7 +4,6 @@ import edu.ntnu.idatt2001.paths.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -12,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since March 24, 2023.
+ * @since March 28, 2023.
  */
 class GoldActionTest {
   private GoldAction goldAction;
@@ -25,8 +24,8 @@ class GoldActionTest {
   }
 
   @Test
-  @DisplayName("Test constructor valid input")
-  void testConstructorValidInput(){
+  @DisplayName("Test constructor")
+  void testConstructor(){
     GoldAction testGoldActionConstructor = new GoldAction(10);
     int expected = 10;
     int actual = testGoldActionConstructor.getGold();
@@ -73,5 +72,12 @@ class GoldActionTest {
     String expected = "{Gold:10}";
     String actual = goldAction.toString();
     assertEquals(expected, actual);
+  }
+
+  @Test
+  @DisplayName("Test equals method")
+  void testEqualsMethod() {
+    GoldAction goldActionEqual = new GoldAction(10);
+    assertEquals(goldAction, goldActionEqual);
   }
 }

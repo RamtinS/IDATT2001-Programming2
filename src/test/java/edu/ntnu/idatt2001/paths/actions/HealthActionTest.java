@@ -75,4 +75,11 @@ class HealthActionTest {
     String actual = healthAction.toString();
     assertEquals(expected, actual);
   }
+
+  @Test
+  @DisplayName("Test equals method")
+  void testEqualsMethod() {
+    HealthAction healthActionEqual = new HealthAction(10);
+    assertEquals(healthAction, healthActionEqual);
+  }
 }

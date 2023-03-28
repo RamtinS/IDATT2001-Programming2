@@ -64,4 +64,11 @@ class ScoreActionTest {
     String actual = scoreAction.toString();
     assertEquals(expected, actual);
   }
+
+  @Test
+  @DisplayName("Test equals method")
+  void testEqualsMethod() {
+    ScoreAction scoreActionEqual = new ScoreAction(10);
+    assertEquals(scoreAction, scoreActionEqual);
+  }
 }
