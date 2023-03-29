@@ -50,7 +50,11 @@ public class Player {
     if (health < 0) {
       throw new IllegalArgumentException("Health increase has to be a positive number");
     }
-    this.health += health;
+    if (getHealth() + health > 100) {
+      this.health = 100;
+    } else {
+      this.health += health;
+    }
   }
 
   /**
