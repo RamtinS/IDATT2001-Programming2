@@ -44,10 +44,20 @@ class ScoreActionTest {
   }
 
   @Test
-  @DisplayName("Should execute and add score")
-  void shouldExecuteAndAddScore() {
+  @DisplayName("Should execute increase score")
+  void shouldExecuteIncreaseScore() {
     scoreAction.execute(player);
     int expectedScore = 30;
+    int actualScore = player.getScore();
+    assertEquals(expectedScore, actualScore);
+  }
+
+  @Test
+  @DisplayName("Should execute decrease score")
+  void shouldExecuteDecreaseScore() {
+    ScoreAction negativeScoreAction = new ScoreAction(-10);
+    negativeScoreAction.execute(player);
+    int expectedScore = 10;
     int actualScore = player.getScore();
     assertEquals(expectedScore, actualScore);
   }
