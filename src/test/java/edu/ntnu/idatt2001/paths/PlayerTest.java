@@ -143,6 +143,15 @@ class PlayerTest {
     }
 
     @Test
+    @DisplayName("Should increase health to only one hundred")
+    void shouldIncreaseHealthToOnlyOneHundred() {
+      player.increaseHealth(500);
+      int expectedHealth = 100;
+      int actualHealth = player.getHealth();
+      assertEquals(expectedHealth, actualHealth);
+    }
+
+    @Test
     @DisplayName("Should decrease health")
     void shouldDecreaseHealth() {
       player.decreaseHealth(-5);
