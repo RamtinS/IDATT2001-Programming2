@@ -2,7 +2,6 @@ package edu.ntnu.idatt2001.paths;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * The class represents a player in the game. It contains methods to manage
@@ -10,7 +9,7 @@ import java.util.Objects;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since March 28, 2023.
+ * @since March 29, 2023.
  */
 public class Player {
   private final String name;
@@ -20,34 +19,15 @@ public class Player {
   private final List<String> inventory;
 
   /**
-   * Constructs a Player object with the given parameters.
+   * Private constructor that constructs a Player object with PlayerBuilder.
    *
-   * @param name The name of the player.
-   * @param health The starting health of the player.
-   * @param score The starting score of the player.
-   * @param gold The amount of gold the player starts with.
-   * @throws NullPointerException If the name of the player is null.
-   * @throws IllegalArgumentException If the health is not greater than zero, if the score
-   *        is a negative number or if the amount of gold is a negative number.
+   * @param builder PlayerBuilder object with the values to be set for the Player object.
    */
-  public Player(String name, int health, int score, int gold)
-          throws IllegalArgumentException, NullPointerException {
-    if (name.isBlank()) {
-      throw new IllegalArgumentException("Name cannot be blank");
-    }
-    if (health <= 0) {
-      throw new IllegalArgumentException("Health has to be greater than 0");
-    }
-    if (score < 0) {
-      throw new IllegalArgumentException("Score cannot be a negative number");
-    }
-    if (gold < 0) {
-      throw new IllegalArgumentException("Gold cannot be a negative number");
-    }
-    this.name = Objects.requireNonNull(name, "Name cannot be null");
-    this.health = health;
-    this.score = score;
-    this.gold = gold;
+  private Player(PlayerBuilder builder) {
+    this.name = builder.name;
+    this.health = builder.health;
+    this.score = builder.score;
+    this.gold = builder.gold;
     this.inventory = new ArrayList<>();
   }
 
@@ -195,5 +175,96 @@ public class Player {
    */
   public List<String> getInventory() {
     return inventory;
+  }
+
+  /**
+   * Builder class for the Player class. The class provides a way
+   * to construct a Player object with optional parameters.
+   */
+  public static class PlayerBuilder {
+    private final String name;
+    private int health = 100;
+    private int score = 0;
+    private int gold = 0;
+
+    /**
+     * Constructs a PlayerBuilder object with the given name.
+     *
+     * @param name the name of the player to be created.
+     */
+    public PlayerBuilder(String name) {
+      this.name = name;
+    }
+
+    /**
+     * The method sets the health of the player.
+     *
+     * @param health the value of the health.
+     * @return this builder object.
+     */
+    public PlayerBuilder health(int health) {
+      this.health = health;
+      return this;
+    }
+
+    /**
+     * The method sets the score of the player.
+     *
+     * @param score the value of the score.
+     * @return this builder object.
+     */
+    public PlayerBuilder score(int score) {
+      this.score = score;
+      return this;
+    }
+
+    /**
+     * The method sets the amount of gold the player has.
+     *
+     * @param gold the amount of gold.
+     * @return this builder object.
+     */
+    public PlayerBuilder gold(int gold) {
+      this.gold = gold;
+      return this;
+    }
+
+    /**
+     * Constructs a Player object with the set values.
+     *
+     * @return a player object.
+     * @throws NullPointerException if the name is null.
+     * @throws IllegalArgumentException if the attributes do not meet the requirements.
+     */
+    public Player build() throws NullPointerException, IllegalArgumentException {
+      validate();
+      return new Player(this);
+    }
+
+    /**
+     * The method validates the values of the attributes of the Player
+     * object built by the builder.
+     *
+     * @throws NullPointerException if name is null.
+     * @throws IllegalArgumentException if the attributes do not meet the requirements.
+     */
+    private void validate() throws NullPointerException, IllegalArgumentException {
+      if (name == null) {
+        throw new NullPointerException("Name cannot be null");
+      }
+      if (name.isBlank()) {
+        throw new IllegalArgumentException("Name cannot be blank");
+      }
+      if (health <= 0 || health > 100) {
+        throw new IllegalArgumentException("Health has to be greater than zero and"
+                + " less than or equal to one hundred.");
+      }
+      if (score < 0) {
+        throw new IllegalArgumentException("Score cannot be a negative number");
+      }
+      if (gold < 0) {
+        throw new IllegalArgumentException("Gold cannot be a negative number");
+      }
+    }
   }
 }
