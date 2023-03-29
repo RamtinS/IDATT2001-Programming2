@@ -102,7 +102,7 @@ public class Player {
     if (points > 0) {
       throw new IllegalArgumentException("Point decrease has to be negative");
     }
-    if (getGold() + points < 0) {
+    if (getScore() + points < 0) {
       throw new IllegalArgumentException("Score cannot be less than zero.");
     }
     this.score += points;
