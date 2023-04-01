@@ -22,6 +22,7 @@ import java.util.List;
  * @since March 24, 2023.
  */
 public class FileStoryHandler {
+  private static final String FILE_EXTENSION = ".paths";
 
   /**
    * The method writes a story object to a text file.
@@ -78,7 +79,7 @@ public class FileStoryHandler {
     validatePathOfFile(pathOfFile);
 
     Story story = null;
-    try (BufferedReader reader = new BufferedReader(new FileReader(pathOfFile))) {
+    try (BufferedReader reader = new BufferedReader(new FileReader(pathOfFile.toLowerCase().trim()))) {
       String storyTitle = reader.readLine();
       List<Passage> passages = readPassagesFromFile(reader);
       Passage openingPassage = passages.get(0);
@@ -188,8 +189,8 @@ public class FileStoryHandler {
     if (pathOfFile.isBlank()) {
       throw new IllegalArgumentException("The path to the file cannot be blank.");
     }
-    if (!pathOfFile.endsWith(".paths")) {
-      throw new IllegalArgumentException("The path to the file must end with .paths");
+    if (!pathOfFile.toLowerCase().trim().endsWith(FILE_EXTENSION)) {
+      throw new IllegalArgumentException("The path to the file must end with " + FILE_EXTENSION);
     }
   }
 }
