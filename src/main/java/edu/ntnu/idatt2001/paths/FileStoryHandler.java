@@ -12,6 +12,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The FileStoryHandler class provides methods to write and read a story
@@ -19,9 +21,10 @@ import java.util.List;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since March 24, 2023.
+ * @since April 02, 2023.
  */
 public class FileStoryHandler {
+  private static final Logger logger = Logger.getLogger(FileStoryHandler.class.getName());
   private static final String FILE_EXTENSION = ".paths";
 
   /**
@@ -62,7 +65,7 @@ public class FileStoryHandler {
         }
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.log(Level.SEVERE, "Error writing story to file.", e);
     }
   }
 
@@ -88,7 +91,7 @@ public class FileStoryHandler {
         story.addPassage(passages.get(i));
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.log(Level.SEVERE, "Error reading story from file.", e);
     }
     return story;
   }
