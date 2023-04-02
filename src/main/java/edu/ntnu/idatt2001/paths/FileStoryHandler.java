@@ -47,26 +47,33 @@ public class FileStoryHandler {
       writer.write("::" + story.getOpeningPassage().getTitle() + "\n");
       writer.write(story.getOpeningPassage().getContent() + "\n");
       for (Link link : story.getOpeningPassage().getLinks()) {
-        writer.write("[" + link.getText() + "]" + "(" + link.getReference() + ")");
-        for (Action action : link.getActions()) {
-          writer.write(action.toString());
-        }
-        writer.write("\n");
+        writeLinkWithActions(writer, link);
       }
       for (Passage passage : story.getPassages()) {
         writer.write("\n::" + passage.getTitle() + "\n");
         writer.write(passage.getContent() + "\n");
         for (Link link : passage.getLinks()) {
-          writer.write("[" + link.getText() + "]" + "(" + link.getReference() + ")");
-          for (Action action : link.getActions()) {
-            writer.write(action.toString());
-          }
-          writer.write("\n");
+          writeLinkWithActions(writer, link);
         }
       }
     } catch (IOException e) {
       logger.log(Level.SEVERE, "Error writing story to file.", e);
     }
+  }
+
+  /**
+   * Helper method to write the given Link object with its associated actions.
+   *
+   * @param writer the BufferedWriter object to write to.
+   * @param link the Link object to write.
+   * @throws IOException if there is an error writing to the BufferedWriter.
+   */
+  private static void writeLinkWithActions(BufferedWriter writer, Link link) throws IOException {
+    writer.write("[" + link.getText() + "]" + "(" + link.getReference() + ")");
+    for (Action action : link.getActions()) {
+      writer.write(action.toString());
+    }
+    writer.write("\n");
   }
 
   /**
