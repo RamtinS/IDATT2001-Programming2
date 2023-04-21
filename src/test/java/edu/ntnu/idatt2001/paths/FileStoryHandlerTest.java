@@ -17,7 +17,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -25,16 +26,17 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since March 24, 2023.
+ * @since April 21, 2023.
  */
 class FileStoryHandlerTest {
+  private static final Logger logger = Logger.getLogger(FileStoryHandler.class.getName());
   private String pathToFile;
   private File testFile;
   private Story story;
 
   @BeforeEach
   void setUp() {
-    pathToFile = "src/main/resources/textFiles/story.paths";
+    pathToFile = "src/test/resources/stories/story.paths";
     testFile = new File(pathToFile);
 
     Action actionOpeningPassage = new InventoryAction("Sword");
@@ -80,7 +82,7 @@ class FileStoryHandlerTest {
     try {
       Files.deleteIfExists(path);
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.log(Level.WARNING, "Error deleting file", e);
     }
   }
 
@@ -90,7 +92,11 @@ class FileStoryHandlerTest {
     @Test
     @DisplayName("Should write story to file")
     void shouldWriteStoryToFileTest() {
-      FileStoryHandler.writeStoryToFile(story, pathToFile);
+      try {
+        FileStoryHandler.writeStoryToFile(story, pathToFile);
+      } catch (IOException e) {
+        logger.log(Level.WARNING, "Error occurred while writing story to file: " + pathToFile, e);
+      }
       try (BufferedReader reader = new BufferedReader(new FileReader(pathToFile))) {
         StringBuilder content = new StringBuilder();
         String line;
@@ -118,19 +124,29 @@ class FileStoryHandlerTest {
 
         assertEquals(expected, content.toString());
       } catch (IOException e) {
-        e.printStackTrace();
+        logger.log(Level.WARNING, "Error occurred while reading file: " + pathToFile, e);
       }
     }
 
     @Test
     @DisplayName("Should read story from file")
     void shouldReadStoryFromFile() {
-      FileStoryHandler.writeStoryToFile(story, pathToFile);
-      Story storyReadFromFile = FileStoryHandler.readStoryFromFile(pathToFile);
+
+      try {
+        FileStoryHandler.writeStoryToFile(story, pathToFile);
+      } catch (IOException e) {
+        logger.log(Level.WARNING, "Error occurred while writing story to file: " + pathToFile, e);
+      }
+      Story storyReadFromFile = null;
+      try {
+        storyReadFromFile = FileStoryHandler.readStoryFromFile(pathToFile);
+      } catch (IOException e) {
+        logger.log(Level.WARNING, "Error occurred while reading story from file: " + pathToFile, e);
+      }
 
       assertEquals(story.getTitle(), storyReadFromFile.getTitle());
       assertEquals(story.getOpeningPassage(), storyReadFromFile.getOpeningPassage());
-      assertTrue(story.getPassages().containsAll(storyReadFromFile.getPassages()));
+      assertTrue(storyReadFromFile.getPassages().containsAll(story.getPassages()));
     }
   }
 
@@ -138,7 +154,7 @@ class FileStoryHandlerTest {
   @DisplayName("Negative tests file handling")
   class negativeTestsFileHandling {
     String invalidPathToFileNull = null;
-    String invalidPathToFileFormat = "story.txt";
+    String invalidPathToFileFormat = "src/main/resources/stories/story.txt";
     String invalidPathToFileBlank = "";
 
     @Test
@@ -174,6 +190,13 @@ class FileStoryHandlerTest {
               () -> FileStoryHandler.readStoryFromFile(invalidPathToFileFormat));
       assertThrows(IllegalArgumentException.class,
               () -> FileStoryHandler.readStoryFromFile(invalidPathToFileBlank));
+    }
+
+    @Test
+    @DisplayName("Should not read story from file throws IOException")
+    void shouldNotReadStoryFromFileThrowsIOException() {
+      assertThrows(IOException.class,
+              () -> FileStoryHandler.readStoryFromFile("nonExistingFile.paths"));
     }
   }
 }
