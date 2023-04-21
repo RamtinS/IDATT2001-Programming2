@@ -36,7 +36,7 @@ public class FileStoryHandler {
    * @throws IllegalArgumentException if the pathOfFile is blank or does not end with ".paths".
    */
   public static void writeStoryToFile(Story story, String pathOfFile)
-          throws NullPointerException, IllegalArgumentException {
+          throws NullPointerException, IllegalArgumentException, IOException {
     if (story == null) {
       throw new NullPointerException("The story cannot be null.");
     }
@@ -58,6 +58,7 @@ public class FileStoryHandler {
       }
     } catch (IOException e) {
       logger.log(Level.SEVERE, "Error writing story to file.", e);
+      throw new IOException("Error writing story to file: " + e.getMessage());
     }
   }
 
@@ -85,10 +86,10 @@ public class FileStoryHandler {
    * @throws IllegalArgumentException if the pathOfFile is blank or does not end with ".paths".
    */
   public static Story readStoryFromFile(String pathOfFile)
-          throws NullPointerException, IllegalArgumentException {
+          throws NullPointerException, IllegalArgumentException, IOException {
     validatePathOfFile(pathOfFile);
 
-    Story story = null;
+    Story story;
     try (BufferedReader reader = new BufferedReader(new FileReader(pathOfFile.toLowerCase().trim()))) {
       String storyTitle = reader.readLine();
       List<Passage> passages = readPassagesFromFile(reader);
@@ -99,6 +100,7 @@ public class FileStoryHandler {
       }
     } catch (IOException e) {
       logger.log(Level.SEVERE, "Error reading story from file.", e);
+      throw new IOException("Error reading story to file: " + e.getMessage());
     }
     return story;
   }
@@ -177,7 +179,7 @@ public class FileStoryHandler {
           case "health" -> action = new HealthAction(Integer.parseInt(actionValue));
           case "inventory" -> action = new InventoryAction(actionValue);
           case "score" -> action = new ScoreAction(Integer.parseInt(actionValue));
-          default -> throw new IllegalArgumentException("Action does not exist.");
+          default -> throw new IllegalArgumentException("Invalid action type: " + actionDescription);
         }
         link.addAction(action);
       }
@@ -188,8 +190,8 @@ public class FileStoryHandler {
    * Helper method to validate the pathOfFile parameter.
    *
    * @param pathOfFile the path of the file to read/write to.
-   * @throws NullPointerException if the pathOfFile is null.
-   * @throws IllegalArgumentException if the pathOfFile is blank or does not end with ".paths".
+   * @throws NullPointerException if pathOfFile is null.
+   * @throws IllegalArgumentException if pathOfFile is blank or does not end with FILE_EXTENSION.
    */
   private static void validatePathOfFile(String pathOfFile)
           throws NullPointerException, IllegalArgumentException {
