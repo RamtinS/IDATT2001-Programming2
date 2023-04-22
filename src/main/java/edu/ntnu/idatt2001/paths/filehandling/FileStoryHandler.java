@@ -1,5 +1,8 @@
-package edu.ntnu.idatt2001.paths;
+package edu.ntnu.idatt2001.paths.filehandling;
 
+import edu.ntnu.idatt2001.paths.Link;
+import edu.ntnu.idatt2001.paths.Passage;
+import edu.ntnu.idatt2001.paths.Story;
 import edu.ntnu.idatt2001.paths.actions.Action;
 import edu.ntnu.idatt2001.paths.actions.GoldAction;
 import edu.ntnu.idatt2001.paths.actions.HealthAction;
@@ -21,7 +24,7 @@ import java.util.logging.Logger;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since April 02, 2023.
+ * @since April 23, 2023.
  */
 public class FileStoryHandler {
   private static final Logger logger = Logger.getLogger(FileStoryHandler.class.getName());

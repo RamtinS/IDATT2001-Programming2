@@ -5,6 +5,7 @@ import edu.ntnu.idatt2001.paths.actions.GoldAction;
 import edu.ntnu.idatt2001.paths.actions.HealthAction;
 import edu.ntnu.idatt2001.paths.actions.InventoryAction;
 import edu.ntnu.idatt2001.paths.actions.ScoreAction;
+import edu.ntnu.idatt2001.paths.filehandling.FileStoryHandler;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since April 21, 2023.
+ * @since April 23, 2023.
  */
 class FileStoryHandlerTest {
   private static final Logger logger = Logger.getLogger(FileStoryHandler.class.getName());
