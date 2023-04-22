@@ -36,7 +36,8 @@ public class FileStoryHandler {
    * @param story the story object to be written.
    * @param pathOfFile the path of the file to write the story to.
    * @throws NullPointerException if the story or pathOfFile is null.
-   * @throws IllegalArgumentException if the pathOfFile is blank or does not end with ".paths".
+   * @throws IllegalArgumentException if pathOfFile is blank or does not end with FILE_EXTENSION.
+   * @throws IOException if there is an error writing story to file.
    */
   public static void writeStoryToFile(Story story, String pathOfFile)
           throws NullPointerException, IllegalArgumentException, IOException {
@@ -86,7 +87,8 @@ public class FileStoryHandler {
    * @param pathOfFile the path of the file to read the story from.
    * @return the story object read from the file.
    * @throws NullPointerException if the pathOfFile is null.
-   * @throws IllegalArgumentException if the pathOfFile is blank or does not end with ".paths".
+   * @throws IllegalArgumentException if pathOfFile is blank or does not end with FILE_EXTENSION.
+   * @throws IOException if there is an error reading story from file.
    */
   public static Story readStoryFromFile(String pathOfFile)
           throws NullPointerException, IllegalArgumentException, IOException {
