@@ -44,7 +44,7 @@ public class FileStoryHandler {
     if (story == null) {
       throw new NullPointerException("The story cannot be null.");
     }
-    validatePathOfFile(pathOfFile);
+    FilePathValidator.validatePathOfFile(pathOfFile, FILE_EXTENSION);
 
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathOfFile.toLowerCase().trim()))) {
       writer.write(story.getTitle() + "\n\n");
@@ -92,7 +92,7 @@ public class FileStoryHandler {
    */
   public static Story readStoryFromFile(String pathOfFile)
           throws NullPointerException, IllegalArgumentException, IOException {
-    validatePathOfFile(pathOfFile);
+    FilePathValidator.validatePathOfFile(pathOfFile, FILE_EXTENSION);
 
     Story story;
     try (BufferedReader reader = new BufferedReader(new FileReader(pathOfFile.toLowerCase().trim()))) {
@@ -188,26 +188,6 @@ public class FileStoryHandler {
         }
         link.addAction(action);
       }
-    }
-  }
-
-  /**
-   * Helper method to validate the pathOfFile parameter.
-   *
-   * @param pathOfFile the path of the file to read/write to.
-   * @throws NullPointerException if pathOfFile is null.
-   * @throws IllegalArgumentException if pathOfFile is blank or does not end with FILE_EXTENSION.
-   */
-  private static void validatePathOfFile(String pathOfFile)
-          throws NullPointerException, IllegalArgumentException {
-    if (pathOfFile == null) {
-      throw new NullPointerException("The path of the file cannot be null.");
-    }
-    if (pathOfFile.isBlank()) {
-      throw new IllegalArgumentException("The path to the file cannot be blank.");
-    }
-    if (!pathOfFile.toLowerCase().trim().endsWith(FILE_EXTENSION)) {
-      throw new IllegalArgumentException("The path to the file must end with " + FILE_EXTENSION);
     }
   }
 }
