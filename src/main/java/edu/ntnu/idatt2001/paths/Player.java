@@ -2,6 +2,7 @@ package edu.ntnu.idatt2001.paths;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The class represents a player in the game. It contains methods to manage
@@ -9,7 +10,7 @@ import java.util.List;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since March 29, 2023.
+ * @since April 23, 2023.
  */
 public class Player {
   private final String name;
@@ -182,8 +183,8 @@ public class Player {
   }
 
   /**
-   * Builder class for the Player class. The class provides a way
-   * to construct a Player object with optional parameters.
+   * Builder class for the Player class. The class constructs a
+   * Player object with optional parameters.
    */
   public static class PlayerBuilder {
     private final String name;
@@ -270,5 +271,37 @@ public class Player {
         throw new IllegalArgumentException("Gold cannot be a negative number");
       }
     }
+  }
+
+  /**
+   * The method checks for equality between HealthAction objects.
+   *
+   * @param o the object to which it is being compared.
+   * @return a boolean value which indicate whether they are equal or not.
+   */
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Player player = (Player) o;
+    return getHealth() == player.getHealth()
+            && getScore() == player.getScore()
+            && getGold() == player.getGold()
+            && Objects.equals(getName(), player.getName())
+            && Objects.equals(getInventory(), player.getInventory());
+  }
+
+  /**
+   * The method generates a hash value for the object.
+   *
+   * @return hash value for the object.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(getName(), getHealth(), getScore(), getGold(), getInventory());
   }
 }
