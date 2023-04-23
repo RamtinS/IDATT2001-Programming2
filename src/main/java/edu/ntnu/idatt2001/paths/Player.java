@@ -274,7 +274,7 @@ public class Player {
   }
 
   /**
-   * The method checks for equality between HealthAction objects.
+   * The method checks for equality between Player objects.
    *
    * @param o the object to which it is being compared.
    * @return a boolean value which indicate whether they are equal or not.
