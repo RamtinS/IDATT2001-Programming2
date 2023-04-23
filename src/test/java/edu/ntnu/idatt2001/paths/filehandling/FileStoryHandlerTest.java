@@ -1,11 +1,13 @@
-package edu.ntnu.idatt2001.paths;
+package edu.ntnu.idatt2001.paths.filehandling;
 
+import edu.ntnu.idatt2001.paths.Link;
+import edu.ntnu.idatt2001.paths.Passage;
+import edu.ntnu.idatt2001.paths.Story;
 import edu.ntnu.idatt2001.paths.actions.Action;
 import edu.ntnu.idatt2001.paths.actions.GoldAction;
 import edu.ntnu.idatt2001.paths.actions.HealthAction;
 import edu.ntnu.idatt2001.paths.actions.InventoryAction;
 import edu.ntnu.idatt2001.paths.actions.ScoreAction;
-import edu.ntnu.idatt2001.paths.filehandling.FileStoryHandler;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -155,7 +157,7 @@ class FileStoryHandlerTest {
   @DisplayName("Negative tests file handling")
   class negativeTestsFileHandling {
     String invalidPathToFileNull = null;
-    String invalidPathToFileFormat = "src/main/resources/stories/story.txt";
+    String invalidPathToFileExtension = "src/test/resources/stories/story.txt";
     String invalidPathToFileBlank = "";
 
     @Test
@@ -172,7 +174,7 @@ class FileStoryHandlerTest {
     @DisplayName("Should not write story to file throws IllegalArgumentException")
     void shouldNotWriteStoryToFileThrowsIllegalArgumentException() {
       assertThrows(IllegalArgumentException.class,
-              () -> FileStoryHandler.writeStoryToFile(story, invalidPathToFileFormat));
+              () -> FileStoryHandler.writeStoryToFile(story, invalidPathToFileExtension));
       assertThrows(IllegalArgumentException.class,
               () -> FileStoryHandler.writeStoryToFile(story, invalidPathToFileBlank));
     }
@@ -188,7 +190,7 @@ class FileStoryHandlerTest {
     @DisplayName("Should not read story from file throws IllegalArgumentException")
     void shouldNotReadStoryFromFileThrowsIllegalArgumentException() {
       assertThrows(IllegalArgumentException.class,
-              () -> FileStoryHandler.readStoryFromFile(invalidPathToFileFormat));
+              () -> FileStoryHandler.readStoryFromFile(invalidPathToFileExtension));
       assertThrows(IllegalArgumentException.class,
               () -> FileStoryHandler.readStoryFromFile(invalidPathToFileBlank));
     }
