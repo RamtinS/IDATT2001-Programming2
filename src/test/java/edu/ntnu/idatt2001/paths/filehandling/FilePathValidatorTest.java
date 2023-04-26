@@ -19,15 +19,22 @@ class FilePathValidatorTest {
     String validPathToFile = "src/test/resources/stories/story.paths";
     String FILE_EXTENSION = ".paths";
     String invalidPathToFileNull = null;
+    String invalidFileExtension = null;
     String invalidPathToFileExtension = "src/test/resources/stories/story.txt";
     String invalidPathToFileBlank = "";
 
     assertDoesNotThrow(() -> FilePathValidator.validatePathOfFile(validPathToFile, FILE_EXTENSION));
+
     assertThrows(NullPointerException.class,
             () -> FilePathValidator.validatePathOfFile(invalidPathToFileNull, FILE_EXTENSION));
+
     assertThrows(IllegalArgumentException.class,
             () -> FilePathValidator.validatePathOfFile(invalidPathToFileExtension, FILE_EXTENSION));
+
     assertThrows(IllegalArgumentException.class,
             () -> FilePathValidator.validatePathOfFile(invalidPathToFileBlank, FILE_EXTENSION));
+
+    assertThrows(NullPointerException.class,
+            () -> FilePathValidator.validatePathOfFile(validPathToFile, invalidFileExtension));
   }
 }
