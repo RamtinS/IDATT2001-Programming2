@@ -4,14 +4,14 @@ import edu.ntnu.idatt2001.paths.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * The class tests the ScoreGoal class.
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since March 29, 2023.
  */
 class ScoreGoalTest {
 
@@ -48,14 +48,18 @@ class ScoreGoalTest {
   @Test
   @DisplayName("Goal is fulfilled")
   void goalIsFulfilled() {
-    Player validPlayer = new Player("Test name", 100, 60, 50);
+    Player validPlayer = new Player.PlayerBuilder("Test name")
+            .score(60)
+            .build();
     assertTrue(scoreGoal.isFulfilled(validPlayer));
   }
 
   @Test
   @DisplayName("Goal is not fulfilled")
   void goalIsNotFulfilled() {
-    Player invalidPlayer = new Player("Test name", 100, 40, 50);
+    Player invalidPlayer = new Player.PlayerBuilder("Test name")
+            .score(40)
+            .build();
     assertFalse(scoreGoal.isFulfilled(invalidPlayer));
   }
 

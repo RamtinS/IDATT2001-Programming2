@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since March 24, 2023.
+ * @since March 29, 2023.
  */
 class HealthActionTest {
 
@@ -22,7 +22,9 @@ class HealthActionTest {
   @BeforeEach
   void setUp() {
     healthAction = new HealthAction(10);
-    player = new Player("Name", 20, 30, 40);
+    player = new Player.PlayerBuilder("Name")
+            .health(20)
+            .build();
   }
 
   @Test

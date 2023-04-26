@@ -12,21 +12,22 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * The class tests the InventoryGoal class.
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since March 29, 2023.
  */
 class InventoryGoalTest {
   private InventoryGoal inventoryGoal;
-  private List<String> mandatoryItems;
   private Player player;
 
   @BeforeEach
   void setUp() {
-    mandatoryItems = new ArrayList<>();
+    List<String> mandatoryItems = new ArrayList<>();
     mandatoryItems.add("Sword");
     mandatoryItems.add("Hammer");
     inventoryGoal = new InventoryGoal(mandatoryItems);
-    player = new Player("Test name", 100, 100, 50);
+    player = new Player.PlayerBuilder("Test name")
+            .build();
   }
 
   @Test

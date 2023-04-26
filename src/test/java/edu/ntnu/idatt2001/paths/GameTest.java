@@ -15,8 +15,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * The class tests the Game class.
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since March 29, 2023.
  */
 class GameTest {
   private Player player;
@@ -26,7 +27,11 @@ class GameTest {
 
   @BeforeEach
   void setUp() {
-    player = new Player("Test name", 100, 100, 50);
+    player = new Player.PlayerBuilder("Test name")
+            .health(100)
+            .score(100)
+            .gold(50)
+            .build();
     story = new Story("Test title", new Passage("Test title", "Test content"));
     goals = new ArrayList<>();
     game = new Game(player, story, goals);

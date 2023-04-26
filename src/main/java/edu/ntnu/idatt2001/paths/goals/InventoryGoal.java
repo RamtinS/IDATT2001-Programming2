@@ -6,10 +6,13 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * The class represents an expected inventory of items.
+ * The class represents an inventory goal for the player.
+ * To achieve the goal, the player must obtain all the
+ * mandatoryItems.
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since April 23, 2023.
  */
 public class InventoryGoal implements Goal {
   private final List<String> mandatoryItems;
@@ -47,5 +50,33 @@ public class InventoryGoal implements Goal {
       throw new NullPointerException("Player cannot be null");
     }
     return player.getInventory().containsAll(getMandatoryItems());
+  }
+
+  /**
+   * The method checks for equality between InventoryGoal objects.
+   *
+   * @param o the object to which it is being compared.
+   * @return a boolean value which indicate whether they are equal or not.
+   */
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    InventoryGoal that = (InventoryGoal) o;
+    return Objects.equals(getMandatoryItems(), that.getMandatoryItems());
+  }
+
+  /**
+   * The method generates a hash value for the object.
+   *
+   * @return hash value for the object.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(getMandatoryItems());
   }
 }

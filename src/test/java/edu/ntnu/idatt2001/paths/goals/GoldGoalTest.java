@@ -10,8 +10,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * The class tests the GoldGoal class.
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since March 29, 2023.
  */
 class GoldGoalTest {
   private GoldGoal goldGoal;
@@ -47,14 +48,18 @@ class GoldGoalTest {
   @Test
   @DisplayName("Goal is fulfilled")
   void goalIsFulfilled() {
-    Player validPlayer = new Player("Test name", 100, 100, 15);
+    Player validPlayer  = new Player.PlayerBuilder("Test name")
+            .gold(50)
+            .build();
     assertTrue(goldGoal.isFulfilled(validPlayer));
   }
 
   @Test
   @DisplayName("Goal is not fulfilled")
   void goalIsNotFulfilled() {
-    Player invalidPlayer = new Player("Test name", 100, 100, 5);
+    Player invalidPlayer  = new Player.PlayerBuilder("Test name")
+            .gold(5)
+            .build();
     assertFalse(goldGoal.isFulfilled(invalidPlayer));
   }
 

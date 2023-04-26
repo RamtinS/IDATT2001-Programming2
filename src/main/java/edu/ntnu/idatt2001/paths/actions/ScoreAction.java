@@ -4,11 +4,12 @@ import edu.ntnu.idatt2001.paths.Player;
 import java.util.Objects;
 
 /**
- * The class represents an action where a player scores points.
+ * The class represents an action where a player's score is
+ * changed by a certain amount.
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since March 28, 2023.
+ * @since April 23, 2023.
  */
 public class ScoreAction implements Action {
   private final int points;

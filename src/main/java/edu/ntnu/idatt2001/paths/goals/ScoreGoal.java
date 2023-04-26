@@ -1,12 +1,16 @@
 package edu.ntnu.idatt2001.paths.goals;
 
 import edu.ntnu.idatt2001.paths.Player;
+import java.util.Objects;
 
 /**
- * The class represents an expected minimum score.
+ * The class represents a score goal for the player. To
+ * achieve the goal, the player must obtain a minimum
+ * amount of points.
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since April 23, 2023.
  */
 public class ScoreGoal implements Goal {
   private final int minimumPoints;
@@ -46,5 +50,33 @@ public class ScoreGoal implements Goal {
       throw new NullPointerException("Player cannot be null");
     }
     return player.getScore() > getMinimumPoints();
+  }
+
+  /**
+   * The method checks for equality between ScoreGoal objects.
+   *
+   * @param o the object to which it is being compared.
+   * @return a boolean value which indicate whether they are equal or not.
+   */
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    ScoreGoal scoreGoal = (ScoreGoal) o;
+    return getMinimumPoints() == scoreGoal.getMinimumPoints();
+  }
+
+  /**
+   * The method generates a hash value for the object.
+   *
+   * @return hash value for the object.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(getMinimumPoints());
   }
 }

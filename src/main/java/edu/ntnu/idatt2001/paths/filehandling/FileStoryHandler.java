@@ -1,5 +1,8 @@
-package edu.ntnu.idatt2001.paths;
+package edu.ntnu.idatt2001.paths.filehandling;
 
+import edu.ntnu.idatt2001.paths.Link;
+import edu.ntnu.idatt2001.paths.Passage;
+import edu.ntnu.idatt2001.paths.Story;
 import edu.ntnu.idatt2001.paths.actions.Action;
 import edu.ntnu.idatt2001.paths.actions.GoldAction;
 import edu.ntnu.idatt2001.paths.actions.HealthAction;
@@ -12,6 +15,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The FileStoryHandler class provides methods to write and read a story
@@ -19,9 +24,11 @@ import java.util.List;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since March 24, 2023.
+ * @since April 23, 2023.
  */
 public class FileStoryHandler {
+  private static final Logger logger = Logger.getLogger(FileStoryHandler.class.getName());
+  private static final String FILE_EXTENSION = ".paths";
 
   /**
    * The method writes a story object to a text file.
@@ -29,40 +36,49 @@ public class FileStoryHandler {
    * @param story the story object to be written.
    * @param pathOfFile the path of the file to write the story to.
    * @throws NullPointerException if the story or pathOfFile is null.
-   * @throws IllegalArgumentException if the pathOfFile is blank or does not end with ".paths".
+   * @throws IllegalArgumentException if pathOfFile is blank or does not end with FILE_EXTENSION.
+   * @throws IOException if there is an error writing story to file.
    */
   public static void writeStoryToFile(Story story, String pathOfFile)
-          throws NullPointerException, IllegalArgumentException {
+          throws NullPointerException, IllegalArgumentException, IOException {
     if (story == null) {
       throw new NullPointerException("The story cannot be null.");
     }
-    validatePathOfFile(pathOfFile);
+    FilePathValidator.validatePathOfFile(pathOfFile, FILE_EXTENSION);
 
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathOfFile.toLowerCase().trim()))) {
       writer.write(story.getTitle() + "\n\n");
       writer.write("::" + story.getOpeningPassage().getTitle() + "\n");
       writer.write(story.getOpeningPassage().getContent() + "\n");
       for (Link link : story.getOpeningPassage().getLinks()) {
-        writer.write("[" + link.getText() + "]" + "(" + link.getReference() + ")");
-        for (Action action : link.getActions()) {
-          writer.write(action.toString());
-        }
-        writer.write("\n");
+        writeLinkWithActions(writer, link);
       }
       for (Passage passage : story.getPassages()) {
         writer.write("\n::" + passage.getTitle() + "\n");
         writer.write(passage.getContent() + "\n");
         for (Link link : passage.getLinks()) {
-          writer.write("[" + link.getText() + "]" + "(" + link.getReference() + ")");
-          for (Action action : link.getActions()) {
-            writer.write(action.toString());
-          }
-          writer.write("\n");
+          writeLinkWithActions(writer, link);
         }
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.log(Level.SEVERE, "Error writing story to file.", e);
+      throw new IOException("Error writing story to file: " + e.getMessage());
     }
+  }
+
+  /**
+   * Helper method to write the given Link object with its associated actions.
+   *
+   * @param writer the BufferedWriter object to write to.
+   * @param link the Link object to write.
+   * @throws IOException if there is an error writing to the BufferedWriter.
+   */
+  private static void writeLinkWithActions(BufferedWriter writer, Link link) throws IOException {
+    writer.write("[" + link.getText() + "]" + "(" + link.getReference() + ")");
+    for (Action action : link.getActions()) {
+      writer.write(action.toString());
+    }
+    writer.write("\n");
   }
 
   /**
@@ -71,14 +87,15 @@ public class FileStoryHandler {
    * @param pathOfFile the path of the file to read the story from.
    * @return the story object read from the file.
    * @throws NullPointerException if the pathOfFile is null.
-   * @throws IllegalArgumentException if the pathOfFile is blank or does not end with ".paths".
+   * @throws IllegalArgumentException if pathOfFile is blank or does not end with FILE_EXTENSION.
+   * @throws IOException if there is an error reading story from file.
    */
   public static Story readStoryFromFile(String pathOfFile)
-          throws NullPointerException, IllegalArgumentException {
-    validatePathOfFile(pathOfFile);
+          throws NullPointerException, IllegalArgumentException, IOException {
+    FilePathValidator.validatePathOfFile(pathOfFile, FILE_EXTENSION);
 
-    Story story = null;
-    try (BufferedReader reader = new BufferedReader(new FileReader(pathOfFile))) {
+    Story story;
+    try (BufferedReader reader = new BufferedReader(new FileReader(pathOfFile.toLowerCase().trim()))) {
       String storyTitle = reader.readLine();
       List<Passage> passages = readPassagesFromFile(reader);
       Passage openingPassage = passages.get(0);
@@ -87,7 +104,8 @@ public class FileStoryHandler {
         story.addPassage(passages.get(i));
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.log(Level.SEVERE, "Error reading story from file.", e);
+      throw new IOException("Error reading story to file: " + e.getMessage());
     }
     return story;
   }
@@ -166,30 +184,10 @@ public class FileStoryHandler {
           case "health" -> action = new HealthAction(Integer.parseInt(actionValue));
           case "inventory" -> action = new InventoryAction(actionValue);
           case "score" -> action = new ScoreAction(Integer.parseInt(actionValue));
-          default -> throw new IllegalArgumentException("Action does not exist.");
+          default -> throw new IllegalArgumentException("Invalid action type: " + actionDescription);
         }
         link.addAction(action);
       }
-    }
-  }
-
-  /**
-   * Helper method to validate the pathOfFile parameter.
-   *
-   * @param pathOfFile the path of the file to read/write to.
-   * @throws NullPointerException if the pathOfFile is null.
-   * @throws IllegalArgumentException if the pathOfFile is blank or does not end with ".paths".
-   */
-  private static void validatePathOfFile(String pathOfFile)
-          throws NullPointerException, IllegalArgumentException {
-    if (pathOfFile == null) {
-      throw new NullPointerException("The path of the file cannot be null.");
-    }
-    if (pathOfFile.isBlank()) {
-      throw new IllegalArgumentException("The path to the file cannot be blank.");
-    }
-    if (!pathOfFile.endsWith(".paths")) {
-      throw new IllegalArgumentException("The path to the file must end with .paths");
     }
   }
 }
