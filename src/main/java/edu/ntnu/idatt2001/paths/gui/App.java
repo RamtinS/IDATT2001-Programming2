@@ -66,7 +66,7 @@ public class App extends Application {
    * Creates an example game and sets it to the current game.
    */
   private void createExampleGame() {
-    Player player = new Player("Test name", 100, 100, 50);
+    Player player = new Player.PlayerBuilder("Test name").health(100).score(100).gold(50).build();
     Passage openingPassage = new Passage("Image1", "geir dreper deg");
     Link firstLink = new Link("ikke trykk her", "Image3");
     firstLink.addAction(new HealthAction(-10));
@@ -167,7 +167,7 @@ public class App extends Application {
       @Override
       public void onCreateClicked(List<Goal> chosenGoals, String playerName,
                                   Difficulty chosenDifficulty) {
-        Player player = new Player(playerName, chosenDifficulty.getHealth(), 0, 0);
+        Player player = new Player.PlayerBuilder(playerName).health(chosenDifficulty.getHealth()).build();
         //TODO Story should be read here
 
         Passage openingPassage = new Passage("Image1", "Test");
