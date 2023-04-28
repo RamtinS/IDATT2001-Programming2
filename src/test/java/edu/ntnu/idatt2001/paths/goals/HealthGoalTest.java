@@ -10,8 +10,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * The class tests the HealthGoal class.
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since March 29, 2023.
  */
 class HealthGoalTest {
   private HealthGoal healthGoal;
@@ -47,14 +48,18 @@ class HealthGoalTest {
   @Test
   @DisplayName("Goal is fulfilled")
   void goalIsFulfilled() {
-    Player validPlayer = new Player("Test name", 100, 100, 50);
+    Player validPlayer  = new Player.PlayerBuilder("Test name")
+            .health(100)
+            .build();
     assertTrue(healthGoal.isFulfilled(validPlayer));
   }
 
   @Test
   @DisplayName("Goal is not fulfilled")
   void goalIsNotFulfilled() {
-    Player invalidPlayer = new Player("Test name", 5, 100, 50);
+    Player invalidPlayer  = new Player.PlayerBuilder("Test name")
+            .health(5)
+            .build();
     assertFalse(healthGoal.isFulfilled(invalidPlayer));
   }
 

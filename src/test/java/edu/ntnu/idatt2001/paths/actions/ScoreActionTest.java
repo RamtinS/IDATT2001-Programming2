@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since March 24, 2023.
+ * @since March 29, 2023.
  */
 class ScoreActionTest {
   private ScoreAction scoreAction;
@@ -21,7 +21,9 @@ class ScoreActionTest {
   @BeforeEach
   void setUp() {
     scoreAction = new ScoreAction(10);
-    player = new Player("Name", 10, 20, 30);
+    player = new Player.PlayerBuilder("Name")
+            .score(20)
+            .build();
   }
 
   @Test
@@ -42,10 +44,20 @@ class ScoreActionTest {
   }
 
   @Test
-  @DisplayName("Should execute and add score")
-  void shouldExecuteAndAddScore() {
+  @DisplayName("Should execute increase score")
+  void shouldExecuteIncreaseScore() {
     scoreAction.execute(player);
     int expectedScore = 30;
+    int actualScore = player.getScore();
+    assertEquals(expectedScore, actualScore);
+  }
+
+  @Test
+  @DisplayName("Should execute decrease score")
+  void shouldExecuteDecreaseScore() {
+    ScoreAction negativeScoreAction = new ScoreAction(-10);
+    negativeScoreAction.execute(player);
+    int expectedScore = 10;
     int actualScore = player.getScore();
     assertEquals(expectedScore, actualScore);
   }

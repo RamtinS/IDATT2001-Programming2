@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since March 24, 2023.
+ * @since March 29, 2023.
  */
 class InventoryActionTest {
   private InventoryAction inventoryAction;
@@ -21,7 +21,8 @@ class InventoryActionTest {
   @BeforeEach
   void setUp() {
     inventoryAction = new InventoryAction("Test Item");
-    player = new Player("Name", 10, 20, 30);
+    player = new Player.PlayerBuilder("Name")
+            .build();
   }
 
   @Test

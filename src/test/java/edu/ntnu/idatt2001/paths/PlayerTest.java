@@ -4,10 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -15,28 +13,38 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since March 28, 2023.
+ * @since March 29, 2023.
  */
 class PlayerTest {
   private Player player;
 
   @BeforeEach
   void setUp() {
-    player = new Player("Name", 10, 2, 3);
+    player = new Player.PlayerBuilder("Name")
+            .health(10)
+            .score(2)
+            .gold(3)
+            .build();
   }
 
   @Nested
-  @DisplayName("Constructor tests")
+  @DisplayName("Builder constructor tests")
   class ConstructorTests {
     private final String validName = "Test name";
-    private final  int validHealth = 1;
-    private final  int validGold = 2;
-    private final int validScore = 3;
 
     @Test
-    @DisplayName("Test constructor with valid input")
-    void testConstructorWithValidInput(){
-      Player player = new Player(validName, validHealth, validScore, validGold);
+    @DisplayName("Test builder constructor valid input")
+    void testBuilderConstructorValidInput() {
+      int validHealth = 1;
+      int validScore = 3;
+      int validGold = 2;
+
+      Player player = new Player.PlayerBuilder(validName)
+              .health(validHealth)
+              .score(validScore)
+              .gold(validGold)
+              .build();
+
       assertEquals(validName, player.getName());
       assertEquals(validHealth, player.getHealth());
       assertEquals(validGold, player.getGold());
@@ -44,23 +52,35 @@ class PlayerTest {
     }
 
     @Test
-    @DisplayName("Test constructor with invalid input throws NullPointerException")
-    void testConstructorWithInvalidInputThrowsNullPointerException(){
+    @DisplayName("Test builder constructor invalid input throws NullPointerException")
+    void testBuilderConstructorInvalidInputThrowsNullPointerException(){
       String invalidName = null;
-      assertThrows(NullPointerException.class, () -> new Player(invalidName, validHealth, validScore, validGold));
+      assertThrows(NullPointerException.class, () -> new Player.PlayerBuilder(invalidName).build());
     }
 
     @Test
-    @DisplayName("Test constructor with invalid input throws IllegalArgumentException")
-    void testConstructorWithInvalidInputThrowsIllegalArgumentException(){
+    @DisplayName("Test builder constructor with invalid input throws IllegalArgumentException")
+    void testConstructorWithInvalidInputThrowsIllegalArgumentException() {
       String invalidName = "";
       int invalidHealth = -1;
-      int invalidGold = -1;
+      int invalidHealthOutOfRange = 110;
       int invalidScore = -1;
-      assertThrows(IllegalArgumentException.class, () -> new Player(invalidName, validHealth, validGold, validScore));
-      assertThrows(IllegalArgumentException.class, () -> new Player(validName, invalidHealth, validGold, validScore));
-      assertThrows(IllegalArgumentException.class, () -> new Player(validName, validHealth, invalidGold, validScore));
-      assertThrows(IllegalArgumentException.class, () -> new Player(validName, validHealth, validGold, invalidScore));
+      int invalidGold = -1;
+
+      assertThrows(IllegalArgumentException.class, () -> new Player.PlayerBuilder(invalidName)
+              .build());
+      assertThrows(IllegalArgumentException.class, () -> new Player.PlayerBuilder(validName)
+              .health(invalidHealth)
+              .build());
+      assertThrows(IllegalArgumentException.class, () -> new Player.PlayerBuilder(validName)
+              .health(invalidHealthOutOfRange)
+              .build());
+      assertThrows(IllegalArgumentException.class, () -> new Player.PlayerBuilder(validName)
+              .score(invalidScore)
+              .build());
+      assertThrows(IllegalArgumentException.class, () -> new Player.PlayerBuilder(validName)
+              .gold(invalidGold)
+              .build());
     }
   }
 
@@ -118,6 +138,15 @@ class PlayerTest {
     void shouldIncreaseHealth() {
       player.increaseHealth(5);
       int expectedHealth = 15;
+      int actualHealth = player.getHealth();
+      assertEquals(expectedHealth, actualHealth);
+    }
+
+    @Test
+    @DisplayName("Should increase health to only one hundred")
+    void shouldIncreaseHealthToOnlyOneHundred() {
+      player.increaseHealth(500);
+      int expectedHealth = 100;
       int actualHealth = player.getHealth();
       assertEquals(expectedHealth, actualHealth);
     }

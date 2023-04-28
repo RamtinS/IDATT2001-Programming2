@@ -135,8 +135,9 @@ class PassageTest {
       String expected = """
             Title: Passage title
             Content: Passage content
-            Links: [Text: Link text.
-            Reference: Link reference.]""";
+            Links: [Text: Link text
+            Reference: Link reference
+            Actions: []]""";
       String actual = passage.toString();
       assertEquals(expected, actual);
     }

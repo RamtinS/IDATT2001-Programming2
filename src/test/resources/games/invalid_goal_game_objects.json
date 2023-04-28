@@ -1,0 +1,186 @@
+[
+  {
+    "player": {
+      "name": "Player1",
+      "health": 50,
+      "score": 100,
+      "gold": 50,
+      "inventory": []
+    },
+    "story title": "Haunted House",
+    "story opening passage": {
+      "title": "Beginnings",
+      "content": "There is a door in front of you.",
+      "links": [
+        {
+          "text": "Try to open the door",
+          "reference": "Another room",
+          "actions": [
+            {
+              "item": "Sword"
+            }
+          ]
+        }
+      ]
+    },
+    "story passages": [
+      {
+        "title": "Another room",
+        "content": "The door opens to another room. You see a desk with a large, dusty book.",
+        "links": [
+          {
+            "text": "Open the book",
+            "reference": "The book of spells",
+            "actions": [
+              {
+                "points": 10
+              },
+              {
+                "health": 10
+              }
+            ]
+          },
+          {
+            "text": "Go back",
+            "reference": "Beginnings",
+            "actions": [
+              {
+                "points": -10
+              },
+              {
+                "health": -10
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "The book of spells",
+        "content": "You open the book and find the spell of teleportation.",
+        "links": [
+          {
+            "text": "Cast the spell",
+            "reference": "Forest",
+            "actions": [
+              {
+                "gold": 10
+              }
+            ]
+          },
+          {
+            "text": "Go back",
+            "reference": "Another room",
+            "actions": [
+              {
+                "gold": -10
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "goals": [
+      {
+        "invalid goal": 10
+      },
+      {
+        "minimumHealth": 70
+      },
+      {
+        "minimumGold": 100
+      }
+    ]
+  },
+  {
+    "player": {
+      "name": "Player2",
+      "health": 60,
+      "score": 100,
+      "gold": 40,
+      "inventory": []
+    },
+    "story title": "Haunted House",
+    "story opening passage": {
+      "title": "Beginnings",
+      "content": "There is a door in front of you.",
+      "links": [
+        {
+          "text": "Try to open the door",
+          "reference": "Another room",
+          "actions": [
+            {
+              "item": "Sword"
+            }
+          ]
+        }
+      ]
+    },
+    "story passages": [
+      {
+        "title": "Another room",
+        "content": "The door opens to another room. You see a desk with a large, dusty book.",
+        "links": [
+          {
+            "text": "Open the book",
+            "reference": "The book of spells",
+            "actions": [
+              {
+                "points": 10
+              },
+              {
+                "health": 10
+              }
+            ]
+          },
+          {
+            "text": "Go back",
+            "reference": "Beginnings",
+            "actions": [
+              {
+                "points": -10
+              },
+              {
+                "health": -10
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "The book of spells",
+        "content": "You open the book and find the spell of teleportation.",
+        "links": [
+          {
+            "text": "Cast the spell",
+            "reference": "Forest",
+            "actions": [
+              {
+                "gold": 10
+              }
+            ]
+          },
+          {
+            "text": "Go back",
+            "reference": "Another room",
+            "actions": [
+              {
+                "gold": -10
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "goals": [
+      {
+        "minimumPoints": 100
+      },
+      {
+        "minimumHealth": 50
+      },
+      {
+        "minimumGold": 10
+      }
+    ]
+  }
+]

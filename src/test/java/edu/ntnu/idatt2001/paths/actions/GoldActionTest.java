@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since March 28, 2023.
+ * @since March 29, 2023.
  */
 class GoldActionTest {
   private GoldAction goldAction;
@@ -20,7 +20,9 @@ class GoldActionTest {
   @BeforeEach
   void setUp() {
     goldAction = new GoldAction(10);
-    player = new Player("Name", 20, 30, 40);
+    player = new Player.PlayerBuilder("Name")
+            .gold(40)
+            .build();
   }
 
   @Test

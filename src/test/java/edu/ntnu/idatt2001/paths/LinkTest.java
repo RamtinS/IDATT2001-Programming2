@@ -15,8 +15,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * The class tests the Link class.
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since March 28, 2023.
  */
 class LinkTest {
   private Link link;
@@ -117,8 +118,9 @@ class LinkTest {
     @DisplayName("Test toString")
     void testToString() {
       String expected = """
-            Text: Test text.
-            Reference: Test reference.""";
+            Text: Test text
+            Reference: Test reference
+            Actions: []""";
       String actual = link.toString();
       assertEquals(expected, actual);
     }

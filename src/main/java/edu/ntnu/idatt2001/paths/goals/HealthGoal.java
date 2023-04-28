@@ -1,12 +1,16 @@
 package edu.ntnu.idatt2001.paths.goals;
 
 import edu.ntnu.idatt2001.paths.Player;
+import java.util.Objects;
 
 /**
- * The class represents an expected minimum health value.
+ * The class represents a health goal for the player. To
+ * achieve the goal, the player must keep a minimum
+ * amount of health.
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since April 23, 2023.
  */
 public class HealthGoal implements Goal {
   private final int minimumHealth;
@@ -46,5 +50,33 @@ public class HealthGoal implements Goal {
       throw new NullPointerException("Player cannot be null");
     }
     return player.getHealth() > getMinimumHealth();
+  }
+
+  /**
+   * The method checks for equality between HealthGoal objects.
+   *
+   * @param o the object to which it is being compared.
+   * @return a boolean value which indicate whether they are equal or not.
+   */
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    HealthGoal that = (HealthGoal) o;
+    return getMinimumHealth() == that.getMinimumHealth();
+  }
+
+  /**
+   * The method generates a hash value for the object.
+   *
+   * @return hash value for the object.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(getMinimumHealth());
   }
 }

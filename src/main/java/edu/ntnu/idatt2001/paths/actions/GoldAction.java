@@ -4,12 +4,12 @@ import edu.ntnu.idatt2001.paths.Player;
 import java.util.Objects;
 
 /**
- * The class represents a gold that, which adds or removes gold from a player's
- * inventory depending on the value of the gold field.
+ * The class represents an action where a player's gold is
+ * changed by a certain amount.
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since March 28, 2023.
+ * @since April 23, 2023.
  */
 public class GoldAction implements Action {
   private final int gold;
