@@ -367,9 +367,9 @@ class FileGameHandlerTest {
       } catch (IOException e) {
         logger.log(Level.WARNING, "Error occurred while writing games to file: " + pathToFile, e);
       }
-      List<Game> gamesReadFromFile = null;
+      List<Game> gamesReadFromFile = new ArrayList<>();
       try {
-        gamesReadFromFile = FileGameHandler.readGamesFromFile(pathToFile);
+        gamesReadFromFile.addAll(FileGameHandler.readGamesFromFile(pathToFile));
       } catch (IOException e) {
         logger.log(Level.WARNING, "Error occurred while reading games to file: " + pathToFile, e);
       }
@@ -400,9 +400,9 @@ class FileGameHandlerTest {
       } catch (IOException e) {
         logger.log(Level.WARNING, "Error occurred while writing games to file: " + pathToFile, e);
       }
-      List<Game> gamesReadFromFile = null;
+      List<Game> gamesReadFromFile = new ArrayList<>();
       try {
-        gamesReadFromFile = FileGameHandler.readGamesFromFile(pathToFile);
+        gamesReadFromFile.addAll(FileGameHandler.readGamesFromFile(pathToFile));
       } catch (IOException e) {
         logger.log(Level.WARNING, "Error occurred while reading games to file: " + pathToFile, e);
       }
