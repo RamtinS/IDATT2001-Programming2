@@ -134,12 +134,12 @@ class FileStoryHandlerTest {
     @Test
     @DisplayName("Should read story from file")
     void shouldReadStoryFromFile() {
-
       try {
         FileStoryHandler.writeStoryToFile(story, pathToFile);
       } catch (IOException e) {
         logger.log(Level.WARNING, "Error occurred while writing story to file: " + pathToFile, e);
       }
+
       Story storyReadFromFile = null;
       try {
         storyReadFromFile = FileStoryHandler.readStoryFromFile(pathToFile);
@@ -150,6 +150,24 @@ class FileStoryHandlerTest {
       assertEquals(story.getTitle(), storyReadFromFile.getTitle());
       assertEquals(story.getOpeningPassage(), storyReadFromFile.getOpeningPassage());
       assertTrue(storyReadFromFile.getPassages().containsAll(story.getPassages()));
+    }
+
+    @Test
+    @DisplayName("Should read story from file with invalid actions")
+    void shouldReadStoryFromFileWithInvalidActions() {
+      String pathToFileWithInvalidActions = "src/test/resources/stories/invalid_actions_story.paths";
+
+      Story storyReadFromFile = null;
+      try {
+        storyReadFromFile = FileStoryHandler.readStoryFromFile(pathToFileWithInvalidActions);
+      } catch (IOException e) {
+        logger.log(Level.WARNING, "Error occurred while reading story from file: "
+                + pathToFileWithInvalidActions, e);
+      }
+
+      assertNotEquals(null, storyReadFromFile);
+      assertEquals(story.getTitle(), storyReadFromFile.getTitle());
+      assertEquals(3, FileStoryHandler.getInvalidActions().size());
     }
   }
 
