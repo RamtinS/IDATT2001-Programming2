@@ -19,16 +19,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The FileStoryHandler class provides methods to write and read a story
- * object to/from a text file.
+ * The FileStoryHandler class provides methods to write and read
+ * a story object to/from a text file.
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since April 23, 2023.
+ * @since April 29, 2023.
  */
 public class FileStoryHandler {
   private static final Logger logger = Logger.getLogger(FileStoryHandler.class.getName());
   private static final String FILE_EXTENSION = ".paths";
+  private static final List<String> invalidActions = new ArrayList<>();
 
   /**
    * The method writes a story object to a text file.
@@ -46,7 +47,8 @@ public class FileStoryHandler {
     }
     FilePathValidator.validatePathOfFile(pathOfFile, FILE_EXTENSION);
 
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathOfFile.toLowerCase().trim()))) {
+    try (BufferedWriter writer = new BufferedWriter(
+            new FileWriter(pathOfFile.toLowerCase().trim()))) {
       writer.write(story.getTitle() + "\n\n");
       writer.write("::" + story.getOpeningPassage().getTitle() + "\n");
       writer.write(story.getOpeningPassage().getContent() + "\n");
@@ -95,7 +97,8 @@ public class FileStoryHandler {
     FilePathValidator.validatePathOfFile(pathOfFile, FILE_EXTENSION);
 
     Story story;
-    try (BufferedReader reader = new BufferedReader(new FileReader(pathOfFile.toLowerCase().trim()))) {
+    try (BufferedReader reader = new BufferedReader(
+            new FileReader(pathOfFile.toLowerCase().trim()))) {
       String storyTitle = reader.readLine();
       List<Passage> passages = readPassagesFromFile(reader);
       Passage openingPassage = passages.get(0);
@@ -105,7 +108,7 @@ public class FileStoryHandler {
       }
     } catch (IOException e) {
       logger.log(Level.SEVERE, "Error reading story from file.", e);
-      throw new IOException("Error reading story to file: " + e.getMessage());
+      throw new IOException("Error reading story from file: " + e.getMessage());
     }
     return story;
   }
@@ -116,10 +119,9 @@ public class FileStoryHandler {
    * @param reader the BufferedReader object to read from.
    * @return a list of Passage objects read from the BufferedReader.
    * @throws IOException if there is an error reading from the BufferedReader.
-   * @throws IllegalArgumentException if the format of the file is incorrect.
    */
   private static List<Passage> readPassagesFromFile(BufferedReader reader)
-          throws IOException, IllegalArgumentException {
+          throws IOException {
     List<Passage> passages = new ArrayList<>();
     String line;
     while ((line = reader.readLine()) != null) {
@@ -153,9 +155,8 @@ public class FileStoryHandler {
    *
    * @param line the string to parse.
    * @return a link object created from the string.
-   * @throws IllegalArgumentException if the action does not exist.
    */
-  private static Link parseLink(String line) throws IllegalArgumentException {
+  private static Link parseLink(String line) {
     String[] linkParts = line.split("[])}]");
     String linkText = linkParts[0].substring(1).trim();
     String linkReference = linkParts[1].substring(1).trim();
@@ -169,25 +170,48 @@ public class FileStoryHandler {
    *
    * @param link the link object to add actions to.
    * @param linkParts array of strings representing the link and its actions.
-   * @throws IllegalStateException if the action does not exist.
    */
-  private static void parseLinkActions(Link link, String[] linkParts)
-          throws IllegalArgumentException {
+  private static void parseLinkActions(Link link, String[] linkParts) {
     for (String linkPart : linkParts) {
       if (linkPart.startsWith("{")) {
-        String[] actionParts = linkPart.split(":");
-        String actionDescription = actionParts[0].substring(1).toLowerCase().trim();
-        String actionValue = actionParts[1].trim();
-        Action action;
-        switch (actionDescription) {
-          case "gold" -> action = new GoldAction(Integer.parseInt(actionValue));
-          case "health" -> action = new HealthAction(Integer.parseInt(actionValue));
-          case "inventory" -> action = new InventoryAction(actionValue);
-          case "score" -> action = new ScoreAction(Integer.parseInt(actionValue));
-          default -> throw new IllegalArgumentException("Invalid action type: " + actionDescription);
+        try {
+          String[] actionParts = linkPart.split(":");
+          if (actionParts.length < 2) {
+            throw new IllegalArgumentException("Invalid action format: "
+                    + linkPart.replace("{", "") + ". Action description and"
+                    + " action value must be separated by a colon.");
+          }
+          String actionDescription = actionParts[0].substring(1).toLowerCase().trim();
+          String actionValue = actionParts[1].trim();
+          Action action;
+          switch (actionDescription) {
+            case "gold" -> action = new GoldAction(Integer.parseInt(actionValue));
+            case "health" -> action = new HealthAction(Integer.parseInt(actionValue));
+            case "inventory" -> action = new InventoryAction(actionValue);
+            case "score" -> action = new ScoreAction(Integer.parseInt(actionValue));
+            default -> throw new IllegalArgumentException("Invalid action type: "
+                    + actionDescription);
+          }
+          link.addAction(action);
+        } catch (NumberFormatException e) {
+          String invalidAction = linkPart.replace("{", "");
+          logger.log(Level.WARNING, "Invalid action value: " + invalidAction, e);
+          invalidActions.add("Invalid action value: " + invalidAction);
+        } catch (IllegalArgumentException e) {
+          logger.log(Level.WARNING, e.getMessage(), e);
+          invalidActions.add(e.getMessage());
         }
-        link.addAction(action);
       }
     }
+  }
+
+  /**
+   * The method retrieves the list with information about
+   * invalid actions which was not parsed from the file.
+   *
+   * @return list of invalid and non parsed actions.
+   */
+  public static List<String> getInvalidActions() {
+    return invalidActions;
   }
 }
