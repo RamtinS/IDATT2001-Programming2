@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since March 29, 2023.
+ * @since May 6, 2023.
  */
 class GoldGoalTest {
   private GoldGoal goldGoal;
@@ -68,5 +68,12 @@ class GoldGoalTest {
   void goalIsNotFulfilledThrowsNullPointerException() {
     Player invalidPlayer = null;
     assertThrows(NullPointerException.class, () -> goldGoal.isFulfilled(invalidPlayer));
+  }
+
+  @Test
+  @DisplayName("Test equals method")
+  void testEqualsMethod() {
+    GoldGoal goldGoalEqual = new GoldGoal(10);
+    assertEquals(goldGoal, goldGoalEqual);
   }
 }

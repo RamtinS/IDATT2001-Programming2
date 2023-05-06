@@ -69,4 +69,11 @@ class HealthGoalTest {
     Player invalidPlayer = null;
     assertThrows(NullPointerException.class, () -> healthGoal.isFulfilled(invalidPlayer));
   }
+
+  @Test
+  @DisplayName("Test equals method")
+  void testEqualsMethod() {
+    HealthGoal healthGoalEqual = new HealthGoal(10);
+    assertEquals(healthGoal, healthGoalEqual);
+  }
 }

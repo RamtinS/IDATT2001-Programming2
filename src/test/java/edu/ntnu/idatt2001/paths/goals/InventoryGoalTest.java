@@ -19,10 +19,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class InventoryGoalTest {
   private InventoryGoal inventoryGoal;
   private Player player;
+  private List<String> mandatoryItems;
 
   @BeforeEach
   void setUp() {
-    List<String> mandatoryItems = new ArrayList<>();
+    mandatoryItems = new ArrayList<>();
     mandatoryItems.add("Sword");
     mandatoryItems.add("Hammer");
     inventoryGoal = new InventoryGoal(mandatoryItems);
@@ -75,5 +76,12 @@ class InventoryGoalTest {
   void goalIsNotFulfilledThrowsNullPointerException() {
     Player invalidPlayer = null;
     assertThrows(NullPointerException.class, () -> inventoryGoal.isFulfilled(invalidPlayer));
+  }
+
+  @Test
+  @DisplayName("Test equals method")
+  void testEqualsMethod() {
+    InventoryGoal inventoryGoalEqual = new InventoryGoal(mandatoryItems);
+    assertEquals(inventoryGoal, inventoryGoalEqual);
   }
 }
