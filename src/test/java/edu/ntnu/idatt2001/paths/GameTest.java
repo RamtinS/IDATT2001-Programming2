@@ -17,24 +17,28 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since March 29, 2023.
+ * @since May 6, 2023.
  */
 class GameTest {
+  private String gameId;
   private Player player;
+  private Passage openingPassage;
   private Story story;
   private List<Goal> goals;
   private Game game;
 
   @BeforeEach
   void setUp() {
+    gameId = "Test ID";
     player = new Player.PlayerBuilder("Test name")
             .health(100)
             .score(100)
             .gold(50)
             .build();
-    story = new Story("Test title", new Passage("Test title", "Test content"));
+    openingPassage = new Passage("Test title", "Test content");
+    story = new Story("Test title", openingPassage);
     goals = new ArrayList<>();
-    game = new Game(player, story, goals);
+    game = new Game(gameId, player, story, goals);
   }
 
   @Nested
@@ -43,21 +47,31 @@ class GameTest {
     @Test
     @DisplayName("Test constructor valid input")
     void testConstructorValidInput() {
-      Game testGameConstructor = new Game(player, story, goals);
+      Game testGameConstructor = new Game(gameId, player, story, goals);
+      assertEquals(gameId, testGameConstructor.getGameId());
       assertEquals(player, testGameConstructor.getPlayer());
       assertEquals(story, testGameConstructor.getStory());
       assertEquals(goals, testGameConstructor.getGoals());
     }
 
     @Test
+    @DisplayName("Test constructor invalid input throws IllegalArgumentException")
+    void testConstructorInvalidInputThrowsIllegalArgumentException() {
+      String invalidGameIdBlank = " ";
+      assertThrows(IllegalArgumentException.class, () -> new Game(invalidGameIdBlank, player, story, goals));
+    }
+
+    @Test
     @DisplayName("Test constructor invalid input throws NullPointerException")
     void testConstructorInvalidInputThrowsNullPointerException() {
+      String invalidGameId = null;
       Player invalidPlayer = null;
       Story invalidStory = null;
       List<Goal> invalidGoals = null;
-      assertThrows(NullPointerException.class, () -> new Game(invalidPlayer, story, goals));
-      assertThrows(NullPointerException.class, () -> new Game(player, invalidStory, goals));
-      assertThrows(NullPointerException.class, () -> new Game(player, story, invalidGoals));
+      assertThrows(NullPointerException.class, () -> new Game(invalidGameId, player, story, goals));
+      assertThrows(NullPointerException.class, () -> new Game(gameId, invalidPlayer, story, goals));
+      assertThrows(NullPointerException.class, () -> new Game(gameId, player, invalidStory, goals));
+      assertThrows(NullPointerException.class, () -> new Game(gameId, player, story, invalidGoals));
     }
   }
 
@@ -68,14 +82,14 @@ class GameTest {
     @DisplayName("Should get player")
     void shouldGetPlayer() {
       Player actualPlayer = game.getPlayer();
-      assertEquals(Player.class, actualPlayer.getClass());
+      assertEquals(player, actualPlayer);
     }
 
     @Test
     @DisplayName("Should get story")
     void shouldGetStory() {
       Story actualStory = game.getStory();
-      assertEquals(Story.class, actualStory.getClass());
+      assertEquals(story, actualStory);
     }
 
     @Test
@@ -95,8 +109,8 @@ class GameTest {
     @Test
     @DisplayName("Should begin the game")
     void shouldBeginTheGame() {
-      Passage actualOpiningPassage = game.begin();
-      assertEquals(Passage.class, actualOpiningPassage.getClass());
+      Passage gameOpiningPassage = game.begin();
+      assertEquals(openingPassage, gameOpiningPassage);
     }
 
     @Test
@@ -104,7 +118,7 @@ class GameTest {
     void shouldGo() {
       Passage expectedPassage = new Passage("Test title", "Test content");
       story.addPassage(expectedPassage);
-      Link link = new Link(expectedPassage.getTitle(), expectedPassage.getTitle());
+      Link link = new Link("Test text", expectedPassage.getTitle());
       Passage actualPassage = game.go(link);
       assertEquals(expectedPassage, actualPassage);
     }

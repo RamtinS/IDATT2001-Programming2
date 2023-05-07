@@ -29,12 +29,13 @@ import java.util.logging.Logger;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since April 23, 2023.
+ * @since May 6, 2023.
  */
 public class FileGameHandler {
 
   private static final Logger logger = Logger.getLogger(FileStoryHandler.class.getName());
   private static final String FILE_EXTENSION = ".json";
+  private static final String GAME_ID_KEY = "game ID";
   private static final String PLAYER_KEY = "player";
   private static final String STORY_TITLE_KEY = "story title";
   private static final String STORY_OPENING_PASSAGE_KEY = "story opening passage";
@@ -65,6 +66,8 @@ public class FileGameHandler {
     JsonArray jsonArray = new JsonArray();
     for (Game game : games) {
       JsonObject jsonObject = new JsonObject();
+
+      jsonObject.addProperty(GAME_ID_KEY, game.getGameId());
 
       jsonObject.add(PLAYER_KEY, gson.toJsonTree(game.getPlayer()));
 
@@ -115,6 +118,8 @@ public class FileGameHandler {
         for (JsonElement jsonElement : jsonArray) {
           JsonObject jsonObject = jsonElement.getAsJsonObject();
 
+          String gameId = gson.fromJson(jsonObject.get(GAME_ID_KEY), String.class);
+
           Player player = gson.fromJson(jsonObject.get(PLAYER_KEY), Player.class);
 
           String storyTitle = gson.fromJson(jsonObject.get(STORY_TITLE_KEY), String.class);
@@ -131,7 +136,7 @@ public class FileGameHandler {
           List<Goal> goals = gson.fromJson(jsonObject.get(GOALS_KEY),
                   new TypeToken<List<Goal>>() {}.getType());
 
-          Game game = new Game(player, story, goals);
+          Game game = new Game(gameId, player, story, goals);
           games.add(game);
         }
       }

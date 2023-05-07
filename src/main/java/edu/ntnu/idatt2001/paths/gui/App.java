@@ -81,7 +81,7 @@ public class App extends Application {
     List<Goal> goals = new ArrayList<>();
     InventoryAction pickaxe = new InventoryAction("Pickaxe");
     pickaxe.execute(player);
-    game = new Game(player, story, goals);
+    game = new Game("Test ID", player, story, goals);
   }
 
   /**
@@ -181,7 +181,7 @@ public class App extends Application {
         story.addPassage(newPassage);
 
         //TODO Ends here
-        game = new Game(player, story, chosenGoals);
+        game = new Game("Test", player, story, chosenGoals);
         BaseFrame currentFrame = new BaseFrame(story.getOpeningPassage(), player, FRAME_WIDTH,
             FRAME_HEIGHT, baseFrameListener);
         stage.setScene(new Scene(currentFrame));

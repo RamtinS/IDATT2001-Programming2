@@ -6,12 +6,15 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * The class represents a game.
+ * The Game class represents a game, which is played by a player
+ * and contains a story and a list of goals.
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since May 6, 2023.
  */
 public class Game {
+  private final String gameId;
   private final Player player;
   private final Story story;
   private final List<Goal> goals;
@@ -22,13 +25,28 @@ public class Game {
    * @param player the player playing the game.
    * @param story the story of the game.
    * @param goals list of goals that indicate desired outcomes in a game.
-   * @throws NullPointerException if player or story is null.
+   * @throws IllegalArgumentException if the gameId is blank.
+   * @throws NullPointerException if the gameId, player or story is null.
    */
-  public Game(Player player, Story story, List<Goal> goals) throws NullPointerException {
+  public Game(String gameId, Player player, Story story, List<Goal> goals)
+          throws IllegalArgumentException, NullPointerException {
+    if (gameId.isBlank()) {
+      throw new IllegalArgumentException("Game ID cannot be blank.");
+    }
+    this.gameId = Objects.requireNonNull(gameId, "Game ID cannot be null.");
     this.player = Objects.requireNonNull(player, "Player cannot be null");
     this.story = Objects.requireNonNull(story, "Story cannot be null");
     this.goals = new ArrayList<>();
     this.goals.addAll(Objects.requireNonNull(goals, "Goals cannot be null"));
+  }
+
+  /**
+   * The method retrieves the game ID.
+   *
+   * @return the game ID.
+   */
+  public String getGameId() {
+    return gameId;
   }
 
   /**
@@ -79,5 +97,33 @@ public class Game {
       throw new NullPointerException("Link cannot be null");
     }
     return story.getPassage(link);
+  }
+
+  /**
+   * The method checks for equality between Game objects.
+   *
+   * @param o the object to which it is being compared.
+   * @return a boolean value which indicate whether they are equal or not.
+   */
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Game game = (Game) o;
+    return Objects.equals(getGameId(), game.getGameId());
+  }
+
+  /**
+   * The method generates a hash value for the object.
+   *
+   * @return hash value for the object.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(getGameId());
   }
 }

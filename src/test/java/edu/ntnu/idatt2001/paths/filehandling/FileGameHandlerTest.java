@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since April 26, 2023.
+ * @since May 6, 2023.
  */
 class FileGameHandlerTest {
 
@@ -52,6 +52,9 @@ class FileGameHandlerTest {
   void setUp() {
     pathToFile = "src/test/resources/games/game_objects.json";
     gamesFile = new File(pathToFile);
+
+    String gameId1 = "Test ID 1";
+    String gameId2 = "Test ID 2";
 
     Player player1 = new Player.PlayerBuilder("Player1")
             .health(50)
@@ -117,8 +120,8 @@ class FileGameHandlerTest {
     inventoryGoal2.add("Sword");
     goals2.add(new InventoryGoal(inventoryGoal2));
 
-    Game game1 = new Game(player1, story, goals1);
-    Game game2 = new Game(player2, story, goals2);
+    Game game1 = new Game(gameId1, player1, story, goals1);
+    Game game2 = new Game(gameId2, player2, story, goals2);
 
     games = new ArrayList<>();
     games.add(game1);
@@ -137,7 +140,7 @@ class FileGameHandlerTest {
 
   @Nested
   @DisplayName("Positive tests file handling")
-  class positiveTestsFileHandling {
+  class PositiveTestsFileHandling {
     @Test
     @DisplayName("Should write games to file")
     void shouldWriteGamesToFile() {
@@ -157,6 +160,7 @@ class FileGameHandlerTest {
         String expected = """
                 [
                   {
+                    "game ID": "Test ID 1",
                     "player": {
                       "name": "Player1",
                       "health": 50,
@@ -254,6 +258,7 @@ class FileGameHandlerTest {
                     ]
                   },
                   {
+                    "game ID": "Test ID 2",
                     "player": {
                       "name": "Player2",
                       "health": 60,
@@ -420,7 +425,7 @@ class FileGameHandlerTest {
 
   @Nested
   @DisplayName("Negative tests file handling")
-  class negativeTestsFileHandling {
+  class NegativeTestsFileHandling {
     String invalidPathOfFileNull = null;
     String invalidPathOfFileExtension = "src/test/resources/games/game_objects.txt";
     String invalidPathOfFileBlank = "";
