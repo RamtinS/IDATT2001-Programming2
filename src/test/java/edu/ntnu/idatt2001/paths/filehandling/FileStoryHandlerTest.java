@@ -91,7 +91,7 @@ class FileStoryHandlerTest {
 
   @Nested
   @DisplayName("Positive tests file handling")
-  class positiveTestsFileHandling {
+  class PositiveTestsFileHandling {
     @Test
     @DisplayName("Should write story to file")
     void shouldWriteStoryToFileTest() {
@@ -173,7 +173,7 @@ class FileStoryHandlerTest {
 
   @Nested
   @DisplayName("Negative tests file handling")
-  class negativeTestsFileHandling {
+  class NegativeTestsFileHandling {
     String invalidPathToFileNull = null;
     String invalidPathToFileExtension = "src/test/resources/stories/story.txt";
     String invalidPathToFileBlank = "";
