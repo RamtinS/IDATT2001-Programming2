@@ -20,9 +20,10 @@ import java.util.List;
  */
 public class GameManager {
 
+  private static GameManager instance = null;
+  private static final int MAX_GAMES = 6;
   private final String pathOfFile;
   private final List<Game> games;
-
 
   /**
    * Constructor for the GameManager class.
@@ -32,12 +33,30 @@ public class GameManager {
    * @throws IllegalArgumentException if pathOfFile is blank or does not end with FILE_EXTENSION.
    * @throws IOException if there is an error reading list of games form file.
    */
-  public GameManager(String pathOfFile) throws NullPointerException,
+  private GameManager(String pathOfFile) throws NullPointerException,
           IllegalArgumentException, IOException {
     FilePathValidator.validatePathOfFile(pathOfFile, FileGameHandler.getFileExtension());
     this.pathOfFile = pathOfFile;
     this.games = new ArrayList<>();
     this.games.addAll(FileGameHandler.readGamesFromFile(pathOfFile));
+  }
+
+  /**
+   * Returns an instance of the GameManager class.
+   * If an instance does not exist, a new instance is created.
+   *
+   * @param pathOfFile the path of the file to read and write Game objects to.
+   * @return an instance of the GameManager class.
+   * @throws NullPointerException if the pathOfFile or FILE_EXTENSION is null.
+   * @throws IllegalArgumentException if pathOfFile is blank or does not end with FILE_EXTENSION.
+   * @throws IOException if there is an error reading list of games form file.
+   */
+  public static GameManager getInstance(String pathOfFile) throws NullPointerException,
+          IllegalArgumentException, IOException {
+    if (instance == null) {
+      instance = new GameManager(pathOfFile);
+    }
+    return instance;
   }
 
   /**
@@ -48,12 +67,20 @@ public class GameManager {
    * @param goals the goals for the new game.
    * @return the new created game.
    * @throws IllegalStateException if the maximum number of games is reached.
-   * @throws NullPointerException if the player, story, or goals is null.
+   * @throws IllegalArgumentException if a game with the same ID already exists.
+   * @throws NullPointerException if the gameId, player, story, or goals is null.
    */
-  public Game createGame(Player player, Story story, List<Goal> goals)
-          throws IllegalStateException, NullPointerException {
-    if (games.size() == 4) {
-      throw new IllegalStateException("Maximum number of games reached. Cannot create more games.");
+  public Game createGame(String gameId, Player player, Story story, List<Goal> goals)
+          throws IllegalStateException, IllegalArgumentException, NullPointerException {
+    if (games.size() == MAX_GAMES) {
+      throw new IllegalStateException("Maximum number of games reached: " + MAX_GAMES
+              + " Cannot create more games.");
+    }
+    if (gameId == null) {
+      throw new NullPointerException("Game ID cannot be null.");
+    }
+    if (games.stream().anyMatch(game -> game.getGameId().equals(gameId.trim()))) {
+      throw new IllegalArgumentException("A game with the same ID already exists.");
     }
     if (player == null) {
       throw new NullPointerException("Player cannot be null.");
@@ -64,7 +91,7 @@ public class GameManager {
     if (goals == null) {
       throw new NullPointerException("Goals cannot be null.");
     }
-    Game game = new Game(player, story, goals);
+    Game game = new Game(gameId,player, story, goals);
     games.add(game);
     return game;
   }
@@ -76,10 +103,8 @@ public class GameManager {
    * @param game the game to delete.
    * @throws IOException if there is an error writing list of games to file.
    */
-  public void deleteGame(Game game) throws IOException {
-    if (game == null) {
-      throw new NullPointerException("Game cannot be null.");
-    }
+  public void deleteGame(Game game) throws NullPointerException, IOException {
+    validateGame(game);
     if (games.remove(game)) {
       FileGameHandler.writeGamesToFile(games, pathOfFile);
     }
@@ -92,11 +117,14 @@ public class GameManager {
    * @param game the game to save.
    * @throws IOException if there is an error writing list of games to file.
    */
-  public void saveGames(Game game) throws IOException {
-    if (game == null) {
-      throw new NullPointerException("Game cannot be null.");
+  public void saveGame(Game game) throws NullPointerException, IOException {
+    validateGame(game);
+    if (games.contains(game)) {
+      int index = games.indexOf(game);
+      games.set(index, game);
+    } else {
+      games.add(game);
     }
-    games.add(game);
     FileGameHandler.writeGamesToFile(games, pathOfFile);
   }
 
@@ -107,5 +135,16 @@ public class GameManager {
    */
   public List<Game> getGames() {
     return games;
+  }
+
+  /**
+   * The method validates the given game object.
+   *
+   * @throws NullPointerException if the game is null.
+   */
+  private void validateGame(Game game) throws NullPointerException {
+    if (game == null) {
+      throw new NullPointerException("Game cannot be null.");
+    }
   }
 }
