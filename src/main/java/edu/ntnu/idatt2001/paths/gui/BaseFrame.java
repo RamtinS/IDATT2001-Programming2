@@ -70,7 +70,7 @@ public class BaseFrame extends AnchorPane {
   private void applyBackground() {
 
     try {
-      Image image = new Image("ImageFiles/" + passage.getTitle() + ".jpg");
+      Image image = new Image("images/" + passage.getTitle() + ".jpg");
 
       BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT,
           BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
@@ -268,7 +268,7 @@ public class BaseFrame extends AnchorPane {
   private void setInventoryItem(Pane pane, String item) {
     try {
 
-      Image image = new Image("ImageFiles/" + item + ".png");
+      Image image = new Image("images/" + item + ".png");
 
       BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT,
           BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
@@ -278,7 +278,7 @@ public class BaseFrame extends AnchorPane {
       pane.setBackground(background);
     } catch (Exception e) {
       try {
-        Image image = new Image("ImageFiles/" + "Exclamation" + ".png");
+        Image image = new Image("images/" + "Exclamation" + ".png");
 
         BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT,
             BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,

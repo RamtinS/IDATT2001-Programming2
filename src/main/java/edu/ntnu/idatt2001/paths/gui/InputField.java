@@ -39,9 +39,9 @@ public class InputField extends HBox {
     textArea.setPrefRowCount(1);
     textArea.setWrapText(true);
 
-    this.validImage = new Image("ImageFiles/checkmark-png-5.png");
-    this.invalidImage = new Image("ImageFiles/Red_X.png");
-    this.warningImage = new Image("ImageFiles/Exclamation.png");
+    this.validImage = new Image("images/checkmark.png");
+    this.invalidImage = new Image("images/red_x.png");
+    this.warningImage = new Image("images/exclamation.png");
 
     imageView = new ImageView();
     imageView.setFitHeight(width);
