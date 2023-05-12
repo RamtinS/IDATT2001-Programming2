@@ -93,6 +93,7 @@ public class Game {
    */
   public Passage resetGame() {
     player.resetPlayer();
+    story.setCurrentPassage(story.getOpeningPassage());
     return story.getOpeningPassage();
   }
 
