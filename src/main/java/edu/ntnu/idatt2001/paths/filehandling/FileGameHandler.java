@@ -39,6 +39,7 @@ public class FileGameHandler {
   private static final String PLAYER_KEY = "player";
   private static final String STORY_TITLE_KEY = "story title";
   private static final String STORY_OPENING_PASSAGE_KEY = "story opening passage";
+  private static final String STORY_CURRENT_PASSAGE_KEY = "story current passage";
   private static final String STORY_PASSAGES_KEY = "story passages";
   private static final String GOALS_KEY = "goals";
 
@@ -73,7 +74,7 @@ public class FileGameHandler {
 
       jsonObject.addProperty(STORY_TITLE_KEY, game.getStory().getTitle());
       jsonObject.add(STORY_OPENING_PASSAGE_KEY, gson.toJsonTree(game.getStory().getOpeningPassage()));
-
+      jsonObject.add(STORY_CURRENT_PASSAGE_KEY, gson.toJsonTree(game.getStory().getCurrentPassage()));
       List<Passage> passages = new ArrayList<>(game.getStory().getPassages());
       jsonObject.add(STORY_PASSAGES_KEY, gson.toJsonTree(passages));
 
@@ -124,7 +125,9 @@ public class FileGameHandler {
 
           String storyTitle = gson.fromJson(jsonObject.get(STORY_TITLE_KEY), String.class);
           Passage openingPassage = gson.fromJson(jsonObject.get(STORY_OPENING_PASSAGE_KEY), Passage.class);
+          Passage currentPassage = gson.fromJson(jsonObject.get(STORY_CURRENT_PASSAGE_KEY), Passage.class);
           Story story = new Story(storyTitle, openingPassage);
+          story.setCurrentPassage(currentPassage);
 
           List<Passage> passages = gson.fromJson(jsonObject.get(STORY_PASSAGES_KEY),
                   new TypeToken<List<Passage>>(){}.getType());
