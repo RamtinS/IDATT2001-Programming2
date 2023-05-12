@@ -86,6 +86,17 @@ public class Game {
   }
 
   /**
+   * The method resets the game by resetting the
+   * player and returning the opening passage of the story.
+   *
+   * @return the opening passage of the story.
+   */
+  public Passage resetGame() {
+    player.resetPlayer();
+    return story.getOpeningPassage();
+  }
+
+  /**
    * Finds the corresponding passage from the given links, and returns it.
    *
    * @param link The link used to find the corresponding passage
