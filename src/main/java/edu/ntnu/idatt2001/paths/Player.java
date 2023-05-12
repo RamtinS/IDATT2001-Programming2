@@ -10,10 +10,13 @@ import java.util.Objects;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since April 23, 2023.
+ * @since May 12, 2023.
  */
 public class Player {
   private final String name;
+  private final int startHealth;
+  private final int startScore;
+  private final int startGold;
   private int health;
   private int score;
   private int gold;
@@ -26,6 +29,9 @@ public class Player {
    */
   private Player(PlayerBuilder builder) {
     this.name = builder.name;
+    this.startHealth = builder.health;
+    this.startScore = builder.score;
+    this.startGold = builder.gold;
     this.health = builder.health;
     this.score = builder.score;
     this.gold = builder.gold;
@@ -180,6 +186,17 @@ public class Player {
    */
   public List<String> getInventory() {
     return inventory;
+  }
+
+  /**
+   * The method resets the player's attributes to the
+   * starting values.
+   */
+  public void resetPlayer() {
+    this.health = this.startHealth;
+    this.score = this.startScore;
+    this.gold = this.startGold;
+    this.inventory.clear();
   }
 
   /**
