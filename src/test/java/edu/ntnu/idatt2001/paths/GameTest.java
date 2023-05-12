@@ -64,14 +64,10 @@ class GameTest {
     @Test
     @DisplayName("Test constructor invalid input throws NullPointerException")
     void testConstructorInvalidInputThrowsNullPointerException() {
-      String invalidGameId = null;
-      Player invalidPlayer = null;
-      Story invalidStory = null;
-      List<Goal> invalidGoals = null;
-      assertThrows(NullPointerException.class, () -> new Game(invalidGameId, player, story, goals));
-      assertThrows(NullPointerException.class, () -> new Game(gameId, invalidPlayer, story, goals));
-      assertThrows(NullPointerException.class, () -> new Game(gameId, player, invalidStory, goals));
-      assertThrows(NullPointerException.class, () -> new Game(gameId, player, story, invalidGoals));
+      assertThrows(NullPointerException.class, () -> new Game(null, player, story, goals));
+      assertThrows(NullPointerException.class, () -> new Game(gameId, null, story, goals));
+      assertThrows(NullPointerException.class, () -> new Game(gameId, player, null, goals));
+      assertThrows(NullPointerException.class, () -> new Game(gameId, player, story, null));
     }
   }
 
@@ -109,8 +105,8 @@ class GameTest {
     @Test
     @DisplayName("Should begin the game")
     void shouldBeginTheGame() {
-      Passage gameOpiningPassage = game.begin();
-      assertEquals(openingPassage, gameOpiningPassage);
+      Passage gameStartPassage = game.begin();
+      assertEquals(story.getCurrentPassage(), gameStartPassage);
     }
 
     @Test
@@ -126,8 +122,7 @@ class GameTest {
     @Test
     @DisplayName("Should not go throws NullPointerException")
     void shouldNotGoThrowsNullPointerException() {
-      Link invalidLink = null;
-      assertThrows(NullPointerException.class, () -> game.go(invalidLink));
+      assertThrows(NullPointerException.class, () -> game.go(null));
     }
   }
 }
