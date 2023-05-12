@@ -44,10 +44,8 @@ class StoryTest {
     @Test
     @DisplayName("Test constructor invalid input throws NullPointerException")
     void testConstructorInvalidInputThrowsNullPointerException() {
-      String invalidTitle = null;
-      Passage invalidPassage = null;
-      assertThrows(NullPointerException.class, () -> new Story(invalidTitle, openingPassage));
-      assertThrows(NullPointerException.class, () -> new Story(validTitle, invalidPassage));
+      assertThrows(NullPointerException.class, () -> new Story(null, openingPassage));
+      assertThrows(NullPointerException.class, () -> new Story(validTitle, null));
     }
 
     @Test
@@ -89,6 +87,28 @@ class StoryTest {
     private final Passage passage3 = new Passage("Title passage3", "Content passage3");
 
     @Test
+    @DisplayName("Should get current passage")
+    void shouldGetCurrentPassage() {
+      Passage expectedPassage = openingPassage;
+      Passage actualPassage = story.getCurrentPassage();
+      assertEquals(expectedPassage, actualPassage);
+    }
+
+    @Test
+    @DisplayName("Should set new current passage")
+    void shouldSetNewCurrentPassage() {
+      story.setCurrentPassage(passage1);
+      Passage actualPassage = story.getCurrentPassage();
+      assertEquals(passage1, actualPassage);
+    }
+
+    @Test
+    @DisplayName("Should not set new current passage throws NullPointerException")
+    void shouldNotSetNewCurrentPassageThrowsNullPointerException() {
+      assertThrows(NullPointerException.class, () -> story.setCurrentPassage(null));
+    }
+
+    @Test
     @DisplayName("Should add passage")
     void shouldAddPassage() {
       story.addPassage(passage1);
@@ -96,10 +116,9 @@ class StoryTest {
     }
 
     @Test
-    @DisplayName("Should not add passage")
-    void shouldNotAddPassage() {
-      Passage invalidPassage = null;
-      assertThrows(NullPointerException.class, () -> story.addPassage(invalidPassage));
+    @DisplayName("Should not add passage throws NullPointerException")
+    void shouldNotAddPassageThrowsNullPointerException() {
+      assertThrows(NullPointerException.class, () -> story.addPassage(null));
     }
 
     @Test
@@ -113,8 +132,7 @@ class StoryTest {
     @Test
     @DisplayName("Should not get passage")
     void shouldNotGetPassage() {
-      Link invalidLink = null;
-      assertThrows(NullPointerException.class, () -> story.getPassage(invalidLink));
+      assertThrows(NullPointerException.class, () -> story.getPassage(null));
     }
 
     @Test
@@ -146,8 +164,7 @@ class StoryTest {
     @Test
     @DisplayName("Should not remove passage throws NullPointerException")
     void shouldNotRemovePassageThrowsNullPointerException() {
-      Link link = null;
-      assertThrows(NullPointerException.class, () -> story.removePassage(link));
+      assertThrows(NullPointerException.class, () -> story.removePassage(null));
     }
 
     @Test
