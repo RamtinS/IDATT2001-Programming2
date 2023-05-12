@@ -1,6 +1,5 @@
 package edu.ntnu.idatt2001.paths;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,11 +11,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- *
  * The class tests the Passage class
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since May 12, 2023.
  */
 class PassageTest {
   private Passage passage;
@@ -31,32 +30,27 @@ class PassageTest {
   @Nested
   @DisplayName("Constructor tests")
   class ConstructorTests {
+    private final String validTitle = "Test title";
+    private final String validContent = "Test content";
+
     @Test
     @DisplayName("Test constructor valid input")
     void testConstructorValidInput(){
-      String expectedTitle = "Test title";
-      String expectedContent = "Test content";
-      Passage passage = new Passage(expectedTitle, expectedContent);
-      assertEquals(expectedTitle, passage.getTitle());
-      assertEquals(expectedContent, passage.getContent());
+      Passage passage = new Passage(validTitle, validContent);
+      assertEquals(validTitle, passage.getTitle());
+      assertEquals(validContent, passage.getContent());
     }
 
     @Test
     @DisplayName("Test constructor invalid input throws NullPointerException")
     void testConstructorInvalidInputThrowsNullPointerException(){
-      String validTitle = "Test title";
-      String validContent = "Test content";
-      String invalidTitle = null;
-      String invalidContent = null;
-      assertThrows(NullPointerException.class, () -> new Passage(invalidTitle, validContent));
-      assertThrows(NullPointerException.class, () -> new Passage(validTitle, invalidContent));
+      assertThrows(NullPointerException.class, () -> new Passage(null, validContent));
+      assertThrows(NullPointerException.class, () -> new Passage(validTitle, null));
     }
 
     @Test
     @DisplayName("Test constructor invalid input throws IllegalArgumentException")
     void testConstructorInvalidInputThrowsIllegalArgumentException(){
-      String validTitle = "Test title";
-      String validContent = "Test content";
       String invalidTitle = "";
       String invalidContent = "";
       assertThrows(IllegalArgumentException.class, () -> new Passage(invalidTitle, validContent));
@@ -126,7 +120,7 @@ class PassageTest {
   }
 
   @Nested
-  @DisplayName("Test other methods")
+  @DisplayName("Test override methods")
   class TestOtherMethods {
     @Test
     @DisplayName("Test toString()")
