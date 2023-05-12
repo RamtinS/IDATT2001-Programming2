@@ -110,6 +110,14 @@ class GameTest {
     }
 
     @Test
+    @DisplayName("Should reset the game")
+    void shouldResetTheGame() {
+      Passage gameStartPassage = game.resetGame();
+      assertEquals(openingPassage, game.getStory().getCurrentPassage());
+      assertEquals(openingPassage, gameStartPassage);
+    }
+
+    @Test
     @DisplayName("Should go")
     void shouldGo() {
       Passage expectedPassage = new Passage("Test title", "Test content");
