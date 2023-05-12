@@ -3,15 +3,16 @@ package edu.ntnu.idatt2001.paths.gui;
 import edu.ntnu.idatt2001.paths.Difficulty;
 import edu.ntnu.idatt2001.paths.Game;
 import edu.ntnu.idatt2001.paths.Link;
-import edu.ntnu.idatt2001.paths.Passage;
 import edu.ntnu.idatt2001.paths.Player;
 import edu.ntnu.idatt2001.paths.Story;
 import edu.ntnu.idatt2001.paths.actions.Action;
-import edu.ntnu.idatt2001.paths.actions.GoldAction;
-import edu.ntnu.idatt2001.paths.actions.HealthAction;
-import edu.ntnu.idatt2001.paths.actions.InventoryAction;
 import edu.ntnu.idatt2001.paths.goals.Goal;
-import java.util.ArrayList;
+import edu.ntnu.idatt2001.paths.gui.listeners.BaseFrameListener;
+import edu.ntnu.idatt2001.paths.gui.listeners.CreateGameListener;
+import edu.ntnu.idatt2001.paths.gui.listeners.LoadStoredGamesListener;
+import edu.ntnu.idatt2001.paths.gui.listeners.MainMenuListener;
+import edu.ntnu.idatt2001.paths.gui.listeners.StoryCreatorListener;
+import edu.ntnu.idatt2001.paths.gui.storycreation.ScrollableStoryCreator;
 import java.util.List;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -31,10 +32,12 @@ public class App extends Application {
 
   private static final int FRAME_HEIGHT = 600;
   private static final int FRAME_WIDTH = 1000;
-  private Game game;
+  private Game currentGame;
   private MainMenuListener mainMenuListener;
   private BaseFrameListener baseFrameListener;
   private CreateGameListener createGameListener;
+  private LoadStoredGamesListener loadStoredGamesListener;
+  private StoryCreatorListener storyCreatorListener;
 
   /**
    * Launches the application.
@@ -53,36 +56,16 @@ public class App extends Application {
   @Override
   public void start(Stage stage) {
 
-    createExampleGame();
     createBaseFrameListener(stage);
     addMainMenuListener(stage);
     addCreateGameListener(stage);
+    addLoadStoredGameListener(stage);
+    addStoryCreatorListener(stage);
 
     stage.setScene(new Scene(new MainMenu(FRAME_WIDTH, FRAME_HEIGHT, mainMenuListener)));
     stage.show();
   }
 
-  /**
-   * Creates an example game and sets it to the current game.
-   */
-  private void createExampleGame() {
-    Player player = new Player.PlayerBuilder("Test name").health(100).score(100).gold(50).build();
-    Passage openingPassage = new Passage("Image1", "geir dreper deg");
-    Link firstLink = new Link("ikke trykk her", "Image3");
-    firstLink.addAction(new HealthAction(-10));
-    firstLink.addAction(new GoldAction(-10));
-    firstLink.addAction(new InventoryAction("Red_X"));
-    openingPassage.addLink(firstLink);
-    Story story = new Story("Test title", openingPassage);
-    Passage newPassage = new Passage("Image3", "geir slår deg");
-
-    story.addPassage(newPassage);
-
-    List<Goal> goals = new ArrayList<>();
-    InventoryAction pickaxe = new InventoryAction("Pickaxe");
-    pickaxe.execute(player);
-    game = new Game("Test ID", player, story, goals);
-  }
 
   /**
    * Creates a BaseFrameListener, adds button functionality to all buttons in the BaseFrame.
@@ -97,8 +80,8 @@ public class App extends Application {
        */
       @Override
       public void onRestartClicked() {
-        BaseFrame restartFrame = new BaseFrame(game.getStory().getOpeningPassage(),
-            game.getPlayer(), FRAME_WIDTH, FRAME_HEIGHT, this);
+        BaseFrame restartFrame = new BaseFrame(currentGame.getStory().getOpeningPassage(),
+            currentGame.getPlayer(), FRAME_WIDTH, FRAME_HEIGHT, this);
         stage.setScene(new Scene(restartFrame));
         stage.show();
       }
@@ -109,7 +92,6 @@ public class App extends Application {
       @Override
       public void onExitClicked() {
         stage.setScene(new Scene(new MainMenu(FRAME_WIDTH, FRAME_HEIGHT, mainMenuListener)));
-
       }
 
 
@@ -122,19 +104,25 @@ public class App extends Application {
       public void onOptionButtonClicked(Link link) {
 
         for (Action action : link.getActions()) {
-          action.execute(game.getPlayer());
+          action.execute(currentGame.getPlayer());
         }
-        BaseFrame newFrame = new BaseFrame(game.getStory().getPassage(link), game.getPlayer(),
-            FRAME_WIDTH, FRAME_HEIGHT, this);
-
+        BaseFrame newFrame;
+        try {
+          newFrame = new BaseFrame(currentGame.go(link), currentGame.getPlayer(), FRAME_WIDTH,
+              FRAME_HEIGHT, this);
+        } catch (Exception e) {
+          Alert alert = new Alert(AlertType.ERROR,
+              "This link is broken, please choose a different button");
+          alert.showAndWait();
+          return;
+        }
         stage.setScene(new Scene(newFrame));
         stage.show();
 
-        if (game.getStory().getPassage(link).getLinks().isEmpty()) {
+        if (currentGame.getStory().getPassage(link).getLinks().isEmpty()) {
           Alert alert = new Alert(AlertType.CONFIRMATION, "The game is finished");
           alert.showAndWait();
         }
-
 
       }
     };
@@ -166,28 +154,16 @@ public class App extends Application {
        */
       @Override
       public void onCreateClicked(List<Goal> chosenGoals, String playerName,
-                                  Difficulty chosenDifficulty) {
-        Player player = new Player.PlayerBuilder(playerName).health(chosenDifficulty.getHealth()).build();
-        //TODO Story should be read here
+                                  Difficulty chosenDifficulty, Story selectedStory) {
+        Player player = new Player.PlayerBuilder(playerName).health(chosenDifficulty.getHealth())
+            .build();
 
-        Passage openingPassage = new Passage("Image1", "Test");
-        Link firstLink = new Link("ikke trykk her", "Image2");
-        firstLink.addAction(new HealthAction(10));
-        firstLink.addAction(new GoldAction(10));
-        openingPassage.addLink(firstLink);
-        Story story = new Story("Test Title", openingPassage);
-        Passage newPassage = new Passage("Image2", "geir slår deg");
-
-        story.addPassage(newPassage);
-
-        //TODO Ends here
-        game = new Game("Test", player, story, chosenGoals);
-        BaseFrame currentFrame = new BaseFrame(story.getOpeningPassage(), player, FRAME_WIDTH,
-            FRAME_HEIGHT, baseFrameListener);
+        currentGame = new Game("Game id", player, selectedStory, chosenGoals);
+        BaseFrame currentFrame = new BaseFrame(currentGame.begin(), currentGame.getPlayer(),
+            FRAME_WIDTH, FRAME_HEIGHT, baseFrameListener);
         stage.setScene(new Scene(currentFrame));
         stage.show();
       }
-
     };
   }
 
@@ -206,7 +182,8 @@ public class App extends Application {
       public void onNewGameClicked() {
         CreateGameMenu createGameMenu = new CreateGameMenu(FRAME_WIDTH, FRAME_HEIGHT,
             createGameListener);
-        stage.setScene(new Scene(createGameMenu));
+        Scene newScene = new Scene(createGameMenu);
+        stage.setScene(newScene);
         stage.show();
       }
 
@@ -215,9 +192,11 @@ public class App extends Application {
        */
       @Override
       public void onLoadGameClicked() {
-        BaseFrame baseFrame = new BaseFrame(game.getStory().getOpeningPassage(), game.getPlayer(),
-            FRAME_WIDTH, FRAME_HEIGHT, baseFrameListener);
-        stage.setScene(new Scene(baseFrame));
+        LoadStoredGamesMenu loadStoredGamesMenu = new LoadStoredGamesMenu(FRAME_WIDTH, FRAME_HEIGHT,
+            loadStoredGamesListener);
+        Scene newScene = new Scene(loadStoredGamesMenu);
+        stage.setScene(newScene);
+        stage.show();
       }
 
       /**
@@ -228,6 +207,41 @@ public class App extends Application {
 
       }
 
+      @Override
+      public void onCreateStoryMenuClicked() {
+        ScrollableStoryCreator scrollableStoryCreator = new ScrollableStoryCreator(FRAME_WIDTH,
+            FRAME_HEIGHT, storyCreatorListener);
+        stage.setScene(new Scene(scrollableStoryCreator));
+      }
+    };
+  }
+
+  private void addLoadStoredGameListener(Stage stage) {
+    loadStoredGamesListener = new LoadStoredGamesListener() {
+      @Override
+      public void onSelectedGameClicked(Game game) {
+        currentGame = game;
+        BaseFrame currentFrame = new BaseFrame(currentGame.getStory().getOpeningPassage(),
+            currentGame.getPlayer(), FRAME_WIDTH, FRAME_HEIGHT, baseFrameListener);
+        stage.setScene(new Scene(currentFrame));
+      }
+
+      @Override
+      public void onReturnClicked() {
+        MainMenu mainMenu = new MainMenu(FRAME_WIDTH, FRAME_HEIGHT, mainMenuListener);
+        stage.setScene(new Scene(mainMenu));
+      }
+    };
+  }
+
+  private void addStoryCreatorListener(Stage stage) {
+    storyCreatorListener = new StoryCreatorListener() {
+      @Override
+      public void onReturnClicked() {
+        MainMenu mainMenu = new MainMenu(FRAME_WIDTH, FRAME_HEIGHT, mainMenuListener);
+        stage.setScene(new Scene(mainMenu));
+        stage.show();
+      }
     };
   }
 
