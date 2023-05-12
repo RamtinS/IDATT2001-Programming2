@@ -4,8 +4,8 @@ package edu.ntnu.idatt2001.paths.gui;
 import edu.ntnu.idatt2001.paths.Link;
 import edu.ntnu.idatt2001.paths.Passage;
 import edu.ntnu.idatt2001.paths.Player;
-import java.util.ArrayList;
-import java.util.List;
+import edu.ntnu.idatt2001.paths.gui.listeners.BaseFrameListener;
+import java.util.Objects;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
@@ -16,8 +16,6 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -48,6 +46,10 @@ public class BaseFrame extends AnchorPane {
    */
   public BaseFrame(Passage passage, Player player, double width, double height,
                    BaseFrameListener listener) {
+    Objects.requireNonNull(passage, "Passage cannot be null");
+    Objects.requireNonNull(player, "Player cannot be null");
+    Objects.requireNonNull(listener, "Listener cannot be null");
+
     this.listener = listener;
     this.width = width;
     this.height = height;
@@ -70,7 +72,7 @@ public class BaseFrame extends AnchorPane {
   private void applyBackground() {
 
     try {
-      Image image = new Image("images/" + passage.getTitle() + ".jpg");
+      Image image = new Image("ImageFiles/" + passage.getTitle() + ".jpg");
 
       BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT,
           BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
@@ -80,7 +82,7 @@ public class BaseFrame extends AnchorPane {
 
       setBackground(background);
     } catch (Exception e) {
-      e.printStackTrace();
+      // setStyle("-fx-background-color: #00FF00");
     }
 
   }
@@ -120,7 +122,7 @@ public class BaseFrame extends AnchorPane {
     Button exitButton = new Button("Exit");
     exitButton.setStyle("-fx-wrap-text: false");
     exitButton.prefWidthProperty().bind(widthProperty().divide(15));
-    exitButton.prefHeightProperty().bind(heightProperty().divide(30));
+    exitButton.prefHeightProperty().bind(widthProperty().divide(30));
     exitButton.setOnAction(event -> listener.onExitClicked());
     exitButton.setLayoutX(0);
     exitButton.setLayoutY(0);
@@ -134,16 +136,18 @@ public class BaseFrame extends AnchorPane {
    */
   private void addRestartButton() {
     Button restartButton = new Button("Restart");
+    restartButton.setStyle("-fx-wrap-text: false");
+    restartButton.prefWidthProperty().bind(widthProperty().divide(15));
+    restartButton.prefHeightProperty().bind(widthProperty().divide(30));
+    restartButton.setOnAction(event -> listener.onRestartClicked());
     ChangeListener<Number> sizeListener =
         (observable, oldValue, newValue) -> restartButton.setLayoutX(
-        getWidth() / 15);
-    restartButton.prefWidthProperty().bind(widthProperty().divide(15));
-    restartButton.prefHeightProperty().bind(heightProperty().divide(30));
-
+        restartButton.getPrefWidth());
     widthProperty().addListener(sizeListener);
+    restartButton.setLayoutX(100);
 
-    restartButton.setOnAction(event -> listener.onRestartClicked());
     getChildren().add(restartButton);
+
   }
 
   /**
@@ -153,6 +157,7 @@ public class BaseFrame extends AnchorPane {
     VBox choiceButtons = new VBox();
     try {
       for (Link link : passage.getLinks()) {
+
         Button button = new Button(link.getText());
         button.setOnAction(event -> listener.onOptionButtonClicked(link));
         button.setPrefWidth(width / 10);
@@ -199,13 +204,14 @@ public class BaseFrame extends AnchorPane {
     textPane.setLayoutY(height / 5);
     textPane.getChildren().add(text);
     textPane.setStyle("-fx-background-color: #C5B1FF");
+
     ChangeListener<Number> sizeListener = (observable, oldValue, newValue) -> {
       text.setWrappingWidth(getWidth() / 7);
       textPane.setLayoutX(getWidth() * 0.9 - text.getWrappingWidth());
       textPane.setLayoutY(getHeight() * 0.2);
     };
-    widthProperty().addListener(sizeListener);
-    heightProperty().addListener(sizeListener);
+    prefWidthProperty().addListener(sizeListener);
+    prefHeightProperty().addListener(sizeListener);
     getChildren().add(textPane);
   }
 
@@ -213,84 +219,11 @@ public class BaseFrame extends AnchorPane {
    * Adds a resizable inventory to the frame.
    */
   private void createInventory() {
-    List<String> inventory = player.getInventory();
-    List<Pane> inventorySlots = new ArrayList<>();
-    HBox inventoryPane = new HBox();
-    ChangeListener<Number> sizeListener = (observable, oldValue, newValue) -> {
-      inventoryPane.setLayoutY(getHeight() * (391.0 / 450));
-      inventoryPane.setLayoutX(getWidth() / 50);
-      inventoryPane.setSpacing(getWidth() / 50);
-    };
-    widthProperty().addListener(sizeListener);
-    heightProperty().addListener(sizeListener);
-
-    makeInventoryResizable(inventory, inventorySlots, inventoryPane);
-
+    int inventoryHeight = 70;
+    InventoryPane inventoryPane = new InventoryPane(60, inventoryHeight, player.getInventory());
     getChildren().add(inventoryPane);
-  }
-
-  /**
-   * Makes the input inventory resizable.
-   *
-   * @param inventory      Items in the inventory.
-   * @param inventorySlots Inventory slots of the inventory.
-   * @param inventoryPane  The pane that holds the inventory slots.
-   */
-  private void makeInventoryResizable(List<String> inventory, List<Pane> inventorySlots,
-                                      HBox inventoryPane) {
-    for (int i = 0; i < 10; i++) {
-      Pane inventorySlot = new Pane();
-      ChangeListener<Number> inventoryResizer = (observable, oldValue, newValue) -> {
-        double slotSize = Math.min(getWidth() / 9 - inventoryPane.getSpacing(), getHeight() / 9);
-        inventorySlot.setPrefHeight(slotSize);
-        inventorySlot.setPrefWidth(slotSize);
-      };
-      widthProperty().addListener(inventoryResizer);
-      heightProperty().addListener(inventoryResizer);
-
-      inventoryPane.getChildren().add(inventorySlot);
-      inventorySlots.add(inventorySlot);
-      try {
-        setInventoryItem(inventorySlot, inventory.get(i));
-      } catch (Exception e) {
-        inventorySlot.setStyle("-fx-background-color: A6FFC3");
-      }
-    }
-  }
-
-  /**
-   * Sets an inventory item to a pane. If there are no pictures by the name of the item, a red cross
-   * will be added instead.
-   *
-   * @param pane The inventory pane of the item.
-   * @param item The item to be added to the pane.
-   */
-  private void setInventoryItem(Pane pane, String item) {
-    try {
-
-      Image image = new Image("images/" + item + ".png");
-
-      BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT,
-          BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-          new BackgroundSize(0.9, 0.9, true, true, true, true));
-
-      Background background = new Background(backgroundImage);
-      pane.setBackground(background);
-    } catch (Exception e) {
-      try {
-        Image image = new Image("images/" + "Exclamation" + ".png");
-
-        BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT,
-            BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-            new BackgroundSize(0.9, 0.9, true, true, true, true));
-
-        Background background = new Background(backgroundImage);
-        pane.setBackground(background);
-
-      } catch (Exception f) {
-        pane.setStyle("-fx-background-color: #A6FFC3");
-      }
-    }
+    inventoryPane.setLayoutY(getPrefHeight() - 70);
+    inventoryPane.setLayoutX(10);
   }
 
 
