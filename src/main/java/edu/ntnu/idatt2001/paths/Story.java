@@ -8,36 +8,42 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * Class that represents a story.
+ * The Story class represents a story in the game. A story is
+ * made up of a collection of passages. The Story object has title,
+ * a map of all passages that make up the story, an opening passage,
+ * and a current passage which keeps track of where in the story the player is.
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since May 12, 2023.
  */
 public class Story {
   private final String title;
   private final Map<Link, Passage> passages;
   private final Passage openingPassage;
+  private Passage currentPassage;
 
   /**
-   * Constructor for the story object.
+   * Constructs a story object with the given title and opening passage.
    *
-   * @param title The title of the story
+   * @param title The title of the story.
    * @param openingPassage The passage that the story will start from.
    * @throws NullPointerException If either the title or opening passage is null.
    * @throws IllegalArgumentException If the title is blank.
    */
-  public Story(String title, Passage openingPassage)
-          throws IllegalArgumentException, NullPointerException {
+  public Story(String title, Passage openingPassage) throws IllegalArgumentException,
+          NullPointerException {
     if (title.isBlank()) {
       throw new IllegalArgumentException("Title cannot be blank.");
     }
     this.title = Objects.requireNonNull(title, "Title cannot be blank.");
     this.openingPassage = Objects.requireNonNull(openingPassage, "Opening passage cannot be null.");
+    this.currentPassage = Objects.requireNonNull(openingPassage, "Opening passage cannot be null.");
     this.passages = new HashMap<>();
   }
 
   /**
-   * Gets the title of the story.
+   * The method retrieves the title of the story.
    *
    * @return The title of the story.
    */
@@ -46,7 +52,7 @@ public class Story {
   }
 
   /**
-   * Retrieves the opening passage of the story.
+   * The method retrieves the opening passage of the story.
    *
    * @return The opening passage of the story.
    */
@@ -55,7 +61,29 @@ public class Story {
   }
 
   /**
-   * Adds a passage to the list of passages.
+   * The method retrieves the current passage of the story.
+   *
+   * @return the current passage.
+   */
+  public Passage getCurrentPassage() {
+    return currentPassage;
+  }
+
+  /**
+   * The method sets a new current passage.
+   *
+   * @param currentPassage the new current passage.
+   * @throws NullPointerException if the currentPassage is null.
+   */
+  public void setCurrentPassage(Passage currentPassage) throws NullPointerException {
+    if (currentPassage == null) {
+      throw new NullPointerException("Current passage cannot be null.");
+    }
+    this.currentPassage = currentPassage;
+  }
+
+  /**
+   * The method adds a passage to the list of passages.
    *
    * @param passage The passage that will be added to the story.
    * @throws NullPointerException If the given passage is null.
@@ -84,7 +112,7 @@ public class Story {
   }
 
   /**
-   * Creates a collection of all passages and returns it.
+   * The method creates a collection of all passages and returns it.
    *
    * @return A collection of all passages.
    */
