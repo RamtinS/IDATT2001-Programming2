@@ -77,12 +77,12 @@ public class Game {
   }
 
   /**
-   * Returns the opening passage of the game.
+   * The method returns the start passage of the game.
    *
-   * @return The opening passage of the game.
+   * @return the start passage of the game.
    */
   public Passage begin() {
-    return story.getOpeningPassage();
+    return story.getCurrentPassage();
   }
 
   /**
