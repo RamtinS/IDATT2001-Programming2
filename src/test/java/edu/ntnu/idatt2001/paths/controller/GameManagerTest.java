@@ -16,11 +16,7 @@ import edu.ntnu.idatt2001.paths.goals.GoldGoal;
 import edu.ntnu.idatt2001.paths.goals.HealthGoal;
 import edu.ntnu.idatt2001.paths.goals.InventoryGoal;
 import edu.ntnu.idatt2001.paths.goals.ScoreGoal;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,24 +40,23 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameManagerTest {
 
   private static final Logger logger = Logger.getLogger(GameManagerTest.class.getName());
-  private String pathToFile;
-  private File testFile;
-  private GameManager gameManager;
-  private String gameId1;
-  private Player player1;
-  private Story story;
-  private List<Goal> goals1;
-  private Game game1;
-  private Game game2;
+  private static String pathOfFile;
+  private static File testFile;
+  private static GameManager gameManager;
+  private static String gameId1;
+  private static Player player1;
+  private static Story story;
+  private static List<Goal> goals1;
+  private static Game game1;
+  private static Game game2;
 
-  @BeforeEach
-  void setUp() {
-    pathToFile =  "src/test/resources/games/games_test.json";
-    testFile = new File(pathToFile);
+  @BeforeAll
+  static void setUpAll() {
+    pathOfFile = "src/test/resources/games/games_test.json";
+    testFile = new File(pathOfFile);
 
     gameId1 = "Test ID 1";
     String gameId2 = "Test ID 2";
-
 
     player1 = new Player.PlayerBuilder("Player1")
             .health(50)
@@ -135,15 +130,22 @@ class GameManagerTest {
     games.add(game2);
 
     try {
-      FileGameHandler.writeGamesToFile(games, pathToFile);
-      gameManager = GameManager.getInstance(pathToFile);
+      FileGameHandler.writeGamesToFile(games, pathOfFile);
+      gameManager = GameManager.initialize(pathOfFile);
     } catch (IOException e) {
       logger.log(Level.WARNING, e.getMessage(), e);
     }
   }
 
-  @AfterEach
-  void tearDown() {
+  @AfterAll
+  static void tearDownAll() {
+    try {
+      gameManager.deleteGame(game1);
+      gameManager.deleteGame(game2);
+    } catch (IOException e) {
+      logger.log(Level.WARNING, e.getMessage(), e);
+    }
+
     Path path = Paths.get(testFile.getPath());
     try {
       Files.deleteIfExists(path);
@@ -158,12 +160,7 @@ class GameManagerTest {
     @Test
     @DisplayName("Test get instance")
     void testGetInstance() {
-      GameManager testGameManager = null;
-      try {
-        testGameManager = GameManager.getInstance(pathToFile);
-      } catch (IOException e) {
-        logger.log(Level.WARNING, e.getMessage(), e);
-      }
+      GameManager testGameManager = GameManager.getInstance();
       assertNotNull(testGameManager);
       assertSame(gameManager, testGameManager);
     }
@@ -254,6 +251,13 @@ class GameManagerTest {
   @Nested
   @DisplayName("Negative tests")
   class NegativeTests {
+
+    @Test
+    @DisplayName("Should not initialize GameManager throws IllegalSateException")
+    void shouldNotInitializeGameManagerThrowsIllegalSateException() {
+      assertThrows(IllegalStateException.class, () -> GameManager.initialize(pathOfFile));
+    }
+
     @Test
     @DisplayName("Should not create game throws IllegalSateException")
     void shouldNotCreateGameThrowsIllegalStateException() {
