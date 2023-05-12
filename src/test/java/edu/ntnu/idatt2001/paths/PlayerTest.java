@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since March 29, 2023.
+ * @since May 12, 2023.
  */
 class PlayerTest {
   private Player player;
@@ -127,6 +127,21 @@ class PlayerTest {
       player.addToInventory("Sword");
       List<String> actualInventory = player.getInventory();
       assertEquals(expectedInventory,actualInventory);
+    }
+
+    @Test
+    @DisplayName("Should rest player")
+    void shouldRestPlayer() {
+      player.increaseHealth(30);
+      player.increaseGold(30);
+      player.increaseScore(30);
+      player.addToInventory("Sword");
+      player.resetPlayer();
+
+      assertEquals(10, player.getHealth());
+      assertEquals(2, player.getScore());
+      assertEquals(3, player.getGold());
+      assertTrue(player.getInventory().isEmpty());
     }
   }
 
