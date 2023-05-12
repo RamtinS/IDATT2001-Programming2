@@ -4,7 +4,7 @@ Forest Adventure
 You are standing at the edge of a dense forest. You see a path leading into the forest.
 [Follow the path](The Clearing){Inventory:Sword}{Inventory:Axe}
 
-::Clearing
+::The Clearing
 As you make your way through the forest, you come across a small clearing. In the center of the clearing is an altar.
 [Approach the altar](Alter){Score:10}
 [Continue through the forest](Deeper into the forest)

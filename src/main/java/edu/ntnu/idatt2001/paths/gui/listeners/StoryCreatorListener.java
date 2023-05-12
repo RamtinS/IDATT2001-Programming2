@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2001.paths.gui;
+package edu.ntnu.idatt2001.paths.gui.listeners;
 
 /**
  * Interface for setting actions to the buttons of a "main menu" frame.
@@ -7,11 +7,6 @@ package edu.ntnu.idatt2001.paths.gui;
  * @version 1.0
  * @since April 26, 2023.
  */
-public interface MainMenuListener {
-
-  void onNewGameClicked();
-
-  void onLoadGameClicked();
-
-  void onTutorialButtonClicked();
+public interface StoryCreatorListener {
+  void onReturnClicked();
 }

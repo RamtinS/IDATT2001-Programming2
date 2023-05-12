@@ -17,8 +17,8 @@ public class InputField extends HBox {
 
   private final TextArea textArea;
   private final ImageView imageView;
-  private boolean shouldBePositiveInteger;
-  private boolean shouldHaveText;
+  private final boolean shouldBePositiveInteger;
+  private final boolean shouldHaveText;
   private final Image invalidImage;
   private final Image warningImage;
   private final Image validImage;

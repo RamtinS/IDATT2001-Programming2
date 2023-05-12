@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2001.paths.gui;
 
 
+import edu.ntnu.idatt2001.paths.gui.listeners.MainMenuListener;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.value.ChangeListener;
@@ -77,30 +78,29 @@ public class MainMenu extends Pane {
    * Adds buttons for all user options.
    */
   private void setOptionButtons() {
-    VBox buttonBox = new VBox();
-    Button newGame = new Button();
-    Button loadgame = new Button();
-    Button tutorial = new Button();
+    final VBox buttonBox = new VBox();
+    Button newGame = new Button("New game");
+    Button loadGame = new Button("Load game");
+    Button tutorial = new Button("Tutorial");
+    Button createGame = new Button("Create story");
 
     List<Button> buttonsToAdd = new ArrayList<>();
     buttonsToAdd.add(newGame);
-    buttonsToAdd.add(loadgame);
+    buttonsToAdd.add(loadGame);
     buttonsToAdd.add(tutorial);
+    buttonsToAdd.add(createGame);
 
     newGame.setOnAction(event -> mainMenuListener.onNewGameClicked());
-    loadgame.setOnAction(event -> mainMenuListener.onLoadGameClicked());
+    loadGame.setOnAction(event -> mainMenuListener.onLoadGameClicked());
     tutorial.setOnAction(event -> mainMenuListener.onTutorialButtonClicked());
-
-    newGame.setText("New game");
-    loadgame.setText("Load game");
-    tutorial.setText("Tutorial");
+    createGame.setOnAction(event -> mainMenuListener.onCreateStoryMenuClicked());
 
     ChangeListener<Number> widthListener = getButtonWidthChangeListener(buttonsToAdd);
     ChangeListener<Number> heightListener = getButtonHeightChangeListener(buttonsToAdd);
 
     widthProperty().addListener(widthListener);
     heightProperty().addListener(heightListener);
-    buttonBox.getChildren().addAll(newGame, loadgame, tutorial);
+    buttonBox.getChildren().addAll(newGame, loadGame, tutorial, createGame);
     buttonBox.layoutXProperty().bind(widthProperty().subtract(newGame.widthProperty()).divide(2));
     buttonBox.layoutYProperty().bind(heightProperty().subtract(newGame.heightProperty()).divide(2));
 
