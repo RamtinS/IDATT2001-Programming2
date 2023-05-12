@@ -184,6 +184,21 @@ class FileGameHandlerTest {
                         }
                       ]
                     },
+                    "story current passage": {
+                      "title": "Beginnings",
+                      "content": "There is a door in front of you.",
+                      "links": [
+                        {
+                          "text": "Try to open the door",
+                          "reference": "Another room",
+                          "actions": [
+                            {
+                              "item": "Sword"
+                            }
+                          ]
+                        }
+                      ]
+                    },
                     "story passages": [
                       {
                         "title": "Another room",
@@ -268,6 +283,21 @@ class FileGameHandlerTest {
                     },
                     "story title": "Haunted House",
                     "story opening passage": {
+                      "title": "Beginnings",
+                      "content": "There is a door in front of you.",
+                      "links": [
+                        {
+                          "text": "Try to open the door",
+                          "reference": "Another room",
+                          "actions": [
+                            {
+                              "item": "Sword"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "story current passage": {
                       "title": "Beginnings",
                       "content": "There is a door in front of you.",
                       "links": [
