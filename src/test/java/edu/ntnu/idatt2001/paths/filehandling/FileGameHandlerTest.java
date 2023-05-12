@@ -163,6 +163,9 @@ class FileGameHandlerTest {
                     "game ID": "Test ID 1",
                     "player": {
                       "name": "Player1",
+                      "startHealth": 50,
+                      "startScore": 100,
+                      "startGold": 50,
                       "health": 50,
                       "score": 100,
                       "gold": 50,
@@ -276,6 +279,9 @@ class FileGameHandlerTest {
                     "game ID": "Test ID 2",
                     "player": {
                       "name": "Player2",
+                      "startHealth": 60,
+                      "startScore": 100,
+                      "startGold": 40,
                       "health": 60,
                       "score": 100,
                       "gold": 40,
