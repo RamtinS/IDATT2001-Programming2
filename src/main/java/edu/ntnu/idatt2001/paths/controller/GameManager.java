@@ -28,10 +28,10 @@ public class GameManager {
   /**
    * Constructor for the GameManager class.
    *
-   * @param pathOfFile the path of the file to read and write Game objects to.
+   * @param pathOfFile the path to the file for reading and writing Game objects.
    * @throws NullPointerException if the pathOfFile or FILE_EXTENSION is null.
    * @throws IllegalArgumentException if pathOfFile is blank or does not end with FILE_EXTENSION.
-   * @throws IOException if there is an error reading list of games form file.
+   * @throws IOException if there is an error reading the list of games form the file.
    */
   private GameManager(String pathOfFile) throws NullPointerException,
           IllegalArgumentException, IOException {
@@ -42,19 +42,35 @@ public class GameManager {
   }
 
   /**
-   * Returns an instance of the GameManager class.
-   * If an instance does not exist, a new instance is created.
+   * The method initializes the GameManager with the given path of file.
+   * This method can only be called once to ensure that GameManager is a singleton instance.
    *
-   * @param pathOfFile the path of the file to read and write Game objects to.
-   * @return an instance of the GameManager class.
+   * @param pathOfFile the path to the file for reading and writing Game objects.
+   * @return the initialized GameManager instance.
    * @throws NullPointerException if the pathOfFile or FILE_EXTENSION is null.
    * @throws IllegalArgumentException if pathOfFile is blank or does not end with FILE_EXTENSION.
-   * @throws IOException if there is an error reading list of games form file.
+   * @throws IOException if there is an error reading the list of games from the file.
+   * @throws IllegalStateException if the GameManager has already been initialized.
    */
-  public static GameManager getInstance(String pathOfFile) throws NullPointerException,
-          IllegalArgumentException, IOException {
+  public static GameManager initialize(String pathOfFile) throws NullPointerException,
+          IllegalArgumentException, IOException, IllegalStateException{
+    if (instance != null) {
+      throw new IllegalStateException("GameManager has already been initialized.");
+    }
+    instance = new GameManager(pathOfFile);
+    return instance;
+  }
+
+  /**
+   * Returns an instance of the GameManager class. The GameManager must be initialized
+   * using the initialize() method before calling this method.
+   *
+   * @return the instance of the GameManager.
+   * @throws IllegalStateException if the GameManager has not been initialized.
+   */
+  public static GameManager getInstance() throws IllegalStateException {
     if (instance == null) {
-      instance = new GameManager(pathOfFile);
+      throw new IllegalStateException("GameManager has not been initialized.");
     }
     return instance;
   }
