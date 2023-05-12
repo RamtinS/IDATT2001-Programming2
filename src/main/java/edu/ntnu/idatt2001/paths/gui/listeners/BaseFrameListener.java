@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2001.paths.gui;
+package edu.ntnu.idatt2001.paths.gui.listeners;
 
 import edu.ntnu.idatt2001.paths.Link;
 
