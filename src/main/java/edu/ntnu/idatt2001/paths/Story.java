@@ -87,10 +87,15 @@ public class Story {
    *
    * @param passage The passage that will be added to the story.
    * @throws NullPointerException If the given passage is null.
+   * @throws IllegalArgumentException If a passage with the same title already exists.
    */
-  public void addPassage(Passage passage) throws NullPointerException {
+  public void addPassage(Passage passage) throws NullPointerException, IllegalArgumentException {
     if (passage == null) {
       throw new NullPointerException("Passage cannot be null.");
+    }
+    if (getPassages().stream()
+            .anyMatch(p -> p.getTitle().equalsIgnoreCase(passage.getTitle().trim()))) {
+      throw new IllegalArgumentException("A passage with the same title already exists.");
     }
     Link link = new Link(passage.getTitle(), passage.getTitle());
     passages.put(link, passage);
@@ -166,7 +171,8 @@ public class Story {
             .flatMap(passage -> passage.getLinks().stream()
                     .filter(link -> getPassages().stream()
                             .noneMatch(p -> p.getTitle().equalsIgnoreCase(link.getReference())
-                                    || openingPassage.getTitle().equalsIgnoreCase(link.getReference()))))
+                                    || openingPassage.getTitle()
+                                    .equalsIgnoreCase(link.getReference()))))
             .collect(Collectors.toList());
   }
 }
