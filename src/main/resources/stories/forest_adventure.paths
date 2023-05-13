@@ -4,86 +4,15 @@ Forest Adventure
 You are standing at the edge of a dense forest. You see a path leading into the forest.
 [Follow the path](The Clearing){Inventory:Sword}{Inventory:Axe}
 
-::The Clearing
-As you make your way through the forest, you come across a small clearing. In the center of the clearing is an altar.
-[Approach the altar](Alter){Score:10}
-[Continue through the forest](Deeper into the forest)
-[Go back](Beginnings){Score:-10}
-
 ::Altar
 As you approach the altar, you see that there is a small, ornate box inside.
 [Open the box](Treasure)
 [Continue through the forest](Deeper into the forest)
-[Go back](Clearing)
-
-::Treasure
-You open the box and find a glittering gem inside. Suddenly, you hear a rustling in the bushes behind you.
-[Investigate the noise](Troll)
-[Leave the clearing and continue through the forest](Deeper into the forest)
-
-::Troll
-A troll emerges from the bushes, its eyes fixed on the gem in your hand.
-[Fight the troll](Fight the troll)
-[Run away](Ran from the Troll)
-
-::Fight the troll
-You choose your weapon and prepare to fight the troll.
-[Sword](Deeper into the forest)
-[Axe](Beginnings)
-[Apple](Beginnings)
-
-::Ran from the Troll
-You start running from the troll, but it catches up to you, and you die.
-[Start over](Beginnings)
-
-::Deeper into the forest
-You continue to make your way through the forest, and you see an another path.
-[Follow the second path](Castle)
-[Follow the main oath](The Forest's Heart)
-[Go back](Clearing)
-
-::Castle
-You come across an old castle in the middle of the forest. The gate is closed, and there are stone guards patrolling the perimeter.
-[Sneak past the guards](Throne Room){Score:30}
-[Fight the guards](Dungeon){Health:-50}
-[Go back](Deeper into the forest)
+[Go back](The Clearing)
 
 ::Dungeon
 You fight the guards, but they overpower you and throw you into the dungeon.
 [Start over](Beginnings)
-
-::Throne Room
-You successfully sneak past the guards and find yourself in the throne room. You see a treasure chest next to the throne.
-[Open the chest](Gold chest){Gold:300}{Score:100}
-[Leave the throne room](Castle)
-
-::Gold chest
-You find a lot of gold in the chest. You decide to take the gold with you and go back to the main path.
-[Leave the throne room](The Forest's Heart)
-
-::Forest's Heart
-You continue through the forest and eventually find yourself in a clearing at the center of the forest. In the center of the clearing, you see a large, ancient tree.
-[Approach the tree](Guardian)
-
-::Guardian
-As you approach the tree, a mysterious figure appears. It introduces itself as the guardian of the forest and asks why you have come.
-[Explain your quest](Continue the journey)
-[Attack the guardian](Fight the guardian)
-
-::Fight the guardian
-You decide to attack the guardian, but quickly realize that it was a mistake as the guardian easily defeats you.
-[Start over](Forest's Heart)
-
-::Continue the journey
-After explaining your quest to the guardian, it grants you permission to continue through the forest and find what you seek.
-[Continue through the forest](Final Showdown)
-[Go back](Guardian)
-
-::Final Showdown
-You finally reach the end of the forest and find what you have been searching for. But before you can claim it, a fierce monster appears.
-[Fight the monster](Fight the monster)
-[Run away](Forest's Heart)
-[Go back](The End)
 
 ::Fight the monster
 The monster charges at you. You quickly draw your weapon and attack it.
@@ -91,10 +20,80 @@ The monster charges at you. You quickly draw your weapon and attack it.
 [Axe](Victory)
 [Apple](Beginnings)
 
+::The Clearing
+As you make your way through the forest, you come across a small clearing. In the center of the clearing is an altar.
+[Approach the altar](Altar){Score:10}
+[Continue through the forest](Deeper into the forest)
+[Go back](Beginnings){Score:-10}
+
+::Treasure
+You open the box and find a glittering gem inside. Suddenly, you hear a rustling in the bushes behind you.
+[Investigate the noise](Troll)
+[Leave the clearing and continue through the forest](Deeper into the forest)
+
+::Continue the journey
+After explaining your quest to the guardian, it grants you permission to continue through the forest and find what you seek.
+[Continue through the forest](Final Showdown)
+[Go back](Guardian)
+
+::Gold chest
+You find a lot of gold in the chest. You decide to take the gold with you and go back to the main path.
+[Leave the throne room](The Forest's Heart)
+
+::Fight the troll
+You choose your weapon and prepare to fight the troll.
+[Sword](Deeper into the forest)
+[Axe](Beginnings)
+[Apple](Beginnings)
+
+::Deeper into the forest
+You continue to make your way through the forest, and you see an another path.
+[Follow the second path](Castle)
+[Follow the main oath](The Forest's Heart)
+[Go back](The Clearing)
+
+::Castle
+You come across an old castle in the middle of the forest. The gate is closed, and there are stone guards patrolling the perimeter.
+[Sneak past the guards](Throne Room){Score:30}
+[Fight the guards](Dungeon){Health:-50}
+[Go back](Deeper into the forest)
+
+::Fight the guardian
+You decide to attack the guardian, but quickly realize that it was a mistake as the guardian easily defeats you.
+[Start over](The Forest's Heart)
+
+::Guardian
+As you approach the tree, a mysterious figure appears. It introduces itself as the guardian of the forest and asks why you have come.
+[Explain your quest](Continue the journey)
+[Attack the guardian](Fight the guardian)
+
+::Troll
+A troll emerges from the bushes, its eyes fixed on the gem in your hand.
+[Fight the troll](Fight the troll)
+[Run away](Ran from the Troll)
+
+::The Forest's Heart
+You continue through the forest and eventually find yourself in a clearing at the center of the forest. In the center of the clearing, you see a large, ancient tree.
+[Approach the tree](Guardian)
+
+::Throne Room
+You successfully sneak past the guards and find yourself in the throne room. You see a treasure chest next to the throne.
+[Open the chest](Gold chest){Gold:300}{Score:100}
+[Leave the throne room](Castle)
+
+::Final Showdown
+You finally reach the end of the forest and find what you have been searching for. But before you can claim it, a fierce monster appears.
+[Fight the monster](Fight the monster)
+[Run away](The Forest's Heart)
+[Go back](Victory)
+
 ::Ran from the monster
 You quickly turn around and run back the way you came. The monster catches up to you, and it is all over.
 [Start over](Beginnings)
 
+::Ran from the Troll
+You start running from the troll, but it catches up to you, and you die.
+[Start over](Beginnings)
+
 ::Victory
 You emerge victorious after the battle. You claim your prize and leave the forest a hero.
-[End of Game](End)
