@@ -42,6 +42,7 @@ public class FileStoryHandler {
    */
   public static void writeStoryToFile(Story story, String pathOfFile)
           throws NullPointerException, IllegalArgumentException, IOException {
+
     if (story == null) {
       throw new NullPointerException("The story cannot be null.");
     }
@@ -94,7 +95,9 @@ public class FileStoryHandler {
    */
   public static Story readStoryFromFile(String pathOfFile)
           throws NullPointerException, IllegalArgumentException, IOException {
+
     FilePathValidator.validatePathOfFile(pathOfFile, FILE_EXTENSION);
+    invalidActions.clear();
 
     Story story;
     try (BufferedReader reader = new BufferedReader(
