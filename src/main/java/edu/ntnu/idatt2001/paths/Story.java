@@ -102,13 +102,23 @@ public class Story {
    * @param link The link that will be used to search for matching passages.
    * @return The passage corresponding to the link.
    * @throws NullPointerException If the link is null.
+   * @throws IllegalStateException If the passage is not found.
    */
-  public Passage getPassage(Link link) throws NullPointerException {
+  public Passage getPassage(Link link) throws NullPointerException, IllegalStateException {
     if (link == null) {
       throw new NullPointerException("Link cannot be null.");
     }
     Link passageLink = new Link(link.getReference(), link.getReference());
-    return this.passages.get(passageLink);
+    Passage passage;
+    if (link.getReference().equalsIgnoreCase(openingPassage.getTitle())) {
+      passage = getOpeningPassage();
+    } else {
+      passage = this.passages.get(passageLink);
+    }
+    if (passage == null) {
+      throw new IllegalStateException("Passage not found: " + link.getReference());
+    }
+    return passage;
   }
 
   /**
