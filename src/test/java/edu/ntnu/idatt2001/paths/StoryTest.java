@@ -25,7 +25,7 @@ class StoryTest {
 
   @BeforeEach
   void setUp() {
-    openingPassage = new Passage("Test title", "Test content");
+    openingPassage = new Passage("Opening passage", "Test content");
     story = new Story("Test title", openingPassage);
   }
 
@@ -85,6 +85,7 @@ class StoryTest {
     private final Passage passage2 = new Passage("Title passage2", "Content passage2");
     private final Link link3 = new Link("Text link3" , "Title passage2");
     private final Passage passage3 = new Passage("Title passage3", "Content passage3");
+    private final Link link4 = new Link("Text link3" , "Opening Passage");
 
     @Test
     @DisplayName("Should get current passage")
@@ -122,6 +123,13 @@ class StoryTest {
     }
 
     @Test
+    @DisplayName("Should get opening passage")
+    void shouldGetOpeningPassage() {
+      Passage actualPassage = story.getPassage(link4);
+      assertEquals(openingPassage, actualPassage);
+    }
+
+    @Test
     @DisplayName("Should get passage")
     void shouldGetPassage() {
       story.addPassage(passage2);
@@ -130,9 +138,15 @@ class StoryTest {
     }
 
     @Test
-    @DisplayName("Should not get passage")
-    void shouldNotGetPassage() {
+    @DisplayName("Should not get passage throws NullPointerException")
+    void shouldNotGetPassageThrowsNullPointerException() {
       assertThrows(NullPointerException.class, () -> story.getPassage(null));
+    }
+
+    @Test
+    @DisplayName("Should not get passage throws IllegalStateException")
+    void shouldNotGetPassageThrowsIllegalStateException() {
+      assertThrows(IllegalStateException.class, () -> story.getPassage(link2));
     }
 
     @Test
