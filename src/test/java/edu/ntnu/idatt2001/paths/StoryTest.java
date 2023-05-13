@@ -81,11 +81,12 @@ class StoryTest {
   class PassageTests {
     private final Link link1 = new Link("Text link1", "Title passage2");
     private final Passage passage1 = new Passage("Title passage1", "Content passage1");
-    private final Link link2 = new Link("Text link2" , "Title passage4");
+    private final Link link2 = new Link("Text link2" , "Title passage5");
     private final Passage passage2 = new Passage("Title passage2", "Content passage2");
     private final Link link3 = new Link("Text link3" , "Title passage2");
     private final Passage passage3 = new Passage("Title passage3", "Content passage3");
     private final Link link4 = new Link("Text link3" , "Opening Passage");
+    private final Passage passage4 = new Passage("Title passage3", "Content passage3");
 
     @Test
     @DisplayName("Should get current passage")
@@ -200,17 +201,20 @@ class StoryTest {
     void shouldGetBrokenLinks() {
       passage1.addLink(link1);
       passage2.addLink(link2);
+      passage3.addLink(link3);
+      passage4.addLink(link4);
 
       story.addPassage(passage1);
       story.addPassage(passage2);
-
-      story.removePassage(link1);
+      story.addPassage(passage3);
+      story.addPassage(passage4);
 
       List<Link> expectedBrokenLinks = new ArrayList<>();
-      expectedBrokenLinks.add(link1);
+      expectedBrokenLinks.add(link2);
       List<Link> actualBrokenLinks = story.getBrokenLinks();
 
-      assertEquals(expectedBrokenLinks, actualBrokenLinks);
+      assertEquals(1, actualBrokenLinks.size());
+      assertTrue(expectedBrokenLinks.containsAll(actualBrokenLinks));
     }
   }
 }
