@@ -6,6 +6,7 @@ import edu.ntnu.idatt2001.paths.Link;
 import edu.ntnu.idatt2001.paths.Player;
 import edu.ntnu.idatt2001.paths.Story;
 import edu.ntnu.idatt2001.paths.actions.Action;
+import edu.ntnu.idatt2001.paths.controller.GameManager;
 import edu.ntnu.idatt2001.paths.goals.Goal;
 import edu.ntnu.idatt2001.paths.gui.listeners.BaseFrameListener;
 import edu.ntnu.idatt2001.paths.gui.listeners.CreateGameListener;
@@ -18,6 +19,9 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.transform.Scale;
+import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 
 /**
@@ -62,7 +66,9 @@ public class App extends Application {
     addLoadStoredGameListener(stage);
     addStoryCreatorListener(stage);
 
-    stage.setScene(new Scene(new MainMenu(FRAME_WIDTH, FRAME_HEIGHT, mainMenuListener)));
+    stage.setTitle("Paths");
+    MainMenu menu = new MainMenu(FRAME_WIDTH, FRAME_HEIGHT, mainMenuListener);
+    stage.setScene(new Scene(menu));
     stage.show();
   }
 
@@ -106,6 +112,7 @@ public class App extends Application {
         for (Action action : link.getActions()) {
           action.execute(currentGame.getPlayer());
         }
+
         BaseFrame newFrame;
         try {
           newFrame = new BaseFrame(currentGame.go(link), currentGame.getPlayer(), FRAME_WIDTH,
@@ -119,9 +126,23 @@ public class App extends Application {
         stage.setScene(new Scene(newFrame));
         stage.show();
 
-        if (currentGame.getStory().getPassage(link).getLinks().isEmpty()) {
-          Alert alert = new Alert(AlertType.CONFIRMATION, "The game is finished");
+        boolean gameFinished = false;
+        if (currentGame.getPlayer().getHealth() <= 0){
+          Alert alert = new Alert(AlertType.CONFIRMATION, "The game is finished, you have died");
           alert.showAndWait();
+          gameFinished = true;
+        }
+
+        if (currentGame.getStory().getPassage(link).getLinks().isEmpty() && !gameFinished) {
+          Alert alert = new Alert(AlertType.CONFIRMATION, "The game is finished, you have won");
+          alert.showAndWait();
+          gameFinished = true;
+        }
+
+        if (gameFinished){
+          MainMenu mainMenu = new MainMenu(FRAME_WIDTH, FRAME_HEIGHT, mainMenuListener);
+          stage.setScene(new Scene(mainMenu));
+          stage.show();
         }
 
       }
@@ -141,7 +162,7 @@ public class App extends Application {
        */
       @Override
       public void onReturnClicked() {
-        stage.setScene(new Scene(new MainMenu(FRAME_WIDTH, FRAME_HEIGHT, mainMenuListener)));
+        stage.setScene(new Scene(new MainMenu(FRAME_WIDTH,FRAME_HEIGHT, mainMenuListener)));
         stage.show();
       }
 
@@ -157,8 +178,21 @@ public class App extends Application {
                                   Difficulty chosenDifficulty, Story selectedStory) {
         Player player = new Player.PlayerBuilder(playerName).health(chosenDifficulty.getHealth())
             .build();
+        try {
+          currentGame = GameManager.getInstance()
+              .createGame("Game id", player, selectedStory, chosenGoals);
+        } catch (Exception e) {
+          Alert alert = new Alert(AlertType.CONFIRMATION,
+              "Error while saving game\nYour game will not be saved, do you still want to "
+                  + "continue?");
+          alert.showAndWait();
+          if (alert.getResult().equals(ButtonType.OK)) {
+            currentGame = new Game("Game id", player, selectedStory, chosenGoals);
+          } else {
+            return;
+          }
+        }
 
-        currentGame = new Game("Game id", player, selectedStory, chosenGoals);
         BaseFrame currentFrame = new BaseFrame(currentGame.begin(), currentGame.getPlayer(),
             FRAME_WIDTH, FRAME_HEIGHT, baseFrameListener);
         stage.setScene(new Scene(currentFrame));
@@ -244,6 +278,7 @@ public class App extends Application {
       }
     };
   }
+
 
 
 }
