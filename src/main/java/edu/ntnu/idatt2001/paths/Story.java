@@ -163,11 +163,10 @@ public class Story {
    */
   public List<Link> getBrokenLinks() {
     return getPassages().stream()
-            .flatMap(passage -> passage.getLinks()
-                    .stream()
-                    .filter(link -> getPassages()
-                            .stream()
-                            .noneMatch(p -> p.getTitle().equals(link.getReference()))))
+            .flatMap(passage -> passage.getLinks().stream()
+                    .filter(link -> getPassages().stream()
+                            .noneMatch(p -> p.getTitle().equalsIgnoreCase(link.getReference())
+                                    || openingPassage.getTitle().equalsIgnoreCase(link.getReference()))))
             .collect(Collectors.toList());
   }
 }
