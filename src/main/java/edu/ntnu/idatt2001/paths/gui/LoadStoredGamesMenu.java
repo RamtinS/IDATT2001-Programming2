@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2001.paths.gui;
 
 import edu.ntnu.idatt2001.paths.Game;
+import edu.ntnu.idatt2001.paths.Link;
 import edu.ntnu.idatt2001.paths.Player;
 import edu.ntnu.idatt2001.paths.Story;
 import edu.ntnu.idatt2001.paths.filehandling.FileStoryHandler;
@@ -31,6 +32,9 @@ public class LoadStoredGamesMenu extends Pane {
   private final LoadStoredGamesListener listener;
   private TableView<Game> gameTable;
   private List<Game> gameList;
+  TableColumn<Game, String> gameColumn;
+  TableColumn<Game, String> playerColumn;
+  TableColumn<Game, String> brokenLinksColumn;
 
   /**
    * Constructor for a LoadStoredGamesMenu object. Adds a table with selectable games.
@@ -63,7 +67,13 @@ public class LoadStoredGamesMenu extends Pane {
     getChildren().add(confirmButton);
     confirmButton.setLayoutX(100);
     confirmButton.setOnAction(event -> {
+
       Game game = gameTable.getSelectionModel().getSelectedItem();
+
+      if (game.getStory().getBrokenLinks().size() > 0) {
+        showBrokenLinks(game.getStory());
+      }
+
       listener.onSelectedGameClicked(game);
     });
     confirmButton.disableProperty().bind(gameIsSelected());
@@ -84,17 +94,17 @@ public class LoadStoredGamesMenu extends Pane {
     gameTable = new TableView<>();
     gameTable.getColumns().clear();
 
-    TableColumn<Game, String> gameColumn = new TableColumn<>();
+    gameColumn = new TableColumn<>();
     gameColumn.setCellValueFactory(
         cellData -> new SimpleStringProperty(cellData.getValue().getStory().getTitle()));
     gameColumn.setText("Game");
 
-    TableColumn<Game, String> playerColumn = new TableColumn<>();
+    playerColumn = new TableColumn<>();
     playerColumn.setCellValueFactory(
         cellData -> new SimpleStringProperty(cellData.getValue().getPlayer().getName()));
     playerColumn.setText("Player");
 
-    TableColumn<Game, String> brokenLinksColumn = new TableColumn<>();
+    brokenLinksColumn = new TableColumn<>();
     brokenLinksColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
         String.valueOf(cellData.getValue().getStory().getBrokenLinks().size())));
     brokenLinksColumn.setText("Broken links");
@@ -144,6 +154,22 @@ public class LoadStoredGamesMenu extends Pane {
    */
   private BooleanBinding gameIsSelected() {
     return gameTable.getSelectionModel().selectedItemProperty().isNull();
+  }
+
+  private void showBrokenLinks(Story story) {
+    List<Link> brokenLinks = story.getBrokenLinks();
+    if (brokenLinks.size() > 0) {
+      String errorMessage = "The uploaded passage has: " + brokenLinks.size() + " broken links.";
+
+      errorMessage = errorMessage.concat("\nThese are the broken links:\n");
+      for (Link link : brokenLinks) {
+        errorMessage = errorMessage.concat("\n - " + link.getText() + "->" + link.getReference());
+      }
+      errorMessage = errorMessage.concat("\n\nAre you sure you want to continue?");
+      Alert alert = new Alert(AlertType.CONFIRMATION, errorMessage);
+      alert.showAndWait();
+
+    }
   }
 
 }
