@@ -21,7 +21,6 @@ import java.util.List;
 public class GameManager {
 
   private static GameManager instance = null;
-  private static final int MAX_GAMES = 6;
   private final String pathOfFile;
   private final List<Game> games;
 
@@ -88,10 +87,6 @@ public class GameManager {
    */
   public Game createGame(String gameId, Player player, Story story, List<Goal> goals)
           throws IllegalStateException, IllegalArgumentException, NullPointerException {
-    if (games.size() == MAX_GAMES) {
-      throw new IllegalStateException("Maximum number of games reached: " + MAX_GAMES
-              + " Cannot create more games.");
-    }
     if (gameId == null) {
       throw new NullPointerException("Game ID cannot be null.");
     }
@@ -107,9 +102,7 @@ public class GameManager {
     if (goals == null) {
       throw new NullPointerException("Goals cannot be null.");
     }
-    Game game = new Game(gameId,player, story, goals);
-    games.add(game);
-    return game;
+    return new Game(gameId, player, story, goals);
   }
 
   /**
