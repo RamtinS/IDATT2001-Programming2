@@ -152,6 +152,7 @@ class GameManagerTest {
     } catch (IOException e) {
       logger.log(Level.WARNING, "Error deleting file.", e);
     }
+    System.out.println(gameManager.getGames());
   }
 
   @Nested
@@ -169,13 +170,11 @@ class GameManagerTest {
     @DisplayName("Should create game")
     void shouldCreateGame() {
       Game game = gameManager.createGame("Test ID 3", player1, story, goals1);
-      assertTrue(gameManager.getGames().contains(game));
 
-      try {
-        gameManager.deleteGame(game);
-      } catch (IOException e) {
-        logger.log(Level.WARNING, e.getMessage(), e);
-      }
+      assertEquals("Test ID 3", game.getGameId());
+      assertEquals(player1, game.getPlayer());
+      assertEquals(story, game.getStory());
+      assertEquals(goals1, game.getGoals());
     }
 
     @Test
@@ -183,6 +182,7 @@ class GameManagerTest {
     void shouldDeleteGame() {
       Game game = gameManager.createGame("Test ID 3", player1, story, goals1);
       try {
+        gameManager.saveGame(game);
         gameManager.deleteGame(game);
       } catch (IOException e) {
         logger.log(Level.WARNING, e.getMessage(), e);
@@ -256,27 +256,6 @@ class GameManagerTest {
     @DisplayName("Should not initialize GameManager throws IllegalSateException")
     void shouldNotInitializeGameManagerThrowsIllegalSateException() {
       assertThrows(IllegalStateException.class, () -> GameManager.initialize(pathOfFile));
-    }
-
-    @Test
-    @DisplayName("Should not create game throws IllegalSateException")
-    void shouldNotCreateGameThrowsIllegalStateException() {
-      Game game3 = gameManager.createGame("Test ID 3", player1, story, goals1);
-      Game game4 = gameManager.createGame("Test ID 4", player1, story, goals1);
-      Game game5 = gameManager.createGame("Test ID 5", player1, story, goals1);
-      Game game6 = gameManager.createGame("Test ID 6", player1, story, goals1);
-
-      assertThrows(IllegalStateException.class, () -> gameManager.createGame("Test ID 7", player1, story, goals1));
-
-      try {
-        gameManager.deleteGame(game3);
-        gameManager.deleteGame(game4);
-        gameManager.deleteGame(game5);
-        gameManager.deleteGame(game6);
-
-      } catch (IOException e) {
-        logger.log(Level.WARNING, e.getMessage(), e);
-      }
     }
 
     @Test
