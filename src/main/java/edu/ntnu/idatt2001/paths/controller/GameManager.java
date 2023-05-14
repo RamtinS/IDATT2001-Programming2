@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2001.paths.controller;
 
 import edu.ntnu.idatt2001.paths.Game;
+import edu.ntnu.idatt2001.paths.Passage;
 import edu.ntnu.idatt2001.paths.Player;
 import edu.ntnu.idatt2001.paths.Story;
 import edu.ntnu.idatt2001.paths.filehandling.FileGameHandler;
@@ -126,8 +127,12 @@ public class GameManager {
    * @param game the game to save.
    * @throws IOException if there is an error writing list of games to file.
    */
-  public void saveGame(Game game) throws NullPointerException, IOException {
+  public void saveGame(Game game, Passage currentPassage) throws NullPointerException, IOException {
     validateGame(game);
+    if (currentPassage == null) {
+      throw new NullPointerException("Current passage cannot be null.");
+    }
+    game.getStory().setCurrentPassage(currentPassage);
     if (games.contains(game)) {
       int index = games.indexOf(game);
       games.set(index, game);
