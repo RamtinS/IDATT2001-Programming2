@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2001.paths.gui;
 
 import edu.ntnu.idatt2001.paths.Difficulty;
+import edu.ntnu.idatt2001.paths.Link;
 import edu.ntnu.idatt2001.paths.Story;
 import edu.ntnu.idatt2001.paths.filehandling.FileStoryHandler;
 import edu.ntnu.idatt2001.paths.goals.Goal;
@@ -19,16 +20,21 @@ import javafx.geometry.VPos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Separator;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 
 /**
  * Class that represents a menu for creating a game. Holds input fields for all values needed to
@@ -132,11 +138,13 @@ public class CreateGameMenu extends Pane {
     rightControl.setSpacing(10);
     rightControl.setPadding(new Insets(10, 10, 10, 10));
 
-    playerNameInput = new InputField(30, 30, false, true);
-    healthGoalInput = new InputField(30, 30, true, true);
-    goldGoalInput = new InputField(30, 30, true, true);
-    inventoryGoalInput = new InputField(30, 30, true, true);
-    scoreGoalInput = new InputField(30, 30, true, true);
+
+    double inputWidth = getWidth() / 4;
+    playerNameInput = new InputField(inputWidth, 30, false, true);
+    healthGoalInput = new InputField(inputWidth, 30, true, true);
+    goldGoalInput = new InputField(inputWidth, 30, true, true);
+    inventoryGoalInput = new InputField(inputWidth, 30, true, true);
+    scoreGoalInput = new InputField(inputWidth, 30, true, true);
 
     healthGoalInput.setHint("Integer between 1 and 100");
     rightControl.getChildren().add(difficultyBox);
@@ -151,7 +159,10 @@ public class CreateGameMenu extends Pane {
       inputField.getTextArea().setOnKeyReleased(action -> inputField.setPrefferedPicture());
 
     }
-    rightControl.getChildren().add(storyBox);
+    HBox hBox = new HBox();
+    hBox.getChildren().addAll(storyBox, createUploadFilesButton());
+
+    rightControl.getChildren().add(hBox);
     return rightControl;
   }
 
@@ -192,6 +203,7 @@ public class CreateGameMenu extends Pane {
 
   private void createStoryBox() {
     storyBox.setPrefWidth(10000000);
+    storyBox.getItems().removeAll(storyBox.getItems());
     for (String storyLocation : findAllStoryFiles()) {
       storyBox.getItems().add(storyLocation);
     }
@@ -266,6 +278,7 @@ public class CreateGameMenu extends Pane {
         .or(inventoryGoalInput.getTextArea().textProperty().isEmpty())
         .or(scoreGoalInput.getTextArea().textProperty().isEmpty())
         .or(healthGoalInput.getTextArea().textProperty().isEmpty())
+        .or(storyBox.valueProperty().isNull())
         .or(difficultyBox.valueProperty().isNull()).or(inputIsNotParseable());
   }
 
@@ -386,6 +399,66 @@ public class CreateGameMenu extends Pane {
 
   private String[] findAllStoryFiles() {
     return new File("src/main/resources/stories").list();
+  }
+
+  /**
+   * Creates a button for uploading a paths file to the user.
+   * <li>If the file cannot be read or written, the user will be alerted.</li>
+   * <li>Only files ending with ".paths" can be submitted.</li>
+   *
+   * @return A button used trigger a {@link FileChooser} where the user can submit a ".paths" file.
+   */
+  private Button createUploadFilesButton() {
+    Button uploadButton = new Button("Upload");
+
+    uploadButton.setOnAction(event -> {
+      FileChooser fileChooser = new FileChooser();
+      fileChooser.getExtensionFilters()
+          .addAll(new ExtensionFilter("Path files (*.paths)", "*.paths"));
+      Stage stage = (Stage) uploadButton.getScene().getWindow();
+      File selectedFile = fileChooser.showOpenDialog(stage);
+      if (selectedFile == null) {
+        return;
+      }
+      Story story;
+      try {
+        story = FileStoryHandler.readStoryFromFile(selectedFile.getPath());
+
+        System.out.println(story);
+        System.out.println(selectedFile.getPath());
+      } catch (Exception e) {
+        Alert alert = new Alert(AlertType.ERROR, "Selected file could not be read because: "  + e.getMessage());
+        alert.showAndWait();
+        return;
+      }
+
+      try {
+        List<Link> brokenLinks = story.getBrokenLinks();
+        if (brokenLinks.size() > 0) {
+          String errorMessage = "The uploaded passage has: " + brokenLinks.size() + " broken links.";
+
+          errorMessage = errorMessage.concat("\nThese are the broken links:\n");
+          for (Link link : brokenLinks){
+            errorMessage = errorMessage.concat( "\n - " + link.getText());
+          }
+          errorMessage = errorMessage.concat("\n\nAre you sure you want to continue?");
+          Alert alert = new Alert(AlertType.CONFIRMATION, errorMessage);
+          alert.showAndWait();
+          if (alert.getResult().equals(ButtonType.CANCEL)){
+            return;
+          }
+        }
+        FileStoryHandler.writeStoryToFile(story, "src/main/resources/stories/uploadStory.paths");
+
+      } catch (Exception e) {
+        Alert alert = new Alert(AlertType.ERROR, "Could not write story to file because" + e.getMessage());
+        e.printStackTrace();
+        alert.showAndWait();
+        createStoryBox();
+      }
+    });
+
+    return uploadButton;
   }
 
 
