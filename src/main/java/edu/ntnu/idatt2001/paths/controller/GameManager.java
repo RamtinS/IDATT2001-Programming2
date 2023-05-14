@@ -37,7 +37,7 @@ public class GameManager {
     FilePathValidator.validatePathOfFile(pathOfFile, FileGameHandler.getFileExtension());
     this.pathOfFile = pathOfFile;
     this.games = new ArrayList<>();
-    this.games.addAll(FileGameHandler.readGamesFromFile(pathOfFile));
+    this.games.addAll(FileGameHandler.parseGamesFromFile(pathOfFile));
   }
 
   /**

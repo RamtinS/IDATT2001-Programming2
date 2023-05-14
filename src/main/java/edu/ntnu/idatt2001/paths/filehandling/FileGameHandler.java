@@ -100,7 +100,7 @@ public class FileGameHandler {
   }
 
   /**
-   * The method reads a list of Game objects from a JSON file.
+   * The method parses a list of Game objects from a JSON file.
    *
    * @param pathOfFile the path ot the file to read from.
    * @return the list of Game objects read from the file.
@@ -109,7 +109,7 @@ public class FileGameHandler {
    * @throws IOException if there is an error reading list of games from file.
    * @throws JsonSyntaxException if the file does not have the correct JSON syntax.
    */
-  public static List<Game> readGamesFromFile(String pathOfFile) throws NullPointerException,
+  public static List<Game> parseGamesFromFile(String pathOfFile) throws NullPointerException,
           IllegalArgumentException, IOException, JsonSyntaxException {
 
     FilePathValidator.validatePathOfFile(pathOfFile, FILE_EXTENSION);
