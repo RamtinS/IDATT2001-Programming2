@@ -19,9 +19,9 @@ public class InputField extends HBox {
   private final ImageView imageView;
   private final boolean shouldBePositiveInteger;
   private final boolean shouldHaveText;
-  private final Image invalidImage;
-  private final Image warningImage;
-  private final Image validImage;
+  private static final Image invalidImage = new Image("images/red_x.png");
+  private final Image warningImage = new Image("images/exclamation.png");
+  private final Image validImage = new Image("images/checkmark.png");
 
   /**
    * Constructor for an input field object.
@@ -35,13 +35,11 @@ public class InputField extends HBox {
   public InputField(double width, double height, boolean shouldBePositiveInteger,
                     boolean shouldHaveText) {
 
+    DimensionUtility.changeAllPaneHeights(this, height);
+    DimensionUtility.changeAllPaneWidths(this, width);
     textArea = new TextArea();
     textArea.setPrefRowCount(1);
     textArea.setWrapText(true);
-
-    this.validImage = new Image("images/checkmark.png");
-    this.invalidImage = new Image("images/red_x.png");
-    this.warningImage = new Image("images/exclamation.png");
 
     imageView = new ImageView();
     imageView.setFitHeight(width);
@@ -50,7 +48,7 @@ public class InputField extends HBox {
 
     this.shouldHaveText = shouldHaveText;
     this.shouldBePositiveInteger = shouldBePositiveInteger;
-
+    setPrefferedPicture();
     getChildren().addAll(textArea, imageView);
   }
 
