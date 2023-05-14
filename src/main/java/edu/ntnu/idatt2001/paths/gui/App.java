@@ -68,7 +68,10 @@ public class App extends Application {
 
     stage.setTitle("Paths");
     MainMenu menu = new MainMenu(FRAME_WIDTH, FRAME_HEIGHT, mainMenuListener);
-    stage.setScene(new Scene(menu));
+    Scene scene = new Scene(menu);
+    stage.setScene(scene);
+    String cssFilePath = "file:src/main/java/edu/ntnu/idatt2001/paths/gui/stylesheets/MainMenuStyling.css";
+    scene.getStylesheets().add(cssFilePath);
     stage.show();
   }
 
