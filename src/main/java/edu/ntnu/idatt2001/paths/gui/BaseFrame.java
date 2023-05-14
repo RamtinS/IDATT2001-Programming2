@@ -75,7 +75,7 @@ public class BaseFrame extends AnchorPane {
    */
   private void applyBackground() {
     try {
-      String pathOfFile = "src/main/resources/images/"
+      String pathOfFile = "images/forestadventure/"
               + passage.getTitle().toLowerCase().replace(" ", "_") + ".png";
 
       Image image = new Image(pathOfFile);
