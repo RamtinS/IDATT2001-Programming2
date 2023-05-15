@@ -35,8 +35,8 @@ public class Link {
     if (reference.isBlank()) {
       throw new IllegalArgumentException("Reference cannot be blank.");
     }
-    this.text = Objects.requireNonNull(text, "Text cannot be null.");
-    this.reference = Objects.requireNonNull(reference, "Reference cannot be null.");
+    this.text = Objects.requireNonNull(text.trim(), "Text cannot be null.");
+    this.reference = Objects.requireNonNull(reference.trim(), "Reference cannot be null.");
     this.actions = new ArrayList<>();
   }
 
