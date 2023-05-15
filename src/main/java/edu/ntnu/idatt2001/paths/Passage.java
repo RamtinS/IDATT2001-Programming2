@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * The class represents a passage.
+ * The class represents a passage in a story. The passage
+ * contains a title, content, and a list of links.
  *
- * @author ...
- * @version JDK 17
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since May 15, 2023.
  */
 public class Passage {
   private final String title;
@@ -31,8 +33,8 @@ public class Passage {
     if (content.isBlank()) {
       throw new IllegalArgumentException("Content cannot be blank");
     }
-    this.title = Objects.requireNonNull(title, "Title cannot be null");
-    this.content = Objects.requireNonNull(content, "Content cannot be null");
+    this.title = Objects.requireNonNull(title.trim(), "Title cannot be null");
+    this.content = Objects.requireNonNull(content.trim(), "Content cannot be null");
     this.links = new ArrayList<>();
   }
 
@@ -87,9 +89,10 @@ public class Passage {
   }
 
   /**
-   * Creates a string containing information about the object.
+   * The toString collects all the information about the
+   * passage, and return a textual representation.
    *
-   * @return A string containing information about the object.
+   * @return textual representation of the passage.
    */
   @Override
   public String toString() {
@@ -119,9 +122,9 @@ public class Passage {
   }
 
   /**
-   * Creates a hashcode for the object.
+   * The method generates a hash value for the object.
    *
-   * @return Hashcode for the object.
+   * @return hash value for the object.
    */
   @Override
   public int hashCode() {
