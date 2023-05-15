@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2001.paths.controller;
 
 import edu.ntnu.idatt2001.paths.Game;
+import edu.ntnu.idatt2001.paths.Passage;
 import edu.ntnu.idatt2001.paths.Player;
 import edu.ntnu.idatt2001.paths.Story;
 import edu.ntnu.idatt2001.paths.filehandling.FileGameHandler;
@@ -21,7 +22,6 @@ import java.util.List;
 public class GameManager {
 
   private static GameManager instance = null;
-  private static final int MAX_GAMES = 6;
   private final String pathOfFile;
   private final List<Game> games;
 
@@ -38,7 +38,7 @@ public class GameManager {
     FilePathValidator.validatePathOfFile(pathOfFile, FileGameHandler.getFileExtension());
     this.pathOfFile = pathOfFile;
     this.games = new ArrayList<>();
-    this.games.addAll(FileGameHandler.readGamesFromFile(pathOfFile));
+    this.games.addAll(FileGameHandler.parseGamesFromFile(pathOfFile));
   }
 
   /**
@@ -88,10 +88,6 @@ public class GameManager {
    */
   public Game createGame(String gameId, Player player, Story story, List<Goal> goals)
           throws IllegalStateException, IllegalArgumentException, NullPointerException {
-    if (games.size() == MAX_GAMES) {
-      throw new IllegalStateException("Maximum number of games reached: " + MAX_GAMES
-              + " Cannot create more games.");
-    }
     if (gameId == null) {
       throw new NullPointerException("Game ID cannot be null.");
     }
@@ -107,9 +103,7 @@ public class GameManager {
     if (goals == null) {
       throw new NullPointerException("Goals cannot be null.");
     }
-    Game game = new Game(gameId,player, story, goals);
-    games.add(game);
-    return game;
+    return new Game(gameId, player, story, goals);
   }
 
   /**
@@ -133,8 +127,12 @@ public class GameManager {
    * @param game the game to save.
    * @throws IOException if there is an error writing list of games to file.
    */
-  public void saveGame(Game game) throws NullPointerException, IOException {
+  public void saveGame(Game game, Passage currentPassage) throws NullPointerException, IOException {
     validateGame(game);
+    if (currentPassage == null) {
+      throw new NullPointerException("Current passage cannot be null.");
+    }
+    game.getStory().setCurrentPassage(currentPassage);
     if (games.contains(game)) {
       int index = games.indexOf(game);
       games.set(index, game);

@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2001.paths.filehandling;
 
-import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 import edu.ntnu.idatt2001.paths.Game;
 import edu.ntnu.idatt2001.paths.Link;
 import edu.ntnu.idatt2001.paths.Passage;
@@ -44,14 +44,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class FileGameHandlerTest {
 
   private static final Logger logger = Logger.getLogger(FileGameHandlerTest.class.getName());
-  private String pathToFile;
+  private String pathOfFile;
   private File gamesFile;
   private List<Game> games;
 
   @BeforeEach
   void setUp() {
-    pathToFile = "src/test/resources/games/game_objects.json";
-    gamesFile = new File(pathToFile);
+    pathOfFile = "src/test/resources/games/game_objects.json";
+    gamesFile = new File(pathOfFile);
 
     String gameId1 = "Test ID 1";
     String gameId2 = "Test ID 2";
@@ -145,12 +145,12 @@ class FileGameHandlerTest {
     @DisplayName("Should write games to file")
     void shouldWriteGamesToFile() {
       try {
-        FileGameHandler.writeGamesToFile(games, pathToFile);
+        FileGameHandler.writeGamesToFile(games, pathOfFile);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
 
-      try (BufferedReader reader = new BufferedReader(new FileReader(pathToFile))) {
+      try (BufferedReader reader = new BufferedReader(new FileReader(pathOfFile))) {
         StringBuilder content = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null) {
@@ -396,7 +396,7 @@ class FileGameHandlerTest {
 
         assertEquals(expected, content.toString());
       } catch (IOException e) {
-        logger.log(Level.WARNING, "Error occurred while reading file: " + pathToFile, e);
+        logger.log(Level.WARNING, "Error occurred while reading file: " + pathOfFile, e);
       }
     }
 
@@ -404,15 +404,15 @@ class FileGameHandlerTest {
     @DisplayName("Should read existing games from file")
     void shouldReadExistingGamesFromFile() {
       try {
-        FileGameHandler.writeGamesToFile(games, pathToFile);
+        FileGameHandler.writeGamesToFile(games, pathOfFile);
       } catch (IOException e) {
-        logger.log(Level.WARNING, "Error occurred while writing games to file: " + pathToFile, e);
+        logger.log(Level.WARNING, "Error occurred while writing games to file: " + pathOfFile, e);
       }
       List<Game> gamesReadFromFile = new ArrayList<>();
       try {
-        gamesReadFromFile.addAll(FileGameHandler.readGamesFromFile(pathToFile));
+        gamesReadFromFile.addAll(FileGameHandler.parseGamesFromFile(pathOfFile));
       } catch (IOException e) {
-        logger.log(Level.WARNING, "Error occurred while reading games to file: " + pathToFile, e);
+        logger.log(Level.WARNING, "Error occurred while reading games to file: " + pathOfFile, e);
       }
 
       assertEquals(games.size(), gamesReadFromFile.size());
@@ -437,17 +437,65 @@ class FileGameHandlerTest {
     void shouldReadEmptyListOfGamesFromFile() {
       List<Game> nonExistingGames = new ArrayList<>();
       try {
-        FileGameHandler.writeGamesToFile(nonExistingGames, pathToFile);
+        FileGameHandler.writeGamesToFile(nonExistingGames, pathOfFile);
       } catch (IOException e) {
-        logger.log(Level.WARNING, "Error occurred while writing games to file: " + pathToFile, e);
+        logger.log(Level.WARNING, "Error occurred while writing games to file: " + pathOfFile, e);
       }
       List<Game> gamesReadFromFile = new ArrayList<>();
       try {
-        gamesReadFromFile.addAll(FileGameHandler.readGamesFromFile(pathToFile));
+        gamesReadFromFile.addAll(FileGameHandler.parseGamesFromFile(pathOfFile));
       } catch (IOException e) {
-        logger.log(Level.WARNING, "Error occurred while reading games to file: " + pathToFile, e);
+        logger.log(Level.WARNING, "Error occurred while reading games to file: " + pathOfFile, e);
       }
       assertTrue(gamesReadFromFile.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Should read valid games from file with invalid action")
+    void shouldReadValidGamesFromFileWithInvalidAction() {
+      String pathOfFileInvalidActions = "src/test/resources/games/invalid_action_game_objects.json";
+      List<Game> gamesReadFromFile = new ArrayList<>();
+
+      try {
+        gamesReadFromFile.addAll(FileGameHandler.parseGamesFromFile(pathOfFileInvalidActions));
+      } catch (IOException e) {
+        logger.log(Level.WARNING, "Error occurred while reading games to file: " + pathOfFile, e);
+      }
+
+      assertEquals(1, gamesReadFromFile.size());
+      assertEquals(1, FileGameHandler.getInvalidGames().size());
+    }
+
+    @Test
+    @DisplayName("Should read valid games from file with invalid goal")
+    void shouldReadValidGamesFromFileWithInvalidGoal() {
+      String pathOfFileInvalidGoal = "src/test/resources/games/invalid_goal_game_objects.json";
+      List<Game> gamesReadFromFile = new ArrayList<>();
+
+      try {
+        gamesReadFromFile.addAll(FileGameHandler.parseGamesFromFile(pathOfFileInvalidGoal));
+      } catch (IOException e) {
+        logger.log(Level.WARNING, "Error occurred while reading games to file: " + pathOfFile, e);
+      }
+
+      assertEquals(1, gamesReadFromFile.size());
+      assertEquals(1, FileGameHandler.getInvalidGames().size());
+    }
+
+    @Test
+    @DisplayName("Should read valid games from file with invalid object")
+    void shouldReadValidGamesFromFileWithInvalidObject() {
+      String pathOfFileInvalidGoal = "src/test/resources/games/invalid_object_game_objects.json";
+      List<Game> gamesReadFromFile = new ArrayList<>();
+
+      try {
+        gamesReadFromFile.addAll(FileGameHandler.parseGamesFromFile(pathOfFileInvalidGoal));
+      } catch (IOException e) {
+        logger.log(Level.WARNING, "Error occurred while reading games to file: " + pathOfFile, e);
+      }
+
+      assertEquals(1, gamesReadFromFile.size());
+      assertEquals(1, FileGameHandler.getInvalidGames().size());
     }
 
     @Test
@@ -471,7 +519,7 @@ class FileGameHandlerTest {
     void shouldNotWriteStoryToFileThrowsNullPointerException() {
       List<Game> invalidList = null;
       assertThrows(NullPointerException.class,
-              () -> FileGameHandler.writeGamesToFile(invalidList, pathToFile));
+              () -> FileGameHandler.writeGamesToFile(invalidList, pathOfFile));
       assertThrows(NullPointerException.class,
               () -> FileGameHandler.writeGamesToFile(games, invalidPathOfFileNull));
     }
@@ -489,39 +537,31 @@ class FileGameHandlerTest {
     @DisplayName("Should not read games from file throws NullPointerException")
     void shouldNotReadStoryFromFileThrowsNullPointerException() {
       assertThrows(NullPointerException.class,
-              () -> FileGameHandler.readGamesFromFile(invalidPathOfFileNull));
+              () -> FileGameHandler.parseGamesFromFile(invalidPathOfFileNull));
     }
 
     @Test
     @DisplayName("Should not read games from file throws IllegalArgumentException")
     void shouldNotReadStoryFromFileThrowsIllegalArgumentException() {
       assertThrows(IllegalArgumentException.class,
-              () -> FileGameHandler.readGamesFromFile(invalidPathOfFileExtension));
+              () -> FileGameHandler.parseGamesFromFile(invalidPathOfFileExtension));
       assertThrows(IllegalArgumentException.class,
-              () -> FileGameHandler.readGamesFromFile(invalidPathOfFileBlank));
+              () -> FileGameHandler.parseGamesFromFile(invalidPathOfFileBlank));
     }
 
     @Test
     @DisplayName("Should not read games from file throws IOException")
     void shouldNotReadGamesFromFileThrowsIOException() {
       assertThrows(IOException.class,
-              () -> FileGameHandler.readGamesFromFile("nonExistingFile.json"));
+              () -> FileGameHandler.parseGamesFromFile("nonExistingFile.json"));
     }
 
     @Test
-    @DisplayName("Should not read games from file invalid action throws JsonParseException")
-    void shouldNotReadGamesFromFileInvalidActionThrowsJsonParseException() {
-      assertThrows(JsonParseException.class,
-              () -> FileGameHandler.readGamesFromFile(
-                      "src/test/resources/games/invalid_action_game_objects.json"));
-    }
-
-    @Test
-    @DisplayName("Should not read games from file invalid goal throws JsonParseException")
+    @DisplayName("Should not read games from file invalid syntax throws JsonSyntaxException")
     void shouldNotReadGamesFromFileInvalidGoalThrowsJsonParseException() {
-      assertThrows(JsonParseException.class,
-              () -> FileGameHandler.readGamesFromFile(
-                      "src/test/resources/games/invalid_goal_game_objects.json"));
+      assertThrows(JsonSyntaxException.class,
+              () -> FileGameHandler.parseGamesFromFile(
+                      "src/test/resources/games/invalid_syntax_game_objects.json"));
     }
   }
 }

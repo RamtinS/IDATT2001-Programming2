@@ -45,6 +45,7 @@ class GameManagerTest {
   private static GameManager gameManager;
   private static String gameId1;
   private static Player player1;
+  private static Passage passage1;
   private static Story story;
   private static List<Goal> goals1;
   private static Game game1;
@@ -82,7 +83,7 @@ class GameManagerTest {
     Action action2Link2Passage1 = new HealthAction(-10);
     Link link1Passage1 = new Link("Open the book", "The book of spells");
     Link link2Passage1 = new Link("Go back", "Beginnings");
-    Passage passage1 = new Passage("Another room",
+    passage1 = new Passage("Another room",
             "The door opens to another room. You see a desk with a large, dusty book.");
     link1Passage1.addAction(action1Link1Passage1);
     link1Passage1.addAction(action2Link1Passage1);
@@ -169,13 +170,11 @@ class GameManagerTest {
     @DisplayName("Should create game")
     void shouldCreateGame() {
       Game game = gameManager.createGame("Test ID 3", player1, story, goals1);
-      assertTrue(gameManager.getGames().contains(game));
 
-      try {
-        gameManager.deleteGame(game);
-      } catch (IOException e) {
-        logger.log(Level.WARNING, e.getMessage(), e);
-      }
+      assertEquals("Test ID 3", game.getGameId());
+      assertEquals(player1, game.getPlayer());
+      assertEquals(story, game.getStory());
+      assertEquals(goals1, game.getGoals());
     }
 
     @Test
@@ -183,6 +182,7 @@ class GameManagerTest {
     void shouldDeleteGame() {
       Game game = gameManager.createGame("Test ID 3", player1, story, goals1);
       try {
+        gameManager.saveGame(game, passage1);
         gameManager.deleteGame(game);
       } catch (IOException e) {
         logger.log(Level.WARNING, e.getMessage(), e);
@@ -197,7 +197,7 @@ class GameManagerTest {
       game1.getPlayer().decreaseHealth(-40);
 
       try {
-        gameManager.saveGame(game1);
+        gameManager.saveGame(game1, passage1);
       } catch (IOException e) {
         logger.log(Level.WARNING, e.getMessage(), e);
       }
@@ -209,18 +209,19 @@ class GameManagerTest {
     }
 
     @Test
-    @DisplayName("Should sava new game")
+    @DisplayName("Should save new game")
     void shouldSaveNewGames() {
       Game game = new Game("Test ID 3", player1, story, goals1);
 
       try {
-        gameManager.saveGame(game);
+        gameManager.saveGame(game, passage1);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
 
       assertEquals(3, gameManager.getGames().size());
       assertEquals("Test ID 3", gameManager.getGames().get(2).getGameId());
+      assertEquals(passage1, game.getStory().getCurrentPassage());
 
       try {
         gameManager.deleteGame(game);
@@ -259,27 +260,6 @@ class GameManagerTest {
     }
 
     @Test
-    @DisplayName("Should not create game throws IllegalSateException")
-    void shouldNotCreateGameThrowsIllegalStateException() {
-      Game game3 = gameManager.createGame("Test ID 3", player1, story, goals1);
-      Game game4 = gameManager.createGame("Test ID 4", player1, story, goals1);
-      Game game5 = gameManager.createGame("Test ID 5", player1, story, goals1);
-      Game game6 = gameManager.createGame("Test ID 6", player1, story, goals1);
-
-      assertThrows(IllegalStateException.class, () -> gameManager.createGame("Test ID 7", player1, story, goals1));
-
-      try {
-        gameManager.deleteGame(game3);
-        gameManager.deleteGame(game4);
-        gameManager.deleteGame(game5);
-        gameManager.deleteGame(game6);
-
-      } catch (IOException e) {
-        logger.log(Level.WARNING, e.getMessage(), e);
-      }
-    }
-
-    @Test
     @DisplayName("Should not create game throws IllegalArgumentException")
     void shouldNotCreateGameThrowsIllegalArgumentException() {
       assertThrows(IllegalArgumentException.class, () -> gameManager.createGame(gameId1, player1, story, goals1));
@@ -303,7 +283,8 @@ class GameManagerTest {
     @Test
     @DisplayName("Should not sava existing game throws NullPointerException")
     void shouldNotSaveExistingGamesThrowsNullPointerException() {
-      assertThrows(NullPointerException.class, () -> gameManager.saveGame(null));
+      assertThrows(NullPointerException.class, () -> gameManager.saveGame(null, passage1));
+      assertThrows(NullPointerException.class, () -> gameManager.saveGame(game1, null));
     }
   }
 }
