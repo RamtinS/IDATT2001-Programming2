@@ -24,7 +24,7 @@ public class InventoryAction implements Action {
     if (item.isBlank()) {
       throw new IllegalArgumentException("Item cannot be blank");
     }
-    this.item = Objects.requireNonNull(item, "Item cannot be null");
+    this.item = Objects.requireNonNull(item.trim(), "Item cannot be null");
   }
 
   /**
