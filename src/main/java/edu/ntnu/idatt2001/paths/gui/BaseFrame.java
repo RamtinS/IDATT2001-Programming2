@@ -1,9 +1,11 @@
 package edu.ntnu.idatt2001.paths.gui;
 
+
 import edu.ntnu.idatt2001.paths.Link;
 import edu.ntnu.idatt2001.paths.Passage;
 import edu.ntnu.idatt2001.paths.Player;
 import edu.ntnu.idatt2001.paths.gui.listeners.BaseFrameListener;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,9 +24,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 /**
- * The BaseFrame class representing a frame for the game.
- * It shows the passage text of the current passage and has
- * buttons for the links that the player can follow.
+ * The BaseFrame class representing a frame for the game. It shows the passage text of the current
+ * passage and has buttons for the links that the player can follow.
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
@@ -68,29 +69,48 @@ public class BaseFrame extends AnchorPane {
     showPassageText();
     createInventory();
     applyBackground();
+    speakPassageInfo(passage);
   }
+
+  /**
+   * Uses text to speech to simulate a voice explaining passage info.
+   * <li>Says the passage text</li>
+   * <li>Says all possible links</li>
+   * @param passage The passage used for reading text
+   */
+  private void speakPassageInfo(Passage passage) {
+    List<Link> links = passage.getLinks();
+    String speakText = passage.getContent();
+    speakText = speakText.concat("You have" + links.size() + "options");
+    for (int i = 0; i < links.size(); i++) {
+      speakText = speakText.concat("Option" + i+1 + passage.getLinks().get(i).getText());
+    }
+    if (links.size() > 0){
+      speakText = speakText.concat("Please choose wisely");
+    }
+    TextToSpeech.getInstance().speech(speakText);
+
+  }
+
 
   /**
    * The method applies a background image to the current scene.
    */
   private void applyBackground() {
     try {
-      String pathOfFile = "images/forestadventure/"
-              + passage.getTitle().toLowerCase().replace(" ", "_") + ".png";
+      String pathOfFile =
+          "images/forestadventure/" + passage.getTitle().toLowerCase().replace(" ", "_") + ".png";
 
       Image image = new Image(pathOfFile);
 
       BackgroundSize backgroundSize = new BackgroundSize(1, 1, true, true, false, false);
 
-      BackgroundImage backgroundImage = new BackgroundImage(image,
-              BackgroundRepeat.NO_REPEAT,
-              BackgroundRepeat.NO_REPEAT,
-              BackgroundPosition.CENTER,
-              backgroundSize);
+      BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT,
+          BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
 
       Background background = new Background(backgroundImage);
       setBackground(background);
-    } catch(Exception e) {
+    } catch (Exception e) {
       logger.log(Level.WARNING, "Failed to load background image: " + e.getMessage(), e);
       Alert alert = new Alert(Alert.AlertType.WARNING, "Failed to load background image.");
       alert.showAndWait();
