@@ -2,70 +2,157 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>edu.ntnu.idatt2001.paths</groupId>
-    <artifactId>mappevurdering-idatt2001</artifactId>
-    <version>1.0-SNAPSHOT</version>
+  <groupId>edu.ntnu.idatt2001.paths</groupId>
+  <artifactId>mappevurdering-idatt2001</artifactId>
+  <version>1.0-SNAPSHOT</version>
 
-    <properties>
-        <!-- The Java source and target version used for the project -->
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <!-- The source encoding used for the project -->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-    <dependencies>
-        <!-- The OpenJFX library dependency for JavaFX controls -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>20-ea+9</version>
-        </dependency>
-        <!-- The JUnit Jupiter dependency for testing -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>5.9.1</version>
-        </dependency>
-        <!-- The Gson library dependency for working with JSON data -->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.8.9</version>
-        </dependency>
-    </dependencies>
-    <build>
-        <plugins>
-            <!-- The Maven compiler plugin used for compiling the source code of the project -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
-            </plugin>
-            <!-- The Maven Surefire plugin used for running unit tests -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M7</version>
-            </plugin>
-            <!-- The JavaFX Maven plugin used for running JavaFX applications -->
-            <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.8</version>
-                <configuration>
-                    <mainClass>edu.ntnu.idatt2001.paths.gui.App</mainClass>
-                </configuration>
-            </plugin>
-            <!-- The Maven Javadoc plugin used for generating Javadoc documentation -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.4.1</version>
-            </plugin>
-        </plugins>
-    </build>
+  <properties>
+    <!-- The Java source and target version used for the project -->
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <!-- The source encoding used for the project -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <dependencies>
+    <!-- The OpenJFX library dependency for JavaFX controls -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+      <version>20-ea+9</version>
+    </dependency>
+    <!-- Dependency for playing media files -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-media</artifactId>
+      <version>20-ea+9</version>
+    </dependency>
+    <!-- Dependencies for text to speech -->
+    <dependency>
+      <groupId>cmu_time_awb</groupId>
+      <artifactId>cmu_time_awb</artifactId>
+      <scope>system</scope>
+      <version>1.0</version>
+      <systemPath>${pom.basedir}/libs/cmu_time_awb.jar</systemPath>
+    </dependency>
+
+    <dependency>
+      <groupId>cmu_us_kal</groupId>
+      <artifactId>cmu_us_kal</artifactId>
+      <scope>system</scope>
+      <version>1.0</version>
+      <systemPath>${pom.basedir}/libs/cmu_us_kal.jar</systemPath>
+    </dependency>
+
+    <dependency>
+      <groupId>cmudict04</groupId>
+      <artifactId>cmudict04</artifactId>
+      <scope>system</scope>
+      <version>1.0</version>
+      <systemPath>${pom.basedir}/libs/cmudict04.jar</systemPath>
+    </dependency>
+
+    <dependency>
+      <groupId>cmulex</groupId>
+      <artifactId>cmulex</artifactId>
+      <scope>system</scope>
+      <version>1.0</version>
+      <systemPath>${pom.basedir}/libs/cmulex.jar</systemPath>
+    </dependency>
+
+    <dependency>
+      <groupId>cmutimelex</groupId>
+      <artifactId>cmutimelex</artifactId>
+      <scope>system</scope>
+      <version>1.0</version>
+      <systemPath>${pom.basedir}/libs/cmutimelex.jar</systemPath>
+    </dependency>
+
+    <dependency>
+      <groupId>en_us</groupId>
+      <artifactId>en_us</artifactId>
+      <scope>system</scope>
+      <version>1.0</version>
+      <systemPath>${pom.basedir}/libs/en_us.jar</systemPath>
+    </dependency>
+
+    <dependency>
+      <groupId>freets</groupId>
+      <artifactId>freets</artifactId>
+      <scope>system</scope>
+      <version>1.0</version>
+      <systemPath>${pom.basedir}/libs/freetts.jar</systemPath>
+    </dependency>
+
+    <dependency>
+      <groupId>freets-jsapi10</groupId>
+      <artifactId>freets-jsapi10</artifactId>
+      <scope>system</scope>
+      <version>1.0</version>
+      <systemPath>${pom.basedir}/libs/freetts-jsapi10.jar</systemPath>
+    </dependency>
+
+    <dependency>
+      <groupId>mbrola</groupId>
+      <artifactId>mbrola</artifactId>
+      <scope>system</scope>
+      <version>1.0</version>
+      <systemPath>${pom.basedir}/libs/mbrola.jar</systemPath>
+    </dependency>
+
+    <dependency>
+      <groupId>jsapi</groupId>
+      <artifactId>jsapi</artifactId>
+      <scope>system</scope>
+      <version>1.0</version>
+      <systemPath>${pom.basedir}/libs/jsapi.jar</systemPath>
+    </dependency>
+
+    <!-- The JUnit Jupiter dependency for testing -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.9.1</version>
+    </dependency>
+    <!-- The Gson library dependency for working with JSON data -->
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.8.9</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <!-- The Maven compiler plugin used for compiling the source code of the project -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.10.1</version>
+      </plugin>
+      <!-- The Maven Surefire plugin used for running unit tests -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0-M7</version>
+      </plugin>
+      <!-- The JavaFX Maven plugin used for running JavaFX applications -->
+      <plugin>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-maven-plugin</artifactId>
+        <version>0.0.8</version>
+        <configuration>
+          <mainClass>edu.ntnu.idatt2001.paths.gui.App</mainClass>
+        </configuration>
+      </plugin>
+      <!-- The Maven Javadoc plugin used for generating Javadoc documentation -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.4.1</version>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
 
