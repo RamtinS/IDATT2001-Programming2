@@ -6,10 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import edu.ntnu.idatt2001.paths.goals.Goal;
-import edu.ntnu.idatt2001.paths.goals.GoldGoal;
-import edu.ntnu.idatt2001.paths.goals.HealthGoal;
-import edu.ntnu.idatt2001.paths.goals.InventoryGoal;
-import edu.ntnu.idatt2001.paths.goals.ScoreGoal;
+import edu.ntnu.idatt2001.paths.goals.GoalType;
 import java.lang.reflect.Type;
 
 /**
@@ -19,11 +16,13 @@ import java.lang.reflect.Type;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since April 23, 2023.
+ * @since May 15, 2023.
  */
 public class GoalDeserializer implements JsonDeserializer<Goal> {
+
   /**
    * The method deserializes a JSON element into its corresponding Goal object.
+   * The method only supports Goal objects determined by the GoalType enum.
    *
    * @param jsonElement the JSON element to be deserialized.
    * @param type the type of the object to be deserialized to.
@@ -35,14 +34,11 @@ public class GoalDeserializer implements JsonDeserializer<Goal> {
   public Goal deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context)
           throws JsonParseException {
     JsonObject jsonObject = jsonElement.getAsJsonObject();
-    if (jsonObject.has("minimumGold")) {
-      return context.deserialize(jsonElement, GoldGoal.class);
-    } else if (jsonObject.has("minimumHealth")) {
-      return context.deserialize(jsonElement, HealthGoal.class);
-    } else if (jsonObject.has("mandatoryItems")) {
-      return context.deserialize(jsonElement, InventoryGoal.class);
-    } else if (jsonObject.has("minimumPoints")) {
-      return context.deserialize(jsonElement, ScoreGoal.class);
+    for (GoalType goalType : GoalType.values()) {
+      if (jsonObject.has(goalType.getGoalValueDescription())) {
+        Class<? extends Goal> goalClass = goalType.getGoalClass();
+        return context.deserialize(jsonElement, goalClass);
+      }
     }
     throw new JsonParseException("Unknown goal type: " + jsonElement);
   }
