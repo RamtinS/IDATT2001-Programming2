@@ -4,10 +4,7 @@ import edu.ntnu.idatt2001.paths.Link;
 import edu.ntnu.idatt2001.paths.Passage;
 import edu.ntnu.idatt2001.paths.Story;
 import edu.ntnu.idatt2001.paths.actions.Action;
-import edu.ntnu.idatt2001.paths.actions.GoldAction;
-import edu.ntnu.idatt2001.paths.actions.HealthAction;
-import edu.ntnu.idatt2001.paths.actions.InventoryAction;
-import edu.ntnu.idatt2001.paths.actions.ScoreAction;
+import edu.ntnu.idatt2001.paths.actions.ActionFactory;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -24,7 +21,7 @@ import java.util.logging.Logger;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since April 29, 2023.
+ * @since May 15, 2023.
  */
 public class FileStoryHandler {
   private static final Logger logger = Logger.getLogger(FileStoryHandler.class.getName());
@@ -64,8 +61,9 @@ public class FileStoryHandler {
         }
       }
     } catch (IOException e) {
-      logger.log(Level.SEVERE, "Error writing story to file.", e);
-      throw new IOException("Error writing story to file: " + e.getMessage());
+      String errorMessage = "Error writing story to file: " + e.getMessage();
+      logger.log(Level.SEVERE, errorMessage, e);
+      throw new IOException(errorMessage);
     }
   }
 
@@ -110,8 +108,9 @@ public class FileStoryHandler {
         story.addPassage(passages.get(i));
       }
     } catch (IOException e) {
-      logger.log(Level.SEVERE, "Error reading story from file.", e);
-      throw new IOException("Error reading story from file: " + e.getMessage());
+      String errorMessage = "Error reading story from file: " + e.getMessage();
+      logger.log(Level.SEVERE, errorMessage, e);
+      throw new IOException(errorMessage);
     }
     return story;
   }
@@ -184,23 +183,11 @@ public class FileStoryHandler {
                     + linkPart.replace("{", "") + ". Action description and"
                     + " action value must be separated by a colon.");
           }
-          String actionDescription = actionParts[0].substring(1).toLowerCase().trim();
+          String actionDescription = actionParts[0].substring(1).trim();
           String actionValue = actionParts[1].trim();
-          Action action;
-          switch (actionDescription) {
-            case "gold" -> action = new GoldAction(Integer.parseInt(actionValue));
-            case "health" -> action = new HealthAction(Integer.parseInt(actionValue));
-            case "inventory" -> action = new InventoryAction(actionValue);
-            case "score" -> action = new ScoreAction(Integer.parseInt(actionValue));
-            default -> throw new IllegalArgumentException("Invalid action type: "
-                    + actionDescription);
-          }
+          Action action = ActionFactory.createAction(actionDescription, actionValue);
           link.addAction(action);
-        } catch (NumberFormatException e) {
-          String invalidAction = linkPart.replace("{", "");
-          logger.log(Level.WARNING, "Invalid action value: " + invalidAction, e);
-          invalidActions.add("Invalid action value: " + invalidAction);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | NullPointerException e) {
           logger.log(Level.WARNING, e.getMessage(), e);
           invalidActions.add(e.getMessage());
         }
