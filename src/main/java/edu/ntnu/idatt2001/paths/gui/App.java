@@ -3,6 +3,7 @@ package edu.ntnu.idatt2001.paths.gui;
 import edu.ntnu.idatt2001.paths.Difficulty;
 import edu.ntnu.idatt2001.paths.Game;
 import edu.ntnu.idatt2001.paths.Link;
+import edu.ntnu.idatt2001.paths.Passage;
 import edu.ntnu.idatt2001.paths.Player;
 import edu.ntnu.idatt2001.paths.Story;
 import edu.ntnu.idatt2001.paths.actions.Action;
@@ -16,12 +17,11 @@ import edu.ntnu.idatt2001.paths.gui.listeners.StoryCreatorListener;
 import edu.ntnu.idatt2001.paths.gui.storycreation.ScrollableStoryCreator;
 import java.util.List;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import javafx.scene.transform.Scale;
-import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 
 /**
@@ -60,26 +60,25 @@ public class App extends Application {
   @Override
   public void start(Stage stage) {
 
+    stage.setTitle("Paths");
     createBaseFrameListener(stage);
     addMainMenuListener(stage);
     addCreateGameListener(stage);
     addLoadStoredGameListener(stage);
     addStoryCreatorListener(stage);
+    switchToMainMenu(stage);
+    setCloseAction(stage);
+  }
 
-    stage.setTitle("Paths");
-    MainMenu menu = new MainMenu(FRAME_WIDTH, FRAME_HEIGHT, mainMenuListener);
-    Scene scene = new Scene(menu);
-    stage.setScene(scene);
-    String cssFilePath = "file:src/main/java/edu/ntnu/idatt2001/paths/gui/stylesheets/MainMenuStyling.css";
-    scene.getStylesheets().add(cssFilePath);
-    stage.show();
+  private void setStyleSheet(Scene scene, String filePath) {
+    scene.getStylesheets().add(filePath);
   }
 
 
   /**
-   * Creates a BaseFrameListener, adds button functionality to all buttons in the BaseFrame.
+   * Sets a new {@link BaseFrameListener}.
    *
-   * @param stage The stage to add the BaseFrame to
+   * @param stage The stage to add the button functionality to.
    */
   private void createBaseFrameListener(Stage stage) {
     baseFrameListener = new BaseFrameListener() {
@@ -89,10 +88,7 @@ public class App extends Application {
        */
       @Override
       public void onRestartClicked() {
-        BaseFrame restartFrame = new BaseFrame(currentGame.getStory().getOpeningPassage(),
-            currentGame.getPlayer(), FRAME_WIDTH, FRAME_HEIGHT, this);
-        stage.setScene(new Scene(restartFrame));
-        stage.show();
+        loadNewBaseFrame(stage, currentGame.getStory().getOpeningPassage());
       }
 
       /**
@@ -100,7 +96,7 @@ public class App extends Application {
        */
       @Override
       public void onExitClicked() {
-        stage.setScene(new Scene(new MainMenu(FRAME_WIDTH, FRAME_HEIGHT, mainMenuListener)));
+        switchToMainMenu(stage);
       }
 
 
@@ -130,7 +126,7 @@ public class App extends Application {
         stage.show();
 
         boolean gameFinished = false;
-        if (currentGame.getPlayer().getHealth() <= 0){
+        if (currentGame.getPlayer().getHealth() <= 0) {
           Alert alert = new Alert(AlertType.CONFIRMATION, "The game is finished, you have died");
           alert.showAndWait();
           gameFinished = true;
@@ -142,18 +138,17 @@ public class App extends Application {
           gameFinished = true;
         }
 
-        if (gameFinished){
-          MainMenu mainMenu = new MainMenu(FRAME_WIDTH, FRAME_HEIGHT, mainMenuListener);
-          stage.setScene(new Scene(mainMenu));
-          stage.show();
+        if (gameFinished) {
+          switchToMainMenu(stage);
         }
 
       }
     };
   }
 
+
   /**
-   * Creates a CreateGameListener for adding methods to CreateGameMenu buttons.
+   * Sets a new {@link CreateGameListener}.
    *
    * @param stage The stage to add the button functionality to.
    */
@@ -165,8 +160,7 @@ public class App extends Application {
        */
       @Override
       public void onReturnClicked() {
-        stage.setScene(new Scene(new MainMenu(FRAME_WIDTH,FRAME_HEIGHT, mainMenuListener)));
-        stage.show();
+        switchToMainMenu(stage);
       }
 
       /**
@@ -196,16 +190,13 @@ public class App extends Application {
           }
         }
 
-        BaseFrame currentFrame = new BaseFrame(currentGame.begin(), currentGame.getPlayer(),
-            FRAME_WIDTH, FRAME_HEIGHT, baseFrameListener);
-        stage.setScene(new Scene(currentFrame));
-        stage.show();
+        loadNewBaseFrame(stage, currentGame.getStory().getOpeningPassage());
       }
     };
   }
 
   /**
-   * Sets the main menu listener.
+   * Sets a new {@link MainMenuListener}.
    *
    * @param stage The stage to add the button functionality to.
    */
@@ -217,11 +208,7 @@ public class App extends Application {
        */
       @Override
       public void onNewGameClicked() {
-        CreateGameMenu createGameMenu = new CreateGameMenu(FRAME_WIDTH, FRAME_HEIGHT,
-            createGameListener);
-        Scene newScene = new Scene(createGameMenu);
-        stage.setScene(newScene);
-        stage.show();
+        switchToCreateGameMenu(stage);
       }
 
       /**
@@ -229,11 +216,7 @@ public class App extends Application {
        */
       @Override
       public void onLoadGameClicked() {
-        LoadStoredGamesMenu loadStoredGamesMenu = new LoadStoredGamesMenu(FRAME_WIDTH, FRAME_HEIGHT,
-            loadStoredGamesListener);
-        Scene newScene = new Scene(loadStoredGamesMenu);
-        stage.setScene(newScene);
-        stage.show();
+        loadStoredGames(stage);
       }
 
       /**
@@ -241,47 +224,137 @@ public class App extends Application {
        */
       @Override
       public void onTutorialButtonClicked() {
-
       }
 
       @Override
       public void onCreateStoryMenuClicked() {
-        ScrollableStoryCreator scrollableStoryCreator = new ScrollableStoryCreator(FRAME_WIDTH,
-            FRAME_HEIGHT, storyCreatorListener);
-        stage.setScene(new Scene(scrollableStoryCreator));
+        loadStoryCreator(stage);
       }
     };
   }
 
+  /**
+   * Sets a new {@link LoadStoredGamesListener}.
+   *
+   * @param stage The stage to add the button functionality to.
+   */
   private void addLoadStoredGameListener(Stage stage) {
     loadStoredGamesListener = new LoadStoredGamesListener() {
+      /**
+       * Sets the current game to the selected game. And executes
+       * {@link App#loadNewBaseFrame(Stage, Passage)}
+       *
+       * @param game The selected game.
+       */
       @Override
       public void onSelectedGameClicked(Game game) {
         currentGame = game;
-        BaseFrame currentFrame = new BaseFrame(currentGame.getStory().getOpeningPassage(),
-            currentGame.getPlayer(), FRAME_WIDTH, FRAME_HEIGHT, baseFrameListener);
-        stage.setScene(new Scene(currentFrame));
+        loadNewBaseFrame(stage, game.getStory().getOpeningPassage());
       }
 
+      /**
+       * Switches the scene to the main menu.
+       */
       @Override
       public void onReturnClicked() {
-        MainMenu mainMenu = new MainMenu(FRAME_WIDTH, FRAME_HEIGHT, mainMenuListener);
-        stage.setScene(new Scene(mainMenu));
+        switchToMainMenu(stage);
       }
     };
   }
 
+  /**
+   * Sets a new {@link StoryCreatorListener}.
+   *
+   * @param stage The stage to add the button functionality to.
+   */
   private void addStoryCreatorListener(Stage stage) {
     storyCreatorListener = new StoryCreatorListener() {
+
+      /**
+       * Switches the scene to the main menu.
+       */
       @Override
       public void onReturnClicked() {
-        MainMenu mainMenu = new MainMenu(FRAME_WIDTH, FRAME_HEIGHT, mainMenuListener);
-        stage.setScene(new Scene(mainMenu));
-        stage.show();
+        switchToMainMenu(stage);
       }
     };
   }
 
+  /**
+   * Loads a new {@link MainMenu} to the stage.
+   *
+   * @param stage The stage to load the {@link MainMenu} to.
+   */
+  private void switchToMainMenu(Stage stage) {
+    MainMenu mainMenu = new MainMenu(FRAME_WIDTH, FRAME_HEIGHT, mainMenuListener);
+    Scene scene = new Scene(mainMenu);
+    setStyleSheet(scene, "file:src/main/resources/stylesheets/MainMenuStyling.css");
+    stage.setScene(scene);
+    stage.show();
+  }
+
+  /**
+   * Loads a new {@link CreateGameMenu} to the stage.
+   *
+   * @param stage The stage to load the {@link CreateGameMenu} to.
+   */
+  private void switchToCreateGameMenu(Stage stage) {
+    CreateGameMenu createGameMenu = new CreateGameMenu(FRAME_WIDTH, FRAME_HEIGHT,
+        createGameListener);
+    Scene scene = new Scene(createGameMenu);
+    setStyleSheet(scene, "file:src/main/resources/stylesheets/CreateGameStyling.css");
+    stage.setScene(scene);
+    stage.show();
+  }
+
+  /**
+   * Loads a new {@link BaseFrame} to the stage.
+   *
+   * @param stage The stage to load the {@link BaseFrame} to.
+   */
+  private void loadNewBaseFrame(Stage stage, Passage passage) {
+    BaseFrame currentFrame = new BaseFrame(passage, currentGame.getPlayer(), FRAME_WIDTH,
+        FRAME_HEIGHT, baseFrameListener);
+    stage.setScene(new Scene(currentFrame));
+  }
+
+  /**
+   * Loads a {@link edu.ntnu.idatt2001.paths.gui.storycreation.StoryCreator StoryCreator} to the
+   * stage.
+   *
+   * @param stage The stage to load the
+   *              {@link edu.ntnu.idatt2001.paths.gui.storycreation.StoryCreator StoryCreator} to.
+   */
+  private void loadStoryCreator(Stage stage) {
+    ScrollableStoryCreator scrollableStoryCreator = new ScrollableStoryCreator(FRAME_WIDTH,
+        FRAME_HEIGHT, storyCreatorListener);
+    stage.setScene(new Scene(scrollableStoryCreator));
+  }
+
+  /**
+   * Loads a {@link LoadStoredGamesMenu} to the stage.
+   *
+   * @param stage The stage to load the {@link LoadStoredGamesMenu} to.
+   */
+  private void loadStoredGames(Stage stage) {
+    LoadStoredGamesMenu loadStoredGamesMenu = new LoadStoredGamesMenu(FRAME_WIDTH, FRAME_HEIGHT,
+        loadStoredGamesListener);
+    Scene newScene = new Scene(loadStoredGamesMenu);
+    stage.setScene(newScene);
+    stage.show();
+  }
+
+  /**
+   * Sets the stage close request to close the currently running JVM.
+   *
+   * @param stage The stage to set the action binding to.
+   */
+  private void setCloseAction(Stage stage) {
+    stage.setOnCloseRequest(event -> {
+      Platform.exit();
+      System.exit(0);
+    });
+  }
 
 
 }
