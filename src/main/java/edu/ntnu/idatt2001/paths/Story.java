@@ -36,7 +36,7 @@ public class Story {
     if (title.isBlank()) {
       throw new IllegalArgumentException("Title cannot be blank.");
     }
-    this.title = Objects.requireNonNull(title, "Title cannot be blank.");
+    this.title = Objects.requireNonNull(title.trim(), "Title cannot be blank.");
     this.openingPassage = Objects.requireNonNull(openingPassage, "Opening passage cannot be null.");
     this.currentPassage = Objects.requireNonNull(openingPassage, "Opening passage cannot be null.");
     this.passages = new HashMap<>();
