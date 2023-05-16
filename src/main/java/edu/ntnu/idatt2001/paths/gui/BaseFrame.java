@@ -6,6 +6,9 @@ import edu.ntnu.idatt2001.paths.Passage;
 import edu.ntnu.idatt2001.paths.Player;
 import edu.ntnu.idatt2001.paths.gui.listeners.BaseFrameListener;
 import edu.ntnu.idatt2001.paths.tts.TextToSpeech;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -25,8 +28,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 /**
- * The BaseFrame class representing a frame for the game. It shows the passage text of the current
- * passage and has buttons for the links that the player can follow.
+ * The BaseFrame class represents a frame for the game.
+ * It shows the passage text of the current passage and
+ * has buttons for the links that the player can follow.
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
@@ -44,23 +48,22 @@ public class BaseFrame extends AnchorPane {
   /**
    * Constructor for a BaseFrame object.
    *
-   * @param passage  Passage to present to the user.
-   * @param player   The player used to represent player values.
-   * @param width    The width of the frame.
-   * @param height   The height of the frame.
+   * @param passage Passage to present to the user.
+   * @param player The player used to represent player values.
+   * @param width The width of the frame.
+   * @param height The height of the frame.
    * @param listener The listener used to send out button activations from the frame.
    */
-  public BaseFrame(Passage passage, Player player, double width, double height,
+  public BaseFrame(String storyTitle, Passage passage, Player player, double width, double height,
                    BaseFrameListener listener) throws NullPointerException {
-    Objects.requireNonNull(passage, "Passage cannot be null");
-    Objects.requireNonNull(player, "Player cannot be null");
-    Objects.requireNonNull(listener, "Listener cannot be null");
-
-    this.listener = listener;
+    if (storyTitle == null) {
+      throw new NullPointerException("Story title cannot be null.");
+    }
+    this.passage = Objects.requireNonNull(passage, "Passage cannot be null");
+    this.player = Objects.requireNonNull(player, "Player cannot be null");
+    this.listener = Objects.requireNonNull(listener, "Listener cannot be null");
     this.width = width;
     this.height = height;
-    this.player = player;
-    this.passage = passage;
 
     setPrefHeight(height);
     setPrefWidth(width);
@@ -69,7 +72,7 @@ public class BaseFrame extends AnchorPane {
     showGoldAndPoints();
     showPassageText();
     createInventory();
-    applyBackground();
+    applyBackground(storyTitle);
     speakPassageInfo(passage);
   }
 
@@ -92,30 +95,56 @@ public class BaseFrame extends AnchorPane {
       speakText = speakText.concat("Please choose wisely.");
     }
     TextToSpeech.getInstance().speech(speakText);
-
   }
-
 
   /**
    * The method applies a background image to the current scene.
+   *
+   * @param storyTitle The title of the story for which images are to be retrieved.
    */
-  private void applyBackground() {
+  private void applyBackground(String storyTitle) {
     try {
-      String pathOfFile =
-          "images/forestadventure/" + passage.getTitle().toLowerCase().replace(" ", "_") + ".png";
+      String fileName = passage.getTitle().toLowerCase().replace(" ", "_");
+      String folderName = storyTitle.toLowerCase().replace(" ", "");
+      String imageFolderPath = "src/main/resources/images/" + folderName;
+      String imageFolderPathRelative = "images/" + folderName + "/";
+
+      String[] imageFiles = new File(imageFolderPath).list();
+
+      String imageExtension = null;
+      if (imageFiles != null) {
+        for (String file : imageFiles) {
+          if (file.startsWith(fileName)) {
+            if (file.endsWith(".png")) {
+              imageExtension = ".png";
+              break;
+            } else if (file.endsWith(".jpg") || file.endsWith(".jpeg")) {
+              imageExtension = ".jpg";
+              break;
+            }
+          }
+        }
+      }
+
+      if (imageExtension == null) {
+        throw new FileNotFoundException("Image not found.");
+      }
+
+      String pathOfFile = imageFolderPathRelative + fileName + imageExtension;
 
       Image image = new Image(pathOfFile);
 
       BackgroundSize backgroundSize = new BackgroundSize(1, 1, true, true, false, false);
 
       BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT,
-          BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
+              BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
 
       Background background = new Background(backgroundImage);
       setBackground(background);
     } catch (Exception e) {
-      logger.log(Level.WARNING, "Failed to load background image: " + e.getMessage(), e);
-      Alert alert = new Alert(Alert.AlertType.WARNING, "Failed to load background image.");
+      String errorMessage = "Failed to load background image: " + e.getMessage();
+      logger.log(Level.WARNING, errorMessage, e);
+      Alert alert = new Alert(Alert.AlertType.WARNING, errorMessage);
       alert.showAndWait();
     }
   }
@@ -129,13 +158,11 @@ public class BaseFrame extends AnchorPane {
     healthBar.prefWidthProperty().bind(widthProperty().divide(5));
     healthBar.prefHeightProperty().bind(heightProperty().divide(15));
 
-    healthBar.setStyle("-fx-accent: red; -fx-background-color: gray;");
+    healthBar.setStyle("-fx-accent: #00ff00; -fx-background-color: gray;");
 
     getChildren().add(healthBar);
     setTopAnchor(healthBar, 0.0);
     setRightAnchor(healthBar, 0.0);
-
-
   }
 
   /**
@@ -214,7 +241,7 @@ public class BaseFrame extends AnchorPane {
     attributes.getChildren().addAll(healthText, pointsText);
     attributes.setLayoutX(0);
     attributes.setLayoutY(height / 3);
-    attributes.setStyle("-fx-background-color: #C5B1FF");
+    attributes.setStyle("-fx-background-color: #add8e6");
     getChildren().add(attributes);
   }
 
@@ -230,7 +257,7 @@ public class BaseFrame extends AnchorPane {
 
     textPane.setLayoutY(height / 5);
     textPane.getChildren().add(text);
-    textPane.setStyle("-fx-background-color: #C5B1FF");
+    textPane.setStyle("-fx-background-color: #add8e6");
 
     ChangeListener<Number> sizeListener = (observable, oldValue, newValue) -> {
       text.setWrappingWidth(getWidth() / 7);

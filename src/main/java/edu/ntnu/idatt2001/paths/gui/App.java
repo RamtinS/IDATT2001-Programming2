@@ -114,8 +114,8 @@ public class App extends Application {
 
         BaseFrame newFrame;
         try {
-          newFrame = new BaseFrame(currentGame.go(link), currentGame.getPlayer(), FRAME_WIDTH,
-              FRAME_HEIGHT, this);
+          newFrame = new BaseFrame(currentGame.getStory().getTitle(), currentGame.go(link),
+                  currentGame.getPlayer(), FRAME_WIDTH, FRAME_HEIGHT, this);
         } catch (Exception e) {
           Alert alert = new Alert(AlertType.ERROR,
               "This link is broken, please choose a different button");
@@ -313,8 +313,8 @@ public class App extends Application {
    * @param stage The stage to load the {@link BaseFrame} to.
    */
   private void loadNewBaseFrame(Stage stage, Passage passage) {
-    BaseFrame currentFrame = new BaseFrame(passage, currentGame.getPlayer(), FRAME_WIDTH,
-        FRAME_HEIGHT, baseFrameListener);
+    BaseFrame currentFrame = new BaseFrame(currentGame.getStory().getTitle(), passage,
+            currentGame.getPlayer(), FRAME_WIDTH, FRAME_HEIGHT, baseFrameListener);
     stage.setScene(new Scene(currentFrame));
   }
 
