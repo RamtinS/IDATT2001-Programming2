@@ -1,21 +1,21 @@
 package edu.ntnu.idatt2001.paths.gui;
 
-
 import edu.ntnu.idatt2001.paths.Link;
 import edu.ntnu.idatt2001.paths.Passage;
 import edu.ntnu.idatt2001.paths.Player;
 import edu.ntnu.idatt2001.paths.gui.listeners.BaseFrameListener;
 import edu.ntnu.idatt2001.paths.tts.TextToSpeech;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -48,6 +48,7 @@ public class BaseFrame extends AnchorPane {
   /**
    * Constructor for a BaseFrame object.
    *
+   * @param storyTitle The title of the story.
    * @param passage Passage to present to the user.
    * @param player The player used to represent player values.
    * @param width The width of the frame.
@@ -182,7 +183,15 @@ public class BaseFrame extends AnchorPane {
     exitButton.setStyle("-fx-wrap-text: false");
     exitButton.prefWidthProperty().bind(widthProperty().divide(15));
     exitButton.prefHeightProperty().bind(widthProperty().divide(30));
-    exitButton.setOnAction(event -> listener.onExitClicked());
+    exitButton.setOnAction(event -> {
+      Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Would you like to save the game?");
+      ButtonType yesButton = new ButtonType("Yes");
+      ButtonType noButton = new ButtonType("No");
+      alert.getButtonTypes().setAll(yesButton, noButton);
+      Optional<ButtonType> result = alert.showAndWait();
+      boolean shouldSaveGame = result.isPresent() && result.get() == yesButton;
+      listener.onExitClicked(shouldSaveGame);
+    });
     exitButton.setLayoutX(0);
     exitButton.setLayoutY(0);
     setTopAnchor(exitButton, 0.0);
@@ -216,7 +225,6 @@ public class BaseFrame extends AnchorPane {
     VBox choiceButtons = new VBox();
 
     for (Link link : passage.getLinks()) {
-
       Button button = new Button(link.getText());
       button.setOnAction(event -> listener.onOptionButtonClicked(link));
       button.setPrefWidth(width / 10);
