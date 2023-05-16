@@ -33,7 +33,7 @@ public class ActionFactory {
     if (actionValue == null) {
       throw new NullPointerException("Action value cannot be null.");
     }
-    ActionType actionType = ActionType.getActionTypeFromActionDescription(actionDescription);
+    ActionType actionType = ActionType.getActionType(actionDescription);
     Class<? extends Action> actionClass = actionType.getActionClass();
     try {
       if (actionValue.matches("^[0-9+-]+$")) {

@@ -27,21 +27,21 @@ class ActionTypeTest {
   @Test
   @DisplayName("Should get action type from action description")
   void shouldGetActionTypeFromActionDescription() {
-    ActionType goldActionType = ActionType.getActionTypeFromActionDescription("gold");
+    ActionType goldActionType = ActionType.getActionType("gold");
     assertEquals(ActionType.GOLD, goldActionType);
-    ActionType healthActionType = ActionType.getActionTypeFromActionDescription("health");
+    ActionType healthActionType = ActionType.getActionType("health");
     assertEquals(ActionType.HEALTH, healthActionType);
-    ActionType inventoryAction = ActionType.getActionTypeFromActionDescription("inventory");
+    ActionType inventoryAction = ActionType.getActionType("inventory");
     assertEquals(ActionType.INVENTORY, inventoryAction);
-    ActionType scoreAction = ActionType.getActionTypeFromActionDescription("score");
+    ActionType scoreAction = ActionType.getActionType("score");
     assertEquals(ActionType.SCORE, scoreAction);
   }
 
   @Test
   @DisplayName("Should not get action type from action description throws IllegalArgumentException")
   void shouldNotGetActionTypeFromActionDescriptionThrowsIllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> ActionType.getActionTypeFromActionDescription("invalid"));
-    assertThrows(IllegalArgumentException.class, () -> ActionType.getActionTypeFromActionDescription(null));
+    assertThrows(IllegalArgumentException.class, () -> ActionType.getActionType("invalid"));
+    assertThrows(IllegalArgumentException.class, () -> ActionType.getActionType(null));
   }
 }
 

@@ -1,5 +1,7 @@
 package edu.ntnu.idatt2001.paths.actions;
 
+import java.util.Arrays;
+
 /**
  * Enum representing different types of cations in the application.
  * Each action type has a corresponding value description and action class.
@@ -55,7 +57,7 @@ public enum ActionType {
    * @throws IllegalArgumentException if the ActionType does not exist.
    * @throws NullPointerException if the action description is null.
    */
-  public static ActionType getActionTypeFromActionDescription(String description)
+  public static ActionType getActionType(String description)
           throws IllegalArgumentException {
     for (ActionType actionType : ActionType.values()) {
       if (actionType.toString().equalsIgnoreCase(description)) {
