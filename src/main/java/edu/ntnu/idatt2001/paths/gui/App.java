@@ -92,10 +92,13 @@ public class App extends Application {
       }
 
       /**
-       * Sets the scene to the main menu.
+       * The method sets the scene to the main menu stage when
+       * the exit button is clicked.
+       *
+       * @param shouldSaveGame true if the game should be saved before exiting, false otherwise.
        */
       @Override
-      public void onExitClicked() {
+      public void onExitClicked(boolean shouldSaveGame) {
         switchToMainMenu(stage);
       }
 
