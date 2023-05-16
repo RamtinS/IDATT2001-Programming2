@@ -5,6 +5,7 @@ import edu.ntnu.idatt2001.paths.Link;
 import edu.ntnu.idatt2001.paths.Passage;
 import edu.ntnu.idatt2001.paths.Player;
 import edu.ntnu.idatt2001.paths.gui.listeners.BaseFrameListener;
+import edu.ntnu.idatt2001.paths.tts.TextToSpeech;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -76,17 +77,19 @@ public class BaseFrame extends AnchorPane {
    * Uses text to speech to simulate a voice explaining passage info.
    * <li>Says the passage text</li>
    * <li>Says all possible links</li>
+   *
    * @param passage The passage used for reading text
    */
   private void speakPassageInfo(Passage passage) {
     List<Link> links = passage.getLinks();
     String speakText = passage.getContent();
-    speakText = speakText.concat("You have" + links.size() + "options");
+    speakText = speakText.concat("You have" + links.size() + "options.");
     for (int i = 0; i < links.size(); i++) {
-      speakText = speakText.concat("Option" + i+1 + passage.getLinks().get(i).getText());
+      int options = i + 1;
+      speakText = speakText.concat("Option" + options + passage.getLinks().get(i).getText() + ".");
     }
-    if (links.size() > 0){
-      speakText = speakText.concat("Please choose wisely");
+    if (links.size() > 1) {
+      speakText = speakText.concat("Please choose wisely.");
     }
     TextToSpeech.getInstance().speech(speakText);
 
