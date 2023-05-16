@@ -45,8 +45,7 @@ public class ActionFactory {
       }
     } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
              | InvocationTargetException | NoSuchMethodException e) {
-      throw new IllegalArgumentException(actionDescription + " action has invalid action value: "
-              + actionValue);
+      throw new IllegalArgumentException("Invalid action value for " + actionDescription + ": " + actionValue);
     }
   }
 }
