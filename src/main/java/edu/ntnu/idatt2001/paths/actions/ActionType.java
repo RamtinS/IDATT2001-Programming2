@@ -59,12 +59,10 @@ public enum ActionType {
    */
   public static ActionType getActionType(String description)
           throws IllegalArgumentException {
-    for (ActionType actionType : ActionType.values()) {
-      if (actionType.toString().equalsIgnoreCase(description)) {
-        return actionType;
-      }
-    }
-    throw new IllegalArgumentException("Invalid action type: " + description);
+    return Arrays.stream(ActionType.values())
+            .filter(actionType -> actionType.toString().equalsIgnoreCase(description))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Invalid action type: " + description));
   }
 }
 
