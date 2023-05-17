@@ -88,7 +88,7 @@ public class App extends Application {
        */
       @Override
       public void onRestartClicked() {
-        loadNewBaseFrame(stage, currentGame.getStory().getOpeningPassage());
+        loadNewBaseFrame(stage, currentGame.resetGame());
       }
 
       /**
