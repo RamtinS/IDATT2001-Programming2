@@ -34,10 +34,10 @@ public class Game {
       throw new IllegalArgumentException("Game ID cannot be blank.");
     }
     this.gameId = Objects.requireNonNull(gameId.trim(), "Game ID cannot be null.");
-    this.player = Objects.requireNonNull(player, "Player cannot be null");
-    this.story = Objects.requireNonNull(story, "Story cannot be null");
+    this.player = Objects.requireNonNull(player, "Player cannot be null.");
+    this.story = Objects.requireNonNull(story, "Story cannot be null.");
     this.goals = new ArrayList<>();
-    this.goals.addAll(Objects.requireNonNull(goals, "Goals cannot be null"));
+    this.goals.addAll(Objects.requireNonNull(goals, "Goals cannot be null."));
   }
 
   /**
