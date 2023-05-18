@@ -1,9 +1,7 @@
-package edu.ntnu.idatt2001.paths.gui;
+package edu.ntnu.idatt2001.paths.gui.menus;
 
 
 import edu.ntnu.idatt2001.paths.Difficulty;
-import edu.ntnu.idatt2001.paths.Link;
-import edu.ntnu.idatt2001.paths.Story;
 import edu.ntnu.idatt2001.paths.filehandling.FileStoryHandler;
 import edu.ntnu.idatt2001.paths.goals.Goal;
 import edu.ntnu.idatt2001.paths.goals.GoldGoal;
@@ -12,6 +10,11 @@ import edu.ntnu.idatt2001.paths.goals.InventoryGoal;
 import edu.ntnu.idatt2001.paths.goals.ScoreGoal;
 import edu.ntnu.idatt2001.paths.gui.listeners.CheckListListener;
 import edu.ntnu.idatt2001.paths.gui.listeners.CreateGameListener;
+import edu.ntnu.idatt2001.paths.gui.uielements.CheckListView;
+import edu.ntnu.idatt2001.paths.gui.uielements.InputField;
+import edu.ntnu.idatt2001.paths.gui.utility.DimensionUtility;
+import edu.ntnu.idatt2001.paths.model.Link;
+import edu.ntnu.idatt2001.paths.model.Story;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,6 +71,8 @@ public class CreateGameMenu extends BorderPane {
   private List<String> inputInventoryGoals;
   private Stage inventoryCheckList;
   private Hyperlink hyperlink;
+  private double buttonWidth;
+  private InputField gameId;
 
   /**
    * Constructor for a CreateGameMenu object.
@@ -77,11 +82,11 @@ public class CreateGameMenu extends BorderPane {
    * @param listener The listener used to activate button functionality.
    */
   public CreateGameMenu(double width, double height, CreateGameListener listener) {
-
+    buttonWidth = width / 4;
     this.listener = listener;
     this.difficultyBox = new ComboBox<>();
     this.storyBox = new ComboBox<>();
-    this.inventoryButton = new Button("select");
+    this.inventoryButton = new Button("Select");
     this.infoGrid = new GridPane();
 
     setDimensions(width, height);
@@ -140,25 +145,27 @@ public class CreateGameMenu extends BorderPane {
    */
   private void addInputs() {
 
-    double inputWidth = getWidth() / 4;
-    playerNameInput = new InputField(inputWidth, 30);
+    playerNameInput = new InputField(buttonWidth, 30);
     playerNameInput.setShouldHaveText(true);
 
-    healthGoalInput = new InputField(inputWidth, 30);
+    healthGoalInput = new InputField(buttonWidth, 30);
     healthGoalInput.setShouldBePositiveInteger(true);
 
-    goldGoalInput = new InputField(inputWidth, 30);
+    goldGoalInput = new InputField(buttonWidth, 30);
     goldGoalInput.setShouldBePositiveInteger(true);
 
-    scoreGoalInput = new InputField(inputWidth, 30);
+    scoreGoalInput = new InputField(buttonWidth, 30);
     scoreGoalInput.setShouldBePositiveInteger(true);
+
+    gameId = new InputField(buttonWidth, 30);
+    gameId.setShouldHaveText(true);
 
     storyBox = createStoryBox();
     difficultyBox = createDifficultyBox();
     createInventoryButton();
 
     ArrayList<Node> inputFields = new ArrayList<>(
-        Arrays.asList(playerNameInput, healthGoalInput, goldGoalInput, scoreGoalInput,
+        Arrays.asList(gameId, playerNameInput, healthGoalInput, goldGoalInput, scoreGoalInput,
             inventoryButton, storyBox, difficultyBox, hyperlink));
 
     for (int i = 0; i < inputFields.size(); i++) {
@@ -170,6 +177,7 @@ public class CreateGameMenu extends BorderPane {
    * Adds all input labels to the menu.
    */
   private void addInputLabels() {
+    Label gameId = new Label("Game ID:");
     Label difficulty = new Label("Difficulty:");
     Label playerName = new Label("Player name:");
     Label healthGoal = new Label("Health goal:");
@@ -178,8 +186,8 @@ public class CreateGameMenu extends BorderPane {
     Label scoreGoal = new Label("Score goal:");
     Label story = new Label("Story:");
 
-    List<Label> inputDescriptors = Arrays.asList(playerName, healthGoal, goldGoal, scoreGoal,
-        inventoryGoal, story, difficulty);
+    List<Label> inputDescriptors = Arrays.asList(gameId, playerName, healthGoal, goldGoal,
+        scoreGoal, inventoryGoal, story, difficulty);
     for (int i = 0; i < inputDescriptors.size(); i++) {
       infoGrid.add(inputDescriptors.get(i), 0, i);
     }
@@ -201,6 +209,7 @@ public class CreateGameMenu extends BorderPane {
     CheckListListener checkListListener = selectedGoals -> inputInventoryGoals = selectedGoals;
     CheckListView checkList = new CheckListView(checkListListener);
 
+    inventoryButton.setPrefWidth(buttonWidth);
     inventoryButton.setOnAction(actionEvent -> {
       checkList.setListItems(List.of(possibleItems));
       if (inventoryCheckList == null) {
@@ -216,7 +225,7 @@ public class CreateGameMenu extends BorderPane {
    */
   private ComboBox<Difficulty> createDifficultyBox() {
     ComboBox<Difficulty> difficulties = new ComboBox<>();
-
+    difficulties.setPrefWidth(buttonWidth);
     difficulties.getItems()
         .addAll(Arrays.asList(Difficulty.EASY, Difficulty.MEDIUM, Difficulty.HARD));
     return difficulties;
@@ -229,8 +238,8 @@ public class CreateGameMenu extends BorderPane {
    */
   private ComboBox<String> createStoryBox() {
     ComboBox<String> stories = new ComboBox<>();
-
-    stories.getItems().addAll(findAllStoryFiles());
+    stories.setPrefWidth(buttonWidth);
+    stories.getItems().addAll(findAllDirectoryFiles("src/main/resources/stories"));
     return stories;
   }
 
@@ -240,7 +249,6 @@ public class CreateGameMenu extends BorderPane {
    */
   private void addReturnButton() {
     Button returnButton = new Button("Return");
-
     returnButton.setOnAction(event -> {
       listener.onReturnClicked();
 
@@ -278,26 +286,44 @@ public class CreateGameMenu extends BorderPane {
 
   /**
    * Sends information used to create a game to the listener by using the
-   * {@link CreateGameListener#onCreateClicked(List, String, Difficulty, Story) onCreateClicked}
-   * method.
+   * {@link CreateGameListener#onCreateClicked(List, String, String, Difficulty, Story)
+   * onCreateClicked} method.
    */
   private void createGameClicked() {
     List<Goal> chosenGoals = getGoalInputData();
     String chosenName = getChosenName();
+    String id = gameId.getTextArea().getText();
     Story selectedStory;
+
     try {
       getChosenDifficulty();
       selectedStory = FileStoryHandler.readStoryFromFile(
           "src/main/resources/stories/" + storyBox.getValue());
 
+      List<Link> brokenLinks = selectedStory.getBrokenLinks();
+      if (brokenLinks.size() > 0) {
+        String alertMessage = "The selected story has " + brokenLinks.size() + " broken links";
+        for (Link link : brokenLinks) {
+          alertMessage = alertMessage.concat("\n" + link.getText() + " -> " + link.getReference());
+        }
+        alertMessage = alertMessage.concat("\nAre you sure you want to continue?");
+
+        Alert alert = new Alert(AlertType.CONFIRMATION, alertMessage);
+        alert.showAndWait();
+        if (alert.getResult() !=null && !alert.getResult().equals(ButtonType.OK)){
+          return;
+        }
+      }
+
+      listener.onCreateClicked(chosenGoals, id, chosenName, getChosenDifficulty(), selectedStory);
+      //TODO add alert for telling broken links
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, "Error while creating game: " + e.getMessage(), e);
       Alert alert = new Alert(AlertType.WARNING);
       alert.setContentText("Something went wrong when creating the game: " + e.getMessage());
       alert.showAndWait();
-      return;
     }
-    listener.onCreateClicked(chosenGoals, chosenName, getChosenDifficulty(), selectedStory);
+
   }
 
   /**
@@ -327,26 +353,20 @@ public class CreateGameMenu extends BorderPane {
   private List<Goal> getGoalInputData() {
     List<Goal> listOfGoals = new ArrayList<>();
 
-    try {
-      HealthGoal healthGoal = new HealthGoal(
-          Integer.parseInt(healthGoalInput.getTextArea().getText()));
-      GoldGoal goldGoal = new GoldGoal(Integer.parseInt(goldGoalInput.getTextArea().getText()));
-      ScoreGoal scoreGoal = new ScoreGoal(Integer.parseInt(scoreGoalInput.getTextArea().getText()));
-      InventoryGoal inventoryGoal = new InventoryGoal(inputInventoryGoals);
+    if (!healthGoalInput.getTextArea().getText().isEmpty()) {
+      listOfGoals.add(new HealthGoal(Integer.parseInt(healthGoalInput.getTextArea().getText())));
+    }
 
-      listOfGoals.add(healthGoal);
-      listOfGoals.add(goldGoal);
-      listOfGoals.add(scoreGoal);
-      listOfGoals.add(inventoryGoal);
+    if (!goldGoalInput.getTextArea().getText().isEmpty()) {
+      listOfGoals.add(new GoldGoal(Integer.parseInt(goldGoalInput.getTextArea().getText())));
+    }
 
-    } catch (NumberFormatException e) {
-      Alert alert = new Alert(AlertType.WARNING);
-      alert.setContentText("All Goal input fields should be numerical values");
-      alert.show();
-    } catch (Exception e) {
-      Alert alert = new Alert(AlertType.WARNING);
-      alert.setContentText("1 or more input fields are invalid because: " + e.getMessage());
-      alert.show();
+    if (!scoreGoalInput.getTextArea().getText().isEmpty()) {
+      listOfGoals.add(new ScoreGoal(Integer.parseInt(scoreGoalInput.getTextArea().getText())));
+    }
+
+    if (inputInventoryGoals != null && inputInventoryGoals.size() > 0) {
+      listOfGoals.add(new InventoryGoal(inputInventoryGoals));
     }
     return listOfGoals;
   }
@@ -371,7 +391,14 @@ public class CreateGameMenu extends BorderPane {
     return Difficulty.parseToDifficulty(difficultyBox.getValue().toString());
   }
 
-  private String[] findAllStoryFiles() {
+  /**
+   * Finds all files in the director given by the location.
+   *
+   * @param location The location of the directory.
+   * @return All files located in the given directory
+   */
+  @SuppressWarnings("SameParameterValue")
+  private String[] findAllDirectoryFiles(String location) {
     return new File("src/main/resources/stories").list();
   }
 
@@ -427,4 +454,6 @@ public class CreateGameMenu extends BorderPane {
       }
     });
   }
+
+
 }

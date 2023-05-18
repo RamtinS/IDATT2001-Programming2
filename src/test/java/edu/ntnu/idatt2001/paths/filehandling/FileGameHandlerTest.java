@@ -1,11 +1,11 @@
 package edu.ntnu.idatt2001.paths.filehandling;
 
 import com.google.gson.JsonSyntaxException;
-import edu.ntnu.idatt2001.paths.Game;
-import edu.ntnu.idatt2001.paths.Link;
-import edu.ntnu.idatt2001.paths.Passage;
-import edu.ntnu.idatt2001.paths.Player;
-import edu.ntnu.idatt2001.paths.Story;
+import edu.ntnu.idatt2001.paths.model.Game;
+import edu.ntnu.idatt2001.paths.model.Link;
+import edu.ntnu.idatt2001.paths.model.Passage;
+import edu.ntnu.idatt2001.paths.model.Player;
+import edu.ntnu.idatt2001.paths.model.Story;
 import edu.ntnu.idatt2001.paths.actions.Action;
 import edu.ntnu.idatt2001.paths.actions.GoldAction;
 import edu.ntnu.idatt2001.paths.actions.HealthAction;

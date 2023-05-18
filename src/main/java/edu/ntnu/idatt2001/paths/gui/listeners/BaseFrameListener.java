@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2001.paths.gui.listeners;
 
-import edu.ntnu.idatt2001.paths.Link;
+import edu.ntnu.idatt2001.paths.model.Link;
 
 /**
  * Interface for setting actions to the buttons of a base frame.

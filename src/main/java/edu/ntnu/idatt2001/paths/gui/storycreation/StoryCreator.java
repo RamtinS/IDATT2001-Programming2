@@ -1,10 +1,10 @@
 package edu.ntnu.idatt2001.paths.gui.storycreation;
 
-import edu.ntnu.idatt2001.paths.Link;
-import edu.ntnu.idatt2001.paths.Passage;
-import edu.ntnu.idatt2001.paths.Story;
+import edu.ntnu.idatt2001.paths.model.Link;
+import edu.ntnu.idatt2001.paths.model.Passage;
+import edu.ntnu.idatt2001.paths.model.Story;
 import edu.ntnu.idatt2001.paths.filehandling.FileStoryHandler;
-import edu.ntnu.idatt2001.paths.gui.InputField;
+import edu.ntnu.idatt2001.paths.gui.uielements.InputField;
 import edu.ntnu.idatt2001.paths.gui.listeners.StoryCreatorListener;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,7 +27,6 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 /**

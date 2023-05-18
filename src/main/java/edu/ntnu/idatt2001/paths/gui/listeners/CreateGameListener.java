@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2001.paths.gui.listeners;
 
 import edu.ntnu.idatt2001.paths.Difficulty;
-import edu.ntnu.idatt2001.paths.Story;
+import edu.ntnu.idatt2001.paths.model.Story;
 import edu.ntnu.idatt2001.paths.goals.Goal;
 import java.util.List;
 
@@ -16,6 +16,6 @@ public interface CreateGameListener {
 
   void onReturnClicked();
 
-  void onCreateClicked(List<Goal> chosenGoals, String playerName, Difficulty chosenDifficulty,
+  void onCreateClicked(List<Goal> chosenGoals, String gameId, String playerName, Difficulty chosenDifficulty,
                        Story selectedStory);
 }

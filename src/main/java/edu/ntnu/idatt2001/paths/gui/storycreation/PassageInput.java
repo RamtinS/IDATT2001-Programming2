@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2001.paths.gui.storycreation;
 
-import edu.ntnu.idatt2001.paths.Passage;
-import edu.ntnu.idatt2001.paths.gui.InputField;
+import edu.ntnu.idatt2001.paths.model.Passage;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.control.TextArea;

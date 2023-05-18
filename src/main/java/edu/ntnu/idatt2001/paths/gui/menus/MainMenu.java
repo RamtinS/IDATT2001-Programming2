@@ -1,6 +1,7 @@
-package edu.ntnu.idatt2001.paths.gui;
+package edu.ntnu.idatt2001.paths.gui.menus;
 
 
+import edu.ntnu.idatt2001.paths.gui.utility.DimensionUtility;
 import edu.ntnu.idatt2001.paths.gui.listeners.MainMenuListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,7 +57,7 @@ public class MainMenu extends Pane {
 
     setHeadLine();
     setOptionButtons();
-    setBackground();
+    setBackgroundImage();
     addTroll();
 
   }
@@ -150,7 +151,7 @@ public class MainMenu extends Pane {
   /**
    * Sets the image background to a picture of a forest.
    */
-  private void setBackground() {
+  private void setBackgroundImage() {
     try {
       Image image = new Image("images/forestadventure/beginnings.png");
 

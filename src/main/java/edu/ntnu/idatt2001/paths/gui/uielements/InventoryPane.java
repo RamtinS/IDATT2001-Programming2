@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2001.paths.gui;
+package edu.ntnu.idatt2001.paths.gui.uielements;
 
 
 import java.io.File;
@@ -67,12 +67,13 @@ public class InventoryPane extends HBox {
    */
   private void setPaneBackground(Pane pane, String name) throws NullPointerException {
 
-    String[] images = new File("src/main/resources/images").list();
+    String[] images = new File("src/main/resources/items").list();
     Objects.requireNonNull(images, "Image folder is empty");
 
     String location =
-        "/images/" + Arrays.stream(images).filter(image -> image.contains(name)).findFirst()
+        "/items/" + Arrays.stream(images).filter(image -> image.contains(name)).findFirst()
             .orElseThrow(NullPointerException::new);
+    System.out.println(location);
 
     pane.setStyle(
         "-fx-background-image: url('" + location + "');" + "-fx-background-size: stretch");

@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2001.paths.gui;
+package edu.ntnu.idatt2001.paths.gui.uielements;
 
 import edu.ntnu.idatt2001.paths.gui.listeners.CheckListListener;
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 /**
  * Represents a checklist containing a list of Strings and corresponding checkboxes.
@@ -54,6 +55,8 @@ public class CheckListView extends VBox {
   private void setFinishButtonAction() {
     finishButton.setOnAction(event -> {
       checkListListener.onConfirmSelectionsClicked(getSelectedItems());
+      Stage stage = (Stage) finishButton.getScene().getWindow();
+      stage.close();
     });
   }
 
@@ -111,5 +114,6 @@ public class CheckListView extends VBox {
     this.listItems = listItems;
     updateFields();
   }
+
 
 }

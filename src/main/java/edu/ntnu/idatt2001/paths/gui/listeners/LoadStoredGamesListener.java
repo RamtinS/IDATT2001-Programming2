@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2001.paths.gui.listeners;
 
-import edu.ntnu.idatt2001.paths.Game;
+import edu.ntnu.idatt2001.paths.model.Game;
 
 /**
  * Interface for setting actions to the buttons of a "Load stored games menu".

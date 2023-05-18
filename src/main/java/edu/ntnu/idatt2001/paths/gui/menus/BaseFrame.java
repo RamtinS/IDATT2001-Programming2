@@ -1,8 +1,9 @@
-package edu.ntnu.idatt2001.paths.gui;
+package edu.ntnu.idatt2001.paths.gui.menus;
 
-import edu.ntnu.idatt2001.paths.Link;
-import edu.ntnu.idatt2001.paths.Passage;
-import edu.ntnu.idatt2001.paths.Player;
+import edu.ntnu.idatt2001.paths.model.Link;
+import edu.ntnu.idatt2001.paths.model.Passage;
+import edu.ntnu.idatt2001.paths.model.Player;
+import edu.ntnu.idatt2001.paths.gui.uielements.InventoryPane;
 import edu.ntnu.idatt2001.paths.gui.listeners.BaseFrameListener;
 import edu.ntnu.idatt2001.paths.tts.TextToSpeech;
 import java.io.File;
@@ -57,9 +58,8 @@ public class BaseFrame extends AnchorPane {
    */
   public BaseFrame(String storyTitle, Passage passage, Player player, double width, double height,
                    BaseFrameListener listener) throws NullPointerException {
-    if (storyTitle == null) {
-      throw new NullPointerException("Story title cannot be null.");
-    }
+
+    Objects.requireNonNull(storyTitle, "Story title cannot be null");
     this.passage = Objects.requireNonNull(passage, "Passage cannot be null");
     this.player = Objects.requireNonNull(player, "Player cannot be null");
     this.listener = Objects.requireNonNull(listener, "Listener cannot be null");
@@ -282,6 +282,7 @@ public class BaseFrame extends AnchorPane {
    */
   private void createInventory() {
     int inventoryHeight = 70;
+    player.getInventory().forEach(System.out::println);
     InventoryPane inventoryPane = new InventoryPane(60, inventoryHeight, player.getInventory());
     getChildren().add(inventoryPane);
     inventoryPane.setLayoutY(getPrefHeight() - 70);

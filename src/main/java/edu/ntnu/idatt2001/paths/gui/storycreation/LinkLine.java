@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2001.paths.gui.storycreation;
 
-import edu.ntnu.idatt2001.paths.Link;
+import edu.ntnu.idatt2001.paths.model.Link;
 import javafx.scene.control.TextArea;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;

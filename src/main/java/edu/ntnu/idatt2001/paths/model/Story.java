@@ -1,5 +1,7 @@
-package edu.ntnu.idatt2001.paths;
+package edu.ntnu.idatt2001.paths.model;
 
+import edu.ntnu.idatt2001.paths.model.Link;
+import edu.ntnu.idatt2001.paths.model.Passage;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;

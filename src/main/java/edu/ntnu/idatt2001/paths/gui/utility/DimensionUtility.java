@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2001.paths.gui;
+package edu.ntnu.idatt2001.paths.gui.utility;
 
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;

@@ -1,5 +1,6 @@
-package edu.ntnu.idatt2001.paths.gui;
+package edu.ntnu.idatt2001.paths.gui.uielements;
 
+import edu.ntnu.idatt2001.paths.gui.utility.DimensionUtility;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -134,6 +135,9 @@ public class InputField extends HBox {
    * @return true if the text is a positive integer, false if not.
    */
   public boolean isPositiveInteger() {
+    if (textArea.getText().isEmpty()){
+      return true;
+    }
     try {
       Integer.parseInt(textArea.getText());
       return true;
