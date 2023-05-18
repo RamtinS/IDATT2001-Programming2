@@ -2,12 +2,10 @@ package edu.ntnu.idatt2001.paths.gui;
 
 import edu.ntnu.idatt2001.paths.Game;
 import edu.ntnu.idatt2001.paths.Link;
-import edu.ntnu.idatt2001.paths.Player;
 import edu.ntnu.idatt2001.paths.Story;
-import edu.ntnu.idatt2001.paths.filehandling.FileStoryHandler;
-import edu.ntnu.idatt2001.paths.goals.Goal;
+import edu.ntnu.idatt2001.paths.controller.GameManager;
 import edu.ntnu.idatt2001.paths.gui.listeners.LoadStoredGamesListener;
-import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.binding.BooleanBinding;
@@ -16,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
@@ -23,18 +22,17 @@ import javafx.scene.layout.Pane;
 /**
  * Represents a menu used for loading stored games.
  *
- * @author Ramtin Samavat and Tobias Oftedal.
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal
  * @version 1.0
  * @since May 12, 2023.
  */
 public class LoadStoredGamesMenu extends Pane {
 
   private final LoadStoredGamesListener listener;
+  private final GameManager gameManager;
   private TableView<Game> gameTable;
   private List<Game> gameList;
-  TableColumn<Game, String> gameColumn;
-  TableColumn<Game, String> playerColumn;
-  TableColumn<Game, String> brokenLinksColumn;
 
   /**
    * Constructor for a LoadStoredGamesMenu object. Adds a table with selectable games.
@@ -42,11 +40,18 @@ public class LoadStoredGamesMenu extends Pane {
    * @param width    The width of the menu.
    * @param height   The height of the menu.
    * @param listener The listener used to execute button actions.
+   * @throws IllegalArgumentException If the listener is null.
    */
-  public LoadStoredGamesMenu(int width, int height, LoadStoredGamesListener listener) {
+  public LoadStoredGamesMenu(int width, int height, LoadStoredGamesListener listener)
+      throws IllegalArgumentException {
+    if (listener == null) {
+      throw new IllegalArgumentException("Listener cannot be null");
+    }
+
+    this.gameManager = GameManager.getInstance();
+    this.listener = listener;
     setPrefWidth(width);
     setPrefHeight(height);
-    this.listener = listener;
     fillGamesData();
     addGameTable();
     addButtons();
@@ -55,28 +60,77 @@ public class LoadStoredGamesMenu extends Pane {
 
   /**
    * Adds all buttons to the pane.
+   * <p>
+   * This includes:
+   * <li>Return button</li>
+   * <li>Confirm button</li>
+   * <li>Delete button</li>
+   * </p>
    */
   private void addButtons() {
-    Button returnButton = new Button("RETURN");
-    returnButton.setOnAction(event -> listener.onReturnClicked());
-    getChildren().add(returnButton);
-    returnButton.setLayoutX(0);
-    returnButton.setLayoutY(0);
+    addReturnButton();
+    addConfirmButton();
+    addDeleteButton();
+  }
 
+  /**
+   * Adds a delete button to the menu.
+   * <p>
+   * <li>The button will try to delete the currently selected {@link Game} in the
+   * {@link LoadStoredGamesMenu#gameTable}.</li>
+   * <li>If the game cannot be deleted, an {@link Alert}
+   * will be shown to the user.</li>
+   * </p>
+   */
+  private void addDeleteButton() {
+    Button deleteButton = new Button("Delete");
+    getChildren().add(deleteButton);
+    deleteButton.setLayoutX(200);
+    deleteButton.setOnAction(event -> {
+      Game selectedGame = gameTable.getSelectionModel().getSelectedItem();
+      try {
+        gameManager.deleteGame(selectedGame);
+      } catch (IOException | IllegalArgumentException | NullPointerException e) {
+        new Alert(AlertType.ERROR,
+            "Could not delete game because: " + e.getMessage()).showAndWait();
+      }
+    });
+
+    deleteButton.disableProperty().bind(gameIsNotSelected());
+  }
+
+  /**
+   * Adds a confirm button to the menu.
+   * <p>
+   * <li>The button activation triggers the
+   * {@link LoadStoredGamesListener#onSelectedGameClicked(Game)} method.</li>
+   * <li></li>
+   * </p>
+   */
+  private void addConfirmButton() {
     Button confirmButton = new Button("Confirm");
-    getChildren().add(confirmButton);
-    confirmButton.setLayoutX(100);
+
     confirmButton.setOnAction(event -> {
 
       Game game = gameTable.getSelectionModel().getSelectedItem();
 
-      if (game.getStory().getBrokenLinks().size() > 0) {
-        showBrokenLinks(game.getStory());
+      if (!showBrokenLinks(game.getStory())) {
+        return;
       }
-
       listener.onSelectedGameClicked(game);
     });
-    confirmButton.disableProperty().bind(gameIsSelected());
+
+    confirmButton.disableProperty().bind(gameIsNotSelected());
+    confirmButton.setLayoutX(100);
+    getChildren().add(confirmButton);
+  }
+
+  private void addReturnButton() {
+    Button returnButton = new Button("RETURN");
+    returnButton.setOnAction(event -> listener.onReturnClicked());
+    returnButton.setLayoutX(0);
+    returnButton.setLayoutY(0);
+    getChildren().add(returnButton);
   }
 
   /**
@@ -94,25 +148,31 @@ public class LoadStoredGamesMenu extends Pane {
     gameTable = new TableView<>();
     gameTable.getColumns().clear();
 
-    gameColumn = new TableColumn<>();
-    gameColumn.setCellValueFactory(
-        cellData -> new SimpleStringProperty(cellData.getValue().getStory().getTitle()));
-    gameColumn.setText("Game");
+    TableColumn<Game, String> gameIdColumn = new TableColumn<>();
+    gameIdColumn.setCellValueFactory(
+        cellData -> new SimpleStringProperty(cellData.getValue().getGameId()));
+    gameIdColumn.setText("Game id");
 
-    playerColumn = new TableColumn<>();
+    TableColumn<Game, String> storyColumn = new TableColumn<>();
+    storyColumn.setCellValueFactory(
+        cellData -> new SimpleStringProperty(cellData.getValue().getStory().getTitle()));
+    storyColumn.setText("Story");
+
+    TableColumn<Game, String> playerColumn = new TableColumn<>();
     playerColumn.setCellValueFactory(
         cellData -> new SimpleStringProperty(cellData.getValue().getPlayer().getName()));
     playerColumn.setText("Player");
 
-    brokenLinksColumn = new TableColumn<>();
+    TableColumn<Game, String> brokenLinksColumn = new TableColumn<>();
     brokenLinksColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
         String.valueOf(cellData.getValue().getStory().getBrokenLinks().size())));
     brokenLinksColumn.setText("Broken links");
 
     gameTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     gameTable.setStyle("-fx-border-color: #000000");
+    gameTable.getColumns().add(gameIdColumn);
     gameTable.getColumns().add(playerColumn);
-    gameTable.getColumns().add(gameColumn);
+    gameTable.getColumns().add(storyColumn);
     gameTable.getColumns().add(brokenLinksColumn);
     gameTable.setItems(FXCollections.observableList(gameList));
     gameTable.setPrefWidth(400);
@@ -124,26 +184,12 @@ public class LoadStoredGamesMenu extends Pane {
    * Adds all games to the list of games.
    */
   private void fillGamesData() {
-    addTestData();
+    List<Game> storedGames = GameManager.getInstance().getGames();
+    gameList = new ArrayList<>(storedGames);
+
+
   }
 
-
-  private void addTestData() {
-    try {
-
-      Player player = new Player.PlayerBuilder("Test name").health(100).score(100).gold(50).build();
-      Story story = FileStoryHandler.readStoryFromFile(
-          "src/main/resources/stories/" + new File("src/main/resources/stories").list()[0]);
-      List<Goal> goals = new ArrayList<>();
-      Game game = new Game("Game id2", player, story, goals);
-      gameList = new ArrayList<>();
-      gameList.add(game);
-    } catch (Exception e) {
-      Alert alert = new Alert(AlertType.ERROR, "Error while loading the selected game" + e);
-      alert.showAndWait();
-    }
-
-  }
 
   /**
    * Boolean-binding for checking if a game has been selected.
@@ -152,11 +198,11 @@ public class LoadStoredGamesMenu extends Pane {
    * gameTable or not. If a game has been selected, it will represent true, if not, the binding will
    * represent false.
    */
-  private BooleanBinding gameIsSelected() {
+  private BooleanBinding gameIsNotSelected() {
     return gameTable.getSelectionModel().selectedItemProperty().isNull();
   }
 
-  private void showBrokenLinks(Story story) {
+  private boolean showBrokenLinks(Story story) {
     List<Link> brokenLinks = story.getBrokenLinks();
     if (brokenLinks.size() > 0) {
       String errorMessage = "The uploaded passage has: " + brokenLinks.size() + " broken links.";
@@ -168,8 +214,10 @@ public class LoadStoredGamesMenu extends Pane {
       errorMessage = errorMessage.concat("\n\nAre you sure you want to continue?");
       Alert alert = new Alert(AlertType.CONFIRMATION, errorMessage);
       alert.showAndWait();
+      return !alert.getResult().equals(ButtonType.OK);
 
     }
+    return true;
   }
 
 }
