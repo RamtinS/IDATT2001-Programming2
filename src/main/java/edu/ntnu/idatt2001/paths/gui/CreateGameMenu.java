@@ -202,7 +202,7 @@ public class CreateGameMenu extends BorderPane {
     CheckListView checkList = new CheckListView(checkListListener);
 
     inventoryButton.setOnAction(actionEvent -> {
-      checkList.setGoals(List.of(possibleItems));
+      checkList.setListItems(List.of(possibleItems));
       if (inventoryCheckList == null) {
         inventoryCheckList = new Stage();
         inventoryCheckList.setScene(new Scene(checkList));
