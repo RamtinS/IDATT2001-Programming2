@@ -9,7 +9,8 @@ import javafx.scene.layout.HBox;
  * Represents an input field with a text area input and an image explaining the validity of the
  * input.
  *
- * @author Ramtin Samavat and Tobias Oftedal.
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal.
  * @version 1.0
  * @since April 26, 2023.
  */
@@ -17,8 +18,8 @@ public class InputField extends HBox {
 
   private final TextArea textArea;
   private final ImageView imageView;
-  private final boolean shouldBePositiveInteger;
-  private final boolean shouldHaveText;
+  private boolean shouldBePositiveInteger;
+  private boolean shouldHaveText;
   private static final Image invalidImage = new Image("images/red_x.png");
   private final Image warningImage = new Image("images/exclamation.png");
   private final Image validImage = new Image("images/checkmark.png");
@@ -26,30 +27,57 @@ public class InputField extends HBox {
   /**
    * Constructor for an input field object.
    *
-   * @param width                   The width of the input field.
-   * @param height                  The height of the input field.
-   * @param shouldBePositiveInteger boolean value explaining if the text should be a positive
-   *                                integer.
-   * @param shouldHaveText          boolean value explaining if the text should have text or not.
+   * @param width  The width of the input field.
+   * @param height The height of the input field.
    */
-  public InputField(double width, double height, boolean shouldBePositiveInteger,
-                    boolean shouldHaveText) {
+  public InputField(double width, double height) {
 
+    shouldHaveText = false;
+    shouldBePositiveInteger = false;
     DimensionUtility.changeAllPaneHeights(this, height);
     DimensionUtility.changeAllPaneWidths(this, width);
     textArea = new TextArea();
     textArea.setPrefRowCount(1);
     textArea.setWrapText(true);
+    textArea.setText("");
 
     imageView = new ImageView();
     imageView.setFitHeight(width);
     imageView.setFitWidth(height);
     imageView.setPreserveRatio(true);
-
-    this.shouldHaveText = shouldHaveText;
-    this.shouldBePositiveInteger = shouldBePositiveInteger;
-    setPrefferedPicture();
+    setPreferredPicture();
     getChildren().addAll(textArea, imageView);
+    setUpdatePictureConstantly();
+  }
+
+  /**
+   * Sets a boolean demanding if the field needs to be filled or not.
+   *
+   * @param shouldHaveText The boolean demanding if the field needs to be filled or not.
+   */
+  public void setShouldHaveText(boolean shouldHaveText) {
+    this.shouldHaveText = shouldHaveText;
+    setPreferredPicture();
+  }
+
+  /**
+   * Sets a boolean demanding if the field should have a positive integer.
+   *
+   * @param shouldBePositiveInteger The boolean demanding if the field needs to have a positive
+   *                                integer or not.
+   */
+  public void setShouldBePositiveInteger(boolean shouldBePositiveInteger) {
+    this.shouldBePositiveInteger = shouldBePositiveInteger;
+    setPreferredPicture();
+  }
+
+  /**
+   * Sets the key release functionality to update the preferred picture.
+   */
+  private void setUpdatePictureConstantly() {
+    setOnKeyReleased(keyEvent -> {
+      setPreferredPicture();
+    });
   }
 
   /**
@@ -135,7 +163,7 @@ public class InputField extends HBox {
   /**
    * Sets the picture according to the state of the input text.
    */
-  public void setPrefferedPicture() {
+  public void setPreferredPicture() {
     if (hasValidInput()) {
       setImageValid();
     } else if (!hasText()) {
