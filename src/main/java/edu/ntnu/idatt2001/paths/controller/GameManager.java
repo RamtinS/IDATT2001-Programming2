@@ -30,7 +30,7 @@ public class GameManager {
    *
    * @param pathOfFile the path to the file for reading and writing Game objects.
    * @throws NullPointerException if the pathOfFile or FILE_EXTENSION is null.
-   * @throws IllegalArgumentException if pathOfFile is blank or does not end with FILE_EXTENSION.
+   * @throws IllegalArgumentException if the pathOfFile is blank or has an incorrect file extension.
    * @throws IOException if there is an error reading the list of games form the file.
    */
   private GameManager(String pathOfFile) throws NullPointerException,
@@ -48,12 +48,12 @@ public class GameManager {
    * @param pathOfFile the path to the file for reading and writing Game objects.
    * @return the initialized GameManager instance.
    * @throws NullPointerException if the pathOfFile or FILE_EXTENSION is null.
-   * @throws IllegalArgumentException if pathOfFile is blank or does not end with FILE_EXTENSION.
+   * @throws IllegalArgumentException if the pathOfFile is blank or has an incorrect file extension.
    * @throws IOException if there is an error reading the list of games from the file.
    * @throws IllegalStateException if the GameManager has already been initialized.
    */
   public static GameManager initialize(String pathOfFile) throws NullPointerException,
-          IllegalArgumentException, IOException, IllegalStateException{
+          IllegalArgumentException, IOException, IllegalStateException {
     if (instance != null) {
       throw new IllegalStateException("GameManager has already been initialized.");
     }
@@ -111,9 +111,12 @@ public class GameManager {
    * writes the updated list to the file.
    *
    * @param game the game to delete.
+   * @throws NullPointerException if the game or pathOfFile is null.
+   * @throws IllegalArgumentException if the pathOfFile is blank or has an incorrect file extension.
    * @throws IOException if there is an error writing list of games to file.
    */
-  public void deleteGame(Game game) throws NullPointerException, IOException {
+  public void deleteGame(Game game) throws NullPointerException,
+          IllegalArgumentException, IOException {
     validateGame(game);
     if (games.remove(game)) {
       FileGameHandler.writeGamesToFile(games, pathOfFile);
@@ -125,9 +128,12 @@ public class GameManager {
    * writes the updated list to the file.
    *
    * @param game the game to save.
+   * @throws NullPointerException if game, currentPassage, or pathOfFile is null.
+   * @throws IllegalArgumentException if the pathOfFile is blank or has an incorrect file extension.
    * @throws IOException if there is an error writing list of games to file.
    */
-  public void saveGame(Game game, Passage currentPassage) throws NullPointerException, IOException {
+  public void saveGame(Game game, Passage currentPassage) throws NullPointerException,
+          IOException, IllegalArgumentException {
     validateGame(game);
     if (currentPassage == null) {
       throw new NullPointerException("Current passage cannot be null.");
