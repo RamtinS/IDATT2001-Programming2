@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2001.paths.gui;
 
+
 import edu.ntnu.idatt2001.paths.Difficulty;
 import edu.ntnu.idatt2001.paths.Link;
 import edu.ntnu.idatt2001.paths.Story;
@@ -7,30 +8,36 @@ import edu.ntnu.idatt2001.paths.filehandling.FileStoryHandler;
 import edu.ntnu.idatt2001.paths.goals.Goal;
 import edu.ntnu.idatt2001.paths.goals.GoldGoal;
 import edu.ntnu.idatt2001.paths.goals.HealthGoal;
+import edu.ntnu.idatt2001.paths.goals.InventoryGoal;
 import edu.ntnu.idatt2001.paths.goals.ScoreGoal;
+import edu.ntnu.idatt2001.paths.gui.listeners.CheckListListener;
 import edu.ntnu.idatt2001.paths.gui.listeners.CreateGameListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.geometry.Insets;
-import javafx.geometry.VPos;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Separator;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -40,21 +47,27 @@ import javafx.stage.Stage;
  * Class that represents a menu for creating a game. Holds input fields for all values needed to
  * create a game. Includes input validation to make sure that all input is valid.
  *
- * @author Ramtin Samavat and Tobias Oftedal.
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal
  * @version 1.0
  * @since April 26, 2023.
  */
-public class CreateGameMenu extends Pane {
+public class CreateGameMenu extends BorderPane {
 
+  private static final Logger LOGGER = Logger.getLogger(CreateGameMenu.class.getName());
   private final CreateGameListener listener;
-
-  private final ComboBox<Difficulty> difficultyBox;
-  private final ComboBox<String> storyBox;
+  private final Button inventoryButton;
+  private final GridPane infoGrid;
+  private ComboBox<Difficulty> difficultyBox;
+  private ComboBox<String> storyBox;
   private InputField playerNameInput;
   private InputField healthGoalInput;
   private InputField goldGoalInput;
-  private InputField inventoryGoalInput;
   private InputField scoreGoalInput;
+  private Button createGame;
+  private List<String> inputInventoryGoals;
+  private Stage inventoryCheckList;
+  private Hyperlink hyperlink;
 
   /**
    * Constructor for a CreateGameMenu object.
@@ -64,17 +77,21 @@ public class CreateGameMenu extends Pane {
    * @param listener The listener used to activate button functionality.
    */
   public CreateGameMenu(double width, double height, CreateGameListener listener) {
-    setDimensions(width, height);
+
     this.listener = listener;
     this.difficultyBox = new ComboBox<>();
     this.storyBox = new ComboBox<>();
-    createDifficultyBox();
-    createStoryBox();
-    setHeadLine();
-    setTextInputField();
-    addCreateGameButton();
+    this.inventoryButton = new Button("select");
+    this.infoGrid = new GridPane();
+
+    setDimensions(width, height);
+    setHeadLine("Create game");
+    createGrid();
+    createUploadFilesHyperLink();
+    addInputs();
+    addInputLabels();
     addReturnButton();
-    findAllStoryFiles();
+    addCreateGameButton();
   }
 
   /**
@@ -84,129 +101,137 @@ public class CreateGameMenu extends Pane {
    * @param height The height of the frame.
    */
   private void setDimensions(double width, double height) {
-    setWidth(width);
-    setHeight(height);
-    setPrefWidth(height);
-    setPrefHeight(height);
-    setMinHeight(height);
-    setMinWidth(width);
+    DimensionUtility.changeAllPaneWidths(this, width);
+    DimensionUtility.changeAllPaneHeights(this, height);
   }
 
   /**
-   * Sets "Create" as a headline of the frame.
+   * Sets a headline for the frame.
+   *
+   * @param headLineText The headline to be set.
    */
-  private void setHeadLine() {
-
-    Text headLine = new Text("Create");
+  @SuppressWarnings("SameParameterValue")
+  private void setHeadLine(String headLineText) {
+    Label headLine = new Label(headLineText);
     headLine.setFont(Font.font("Arial", 30));
-    headLine.setWrappingWidth(getWidth() / 2);
-    headLine.setTextOrigin(VPos.CENTER);
-    headLine.setLayoutX((getWidth() - headLine.getWrappingWidth()) / 2);
-    headLine.setLayoutY(getHeight() * 0.05);
+    headLine.setId("headline");
     headLine.setTextAlignment(TextAlignment.CENTER);
-    getChildren().add(headLine);
+    setAlignment(headLine, Pos.CENTER);
+    setTop(headLine);
   }
 
   /**
-   * Creates a SplitPane with all input fields and their corresponding text fields.
+   * Creates a {@link GridPane} and adds it to the {@link Pos#CENTER} of the pane.
    */
-  private void setTextInputField() {
-
-    SplitPane splitPane = new SplitPane();
-    VBox leftControl = addInputText();
-    VBox rightControl = addInputFields();
-
-    splitPane.getItems().addAll(leftControl, rightControl);
-
-    TitledPane titledPane = new TitledPane("Please fill out all boxes", splitPane);
-    titledPane.setAnimated(false);
-    titledPane.setCollapsible(false);
-    titledPane.setPrefWidth(getWidth() / 2);
-    titledPane.setPrefHeight(0);
-    titledPane.setLayoutX((getWidth() - titledPane.getPrefWidth()) / 2);
-    titledPane.setLayoutY((getWidth() * 0.10));
-    getChildren().add(titledPane);
+  private void createGrid() {
+    infoGrid.setHgap(10);
+    infoGrid.setVgap(10);
+    infoGrid.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+    VBox gridHolder = new VBox();
+    gridHolder.getChildren().add(infoGrid);
+    gridHolder.setAlignment(Pos.CENTER);
+    infoGrid.setAlignment(Pos.CENTER);
+    gridHolder.setStyle("-fx-border-color: #000000");
+    setCenter(gridHolder);
   }
 
   /**
    * Creates a VBox containing all input fields.
-   *
-   * @return A VBox containing all input fields.
    */
-  private VBox addInputFields() {
-    VBox rightControl = new VBox();
-    rightControl.setSpacing(10);
-    rightControl.setPadding(new Insets(10, 10, 10, 10));
-
+  private void addInputs() {
 
     double inputWidth = getWidth() / 4;
-    playerNameInput = new InputField(inputWidth, 30, false, true);
-    healthGoalInput = new InputField(inputWidth, 30, true, true);
-    goldGoalInput = new InputField(inputWidth, 30, true, true);
-    inventoryGoalInput = new InputField(inputWidth, 30, true, true);
-    scoreGoalInput = new InputField(inputWidth, 30, true, true);
+    playerNameInput = new InputField(inputWidth, 30);
+    playerNameInput.setShouldHaveText(true);
 
-    healthGoalInput.setHint("Integer between 1 and 100");
-    rightControl.getChildren().add(difficultyBox);
+    healthGoalInput = new InputField(inputWidth, 30);
+    healthGoalInput.setShouldBePositiveInteger(true);
 
-    ArrayList<InputField> inputFields = new ArrayList<>(
-        Arrays.asList(playerNameInput, healthGoalInput, goldGoalInput, inventoryGoalInput,
-            scoreGoalInput));
+    goldGoalInput = new InputField(inputWidth, 30);
+    goldGoalInput.setShouldBePositiveInteger(true);
 
-    for (InputField inputField : inputFields) {
-      rightControl.getChildren().add(inputField);
-      inputField.setPrefferedPicture();
-      inputField.getTextArea().setOnKeyReleased(action -> inputField.setPrefferedPicture());
+    scoreGoalInput = new InputField(inputWidth, 30);
+    scoreGoalInput.setShouldBePositiveInteger(true);
 
+    storyBox = createStoryBox();
+    difficultyBox = createDifficultyBox();
+    createInventoryButton();
+
+    ArrayList<Node> inputFields = new ArrayList<>(
+        Arrays.asList(playerNameInput, healthGoalInput, goldGoalInput, scoreGoalInput,
+            inventoryButton, storyBox, difficultyBox, hyperlink));
+
+    for (int i = 0; i < inputFields.size(); i++) {
+      infoGrid.add(inputFields.get(i), 1, i);
     }
-    HBox hBox = new HBox();
-    hBox.getChildren().addAll(storyBox, createUploadFilesButton());
-
-    rightControl.getChildren().add(hBox);
-    return rightControl;
   }
 
   /**
-   * Creates a VBox of all text for explaining input fields.
-   *
-   * @return a VBox of all text for explaining input fields.
+   * Adds all input labels to the menu.
    */
-  private VBox addInputText() {
-    VBox leftControl = new VBox();
-    leftControl.setSpacing(15);
-    leftControl.setPadding(new Insets(10, 10, 10, 10));
+  private void addInputLabels() {
+    Label difficulty = new Label("Difficulty:");
+    Label playerName = new Label("Player name:");
+    Label healthGoal = new Label("Health goal:");
+    Label goldGoal = new Label("Gold goal:");
+    Label inventoryGoal = new Label("Inventory goal:");
+    Label scoreGoal = new Label("Score goal:");
+    Label story = new Label("Story:");
 
-    Text difficulty = new Text("Difficulty:");
-    Text playerName = new Text("Player name:");
-    Text healthGoal = new Text("HealthGoal:");
-    Text goldGoal = new Text("goldGoal:");
-    Text inventoryGoal = new Text("inventoryGoal:");
-    Text scoreGoal = new Text("scoreGoal:");
-    Text story = new Text("Story");
+    List<Label> inputDescriptors = Arrays.asList(playerName, healthGoal, goldGoal, scoreGoal,
+        inventoryGoal, story, difficulty);
+    for (int i = 0; i < inputDescriptors.size(); i++) {
+      infoGrid.add(inputDescriptors.get(i), 0, i);
+    }
+  }
 
-    leftControl.getChildren()
-        .addAll(difficulty, new Separator(), playerName, new Separator(), healthGoal,
-            new Separator(), goldGoal, new Separator(), inventoryGoal, new Separator(), scoreGoal,
-            new Separator(), story);
-    return leftControl;
+  /**
+   * Creates a button that opens a {@link CheckListView} showing all possible inventory items to the
+   * user and adds it to the menu.
+   */
+  private void createInventoryButton() {
+    String[] possibleItems = new File("src/main/resources/items").list();
+
+    if (possibleItems == null) {
+      new Alert(AlertType.WARNING, "Cannot locate any inventory items").showAndWait();
+      return;
+    }
+
+    Arrays.setAll(possibleItems, i -> possibleItems[i].replace(".jpg", "").replace(".png", ""));
+    CheckListListener checkListListener = selectedGoals -> inputInventoryGoals = selectedGoals;
+    CheckListView checkList = new CheckListView(checkListListener);
+
+    inventoryButton.setOnAction(actionEvent -> {
+      checkList.setGoals(List.of(possibleItems));
+      if (inventoryCheckList == null) {
+        inventoryCheckList = new Stage();
+        inventoryCheckList.setScene(new Scene(checkList));
+      }
+      inventoryCheckList.show();
+    });
   }
 
   /**
    * Creates a difficulty box with all the games difficulties.
    */
-  private void createDifficultyBox() {
-    difficultyBox.setPrefWidth(100000000);
+  private ComboBox<Difficulty> createDifficultyBox() {
+    ComboBox<Difficulty> difficulties = new ComboBox<>();
 
-    difficultyBox.getItems()
+    difficulties.getItems()
         .addAll(Arrays.asList(Difficulty.EASY, Difficulty.MEDIUM, Difficulty.HARD));
+    return difficulties;
   }
 
-  private void createStoryBox() {
-    storyBox.setPrefWidth(10000000);
-    storyBox.getItems().removeAll(storyBox.getItems());
-    for (String storyLocation : findAllStoryFiles()) {
-      storyBox.getItems().add(storyLocation);
-    }
+  /**
+   * Creates a {@link ComboBox} of all stories, and adds it to the menu.
+   *
+   * @return A ComboBox containing all stored stories.
+   */
+  private ComboBox<String> createStoryBox() {
+    ComboBox<String> stories = new ComboBox<>();
+
+    stories.getItems().addAll(findAllStoryFiles());
+    return stories;
   }
 
   /**
@@ -215,87 +240,90 @@ public class CreateGameMenu extends Pane {
    */
   private void addReturnButton() {
     Button returnButton = new Button("Return");
-    returnButton.setPrefWidth(getWidth() / 15);
-    returnButton.setOnAction(event -> listener.onReturnClicked());
-    returnButton.setLayoutX(0);
-    returnButton.setLayoutY(0);
-    getChildren().add(returnButton);
+
+    returnButton.setOnAction(event -> {
+      listener.onReturnClicked();
+
+      Media sound = new Media(
+          new File("src/main/resources/audio/mouse_click.mp3").toURI().toString());
+      MediaPlayer mediaPlayer = new MediaPlayer(sound);
+      mediaPlayer.play();
+
+    });
+    returnButton.setId("return-button");
+
+    setLeft(returnButton);
   }
 
   /**
    * Adds a "create game" button and adds the listener to it.
    */
   private void addCreateGameButton() {
-    Button createGame = new Button("Create");
-    createGame.setPrefWidth(getWidth() / 15);
-
-    createGame.disableProperty().bind(invalidInput());
-
+    createGame = new Button("Create");
     createGame.setOnAction(event -> createGameClicked());
+    createGame.disableProperty().bind(inputIsValid().not());
 
     Pane createButtonPane = new Pane();
-    createButtonPane.setLayoutX(getWidth() - getWidth() / 15);
-    createButtonPane.setLayoutY(getHeight() * 0.3);
 
     createButtonPane.setOnMouseEntered(event -> {
-      if (invalidInput().get()) {
+      if (createGame.isDisable()) {
         Tooltip tooltip = new Tooltip("Please fill all fields correctly");
         Tooltip.install(createButtonPane, tooltip);
       }
     });
 
     createButtonPane.getChildren().add(createGame);
-    getChildren().add(createButtonPane);
-
+    setRight(createButtonPane);
   }
 
+  /**
+   * Sends information used to create a game to the listener by using the
+   * {@link CreateGameListener#onCreateClicked(List, String, Difficulty, Story) onCreateClicked}
+   * method.
+   */
   private void createGameClicked() {
     List<Goal> chosenGoals = getGoalInputData();
     String chosenName = getChosenName();
-    Story selectedStory = null;
+    Story selectedStory;
     try {
       getChosenDifficulty();
       selectedStory = FileStoryHandler.readStoryFromFile(
           "src/main/resources/stories/" + storyBox.getValue());
 
     } catch (Exception e) {
+      LOGGER.log(Level.SEVERE, "Error while creating game: " + e.getMessage(), e);
       Alert alert = new Alert(AlertType.WARNING);
-      alert.setContentText("Please choose a valid difficulty");
-      alert.show();
+      alert.setContentText("Something went wrong when creating the game: " + e.getMessage());
+      alert.showAndWait();
+      return;
     }
     listener.onCreateClicked(chosenGoals, chosenName, getChosenDifficulty(), selectedStory);
   }
 
   /**
-   * BooleanBinding for checking if any input is invalid.
-   *
-   * @return A BooleanBinding representing true if any input is invalid, if not, it will represent
-   * true.
-   */
-  private BooleanBinding invalidInput() {
-    return playerNameInput.getTextArea().textProperty().isEmpty()
-        .or(goldGoalInput.getTextArea().textProperty().isEmpty())
-        .or(inventoryGoalInput.getTextArea().textProperty().isEmpty())
-        .or(scoreGoalInput.getTextArea().textProperty().isEmpty())
-        .or(healthGoalInput.getTextArea().textProperty().isEmpty())
-        .or(storyBox.valueProperty().isNull())
-        .or(difficultyBox.valueProperty().isNull()).or(inputIsNotParseable());
-  }
-
-  /**
-   * BooleanBinding for checking if all inputs that should be parseable are so.
+   * {@link BooleanBinding} for checking if all inputs that should be parseable are so.
    *
    * @return A BooleanBinding representing true parseable inputs are parseable, if not, it will
    * represent true.
    */
-  private BooleanBinding inputIsNotParseable() {
+  private BooleanBinding inputIsValid() {
     return Bindings.createBooleanBinding(
-        () -> !(goldGoalInputValid() && healthGoalInputValid() && inventoryGoalInputValid()
-            && scoreGoalInputValid()), goldGoalInput.getTextArea().textProperty(),
-        inventoryGoalInput.getTextArea().textProperty(),
-        scoreGoalInput.getTextArea().textProperty(), healthGoalInput.getTextArea().textProperty());
+        () -> (goldGoalInput.hasValidInput() && scoreGoalInput.hasValidInput()
+            && storyBox.getValue() != null && difficultyBox.getValue() != null
+            && playerNameInput.hasValidInput() && healthGoalInput.hasValidInput()),
+        goldGoalInput.getTextArea().textProperty(), scoreGoalInput.getTextArea().textProperty(),
+        healthGoalInput.getTextArea().textProperty(), difficultyBox.valueProperty(),
+        storyBox.valueProperty(),
+
+        playerNameInput.getTextArea().textProperty());
   }
 
+  /**
+   * Parses all {@link Goal} inputs to goals to create a list goals from the input goals of the
+   * user.
+   *
+   * @return A list of all {@link Goal goals} specified by the user.
+   */
   private List<Goal> getGoalInputData() {
     List<Goal> listOfGoals = new ArrayList<>();
 
@@ -304,18 +332,20 @@ public class CreateGameMenu extends Pane {
           Integer.parseInt(healthGoalInput.getTextArea().getText()));
       GoldGoal goldGoal = new GoldGoal(Integer.parseInt(goldGoalInput.getTextArea().getText()));
       ScoreGoal scoreGoal = new ScoreGoal(Integer.parseInt(scoreGoalInput.getTextArea().getText()));
+      InventoryGoal inventoryGoal = new InventoryGoal(inputInventoryGoals);
 
       listOfGoals.add(healthGoal);
       listOfGoals.add(goldGoal);
       listOfGoals.add(scoreGoal);
+      listOfGoals.add(inventoryGoal);
 
     } catch (NumberFormatException e) {
       Alert alert = new Alert(AlertType.WARNING);
       alert.setContentText("All Goal input fields should be numerical values");
       alert.show();
-    } catch (IllegalArgumentException e) {
+    } catch (Exception e) {
       Alert alert = new Alert(AlertType.WARNING);
-      alert.setContentText(e.getMessage());
+      alert.setContentText("1 or more input fields are invalid because: " + e.getMessage());
       alert.show();
     }
     return listOfGoals;
@@ -341,81 +371,22 @@ public class CreateGameMenu extends Pane {
     return Difficulty.parseToDifficulty(difficultyBox.getValue().toString());
   }
 
-  /**
-   * Checks if the gold goal input is valid.
-   *
-   * @return True if the gold goal input is valid, false if not.
-   */
-  private boolean goldGoalInputValid() {
-    try {
-      Integer.parseInt(goldGoalInput.getTextArea().getText());
-      return true;
-    } catch (NumberFormatException e) {
-      return false;
-    }
-  }
-
-  /**
-   * Checks if the inventory goal input is valid.
-   *
-   * @return True if the inventory goal input is valid, false if not.
-   */
-  private boolean inventoryGoalInputValid() {
-    try {
-      Integer.parseInt(inventoryGoalInput.getTextArea().getText());
-      return true;
-    } catch (NumberFormatException e) {
-      return false;
-    }
-  }
-
-  /**
-   * Checks if the score goal input is valid.
-   *
-   * @return True if the score goal input is valid, false if not.
-   */
-  private boolean scoreGoalInputValid() {
-    try {
-      Integer.parseInt(scoreGoalInput.getTextArea().getText());
-      return true;
-    } catch (NumberFormatException e) {
-      return false;
-    }
-  }
-
-  /**
-   * Checks if the health goal input is valid.
-   *
-   * @return True if the health goal input is valid, false if not.
-   */
-  private boolean healthGoalInputValid() {
-    try {
-      Integer.parseInt(healthGoalInput.getTextArea().getText());
-      return true;
-    } catch (NumberFormatException e) {
-      return false;
-    }
-  }
-
   private String[] findAllStoryFiles() {
     return new File("src/main/resources/stories").list();
   }
 
   /**
-   * Creates a button for uploading a paths file to the user.
+   * Creates a button for uploading a paths file from the user.
    * <li>If the file cannot be read or written, the user will be alerted.</li>
    * <li>Only files ending with ".paths" can be submitted.</li>
-   *
-   * @return A button used trigger a {@link FileChooser} where the user can submit a ".paths" file.
    */
-  private Button createUploadFilesButton() {
-    Button uploadButton = new Button("Upload");
-
-    uploadButton.setOnAction(event -> {
+  private void createUploadFilesHyperLink() {
+    hyperlink = new Hyperlink("Upload your own files here");
+    hyperlink.setOnAction(event -> {
       FileChooser fileChooser = new FileChooser();
       fileChooser.getExtensionFilters()
           .addAll(new ExtensionFilter("Path files (*.paths)", "*.paths"));
-      Stage stage = (Stage) uploadButton.getScene().getWindow();
+      Stage stage = (Stage) hyperlink.getScene().getWindow();
       File selectedFile = fileChooser.showOpenDialog(stage);
       if (selectedFile == null) {
         return;
@@ -423,11 +394,9 @@ public class CreateGameMenu extends Pane {
       Story story;
       try {
         story = FileStoryHandler.readStoryFromFile(selectedFile.getPath());
-
-        System.out.println(story);
-        System.out.println(selectedFile.getPath());
       } catch (Exception e) {
-        Alert alert = new Alert(AlertType.ERROR, "Selected file could not be read because: "  + e.getMessage());
+        Alert alert = new Alert(AlertType.ERROR,
+            "Selected file could not be read because: " + e.getMessage());
         alert.showAndWait();
         return;
       }
@@ -435,31 +404,27 @@ public class CreateGameMenu extends Pane {
       try {
         List<Link> brokenLinks = story.getBrokenLinks();
         if (brokenLinks.size() > 0) {
-          String errorMessage = "The uploaded passage has: " + brokenLinks.size() + " broken links.";
+          String errorMessage =
+              "The uploaded passage has: " + brokenLinks.size() + " broken links.";
 
           errorMessage = errorMessage.concat("\nThese are the broken links:\n");
-          for (Link link : brokenLinks){
-            errorMessage = errorMessage.concat( "\n - " + link.getText());
+          for (Link link : brokenLinks) {
+            errorMessage = errorMessage.concat("\n - " + link.getText());
           }
           errorMessage = errorMessage.concat("\n\nAre you sure you want to continue?");
           Alert alert = new Alert(AlertType.CONFIRMATION, errorMessage);
           alert.showAndWait();
-          if (alert.getResult().equals(ButtonType.CANCEL)){
+          if (alert.getResult().equals(ButtonType.CANCEL)) {
             return;
           }
         }
         FileStoryHandler.writeStoryToFile(story, "src/main/resources/stories/uploadStory.paths");
 
       } catch (Exception e) {
-        Alert alert = new Alert(AlertType.ERROR, "Could not write story to file because" + e.getMessage());
-        e.printStackTrace();
+        Alert alert = new Alert(AlertType.ERROR,
+            "Could not write story to file because" + e.getMessage());
         alert.showAndWait();
-        createStoryBox();
       }
     });
-
-    return uploadButton;
   }
-
-
 }
