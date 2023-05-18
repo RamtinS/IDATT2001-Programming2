@@ -8,6 +8,8 @@ import edu.ntnu.idatt2001.paths.gui.listeners.LoadStoredGamesListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -29,16 +31,17 @@ import javafx.scene.layout.Pane;
  */
 public class LoadStoredGamesMenu extends Pane {
 
+  private static final Logger logger = Logger.getLogger(LoadStoredGamesMenu.class.getName());
   private final LoadStoredGamesListener listener;
-  private final GameManager gameManager;
+  private GameManager gameManager;
   private TableView<Game> gameTable;
   private List<Game> gameList;
 
   /**
    * Constructor for a LoadStoredGamesMenu object. Adds a table with selectable games.
    *
-   * @param width    The width of the menu.
-   * @param height   The height of the menu.
+   * @param width The width of the menu.
+   * @param height The height of the menu.
    * @param listener The listener used to execute button actions.
    * @throws IllegalArgumentException If the listener is null.
    */
@@ -47,8 +50,13 @@ public class LoadStoredGamesMenu extends Pane {
     if (listener == null) {
       throw new IllegalArgumentException("Listener cannot be null");
     }
-
-    this.gameManager = GameManager.getInstance();
+    try {
+      this.gameManager = GameManager.getInstance();
+    } catch (IllegalStateException e) {
+      logger.log(Level.SEVERE, e.getMessage(), e);
+      Alert alert = new Alert(AlertType.ERROR, e.getMessage());
+      alert.showAndWait();
+    }
     this.listener = listener;
     setPrefWidth(width);
     setPrefHeight(height);
@@ -91,11 +99,11 @@ public class LoadStoredGamesMenu extends Pane {
       try {
         gameManager.deleteGame(selectedGame);
       } catch (IOException | IllegalArgumentException | NullPointerException e) {
-        new Alert(AlertType.ERROR,
-            "Could not delete game because: " + e.getMessage()).showAndWait();
+        logger.log(Level.WARNING, e.getMessage(), e);
+        Alert alert = new Alert(AlertType.ERROR, e.getMessage());
+        alert.showAndWait();
       }
     });
-
     deleteButton.disableProperty().bind(gameIsNotSelected());
   }
 
@@ -109,17 +117,13 @@ public class LoadStoredGamesMenu extends Pane {
    */
   private void addConfirmButton() {
     Button confirmButton = new Button("Confirm");
-
     confirmButton.setOnAction(event -> {
-
       Game game = gameTable.getSelectionModel().getSelectedItem();
-
       if (!showBrokenLinks(game.getStory())) {
         return;
       }
       listener.onSelectedGameClicked(game);
     });
-
     confirmButton.disableProperty().bind(gameIsNotSelected());
     confirmButton.setLayoutX(100);
     getChildren().add(confirmButton);
@@ -186,10 +190,7 @@ public class LoadStoredGamesMenu extends Pane {
   private void fillGamesData() {
     List<Game> storedGames = GameManager.getInstance().getGames();
     gameList = new ArrayList<>(storedGames);
-
-
   }
-
 
   /**
    * Boolean-binding for checking if a game has been selected.
@@ -219,5 +220,4 @@ public class LoadStoredGamesMenu extends Pane {
     }
     return true;
   }
-
 }
