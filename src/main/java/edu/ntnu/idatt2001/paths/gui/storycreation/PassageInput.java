@@ -17,7 +17,7 @@ import javafx.scene.layout.VBox;
 public class PassageInput extends VBox {
 
 
-  private final InputField titleField;
+  private final TextArea titleField;
   private final TextArea passageText;
   private final List<LinkLine> linkLines;
 
@@ -38,9 +38,9 @@ public class PassageInput extends VBox {
    *
    * @return An input field for the title of the passage.
    */
-  private InputField createTitleField() {
-    InputField inputField = new InputField(getWidth(), getHeight() / 5, false, true);
-    inputField.setHint("Enter passage title");
+  private TextArea createTitleField() {
+    TextArea inputField = new TextArea();
+    inputField.setPromptText("Enter passage title");
     return inputField;
   }
 
@@ -69,10 +69,7 @@ public class PassageInput extends VBox {
    * @return A passage with the input title and text.
    */
   public Passage getPassage() {
-    Passage passage = new Passage(titleField.getTextArea().getText(), passageText.getText());
-    for (LinkLine linkLine : getLinkLines()) {
-      passage.addLink(linkLine.getLink());
-    }
+    Passage passage = new Passage(titleField.getText(), passageText.getText());
     return passage;
   }
 

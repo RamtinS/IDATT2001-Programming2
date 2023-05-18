@@ -3,11 +3,19 @@ package edu.ntnu.idatt2001.paths.gui.storycreation;
 import edu.ntnu.idatt2001.paths.Link;
 import edu.ntnu.idatt2001.paths.Passage;
 import edu.ntnu.idatt2001.paths.Story;
+import edu.ntnu.idatt2001.paths.filehandling.FileStoryHandler;
+import edu.ntnu.idatt2001.paths.gui.InputField;
 import edu.ntnu.idatt2001.paths.gui.listeners.StoryCreatorListener;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -19,6 +27,8 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 
 /**
  * Pane used to create a story, has methods for creating passages and links, and retrieving their
@@ -29,6 +39,15 @@ public class StoryCreator extends Pane {
   private Position firstposition;
   private Position secondPosition;
   private final StoryCreatorListener listener;
+  private RadioButton createPassageInputs;
+  private RadioButton createMovePassageButton;
+  private RadioButton createDragLine;
+  private Button returnToMainMenu;
+  private Button resetLines;
+  private Button undoButton;
+  private Button saveStory;
+  private InputField storyName;
+  private static final Logger LOGGER =Logger.getLogger(StoryCreator.class.getName());
 
   /**
    * Constructor for a StoryCreator object. Adds buttons, and adds the keyboard shortcuts.
@@ -155,9 +174,10 @@ public class StoryCreator extends Pane {
             getChildren().remove(firstDrawnPosition.getIcon());
             line.moveArrowHead();
           } else {
-            throw new IllegalArgumentException("LIne is not close to enough to 2 passages.");
+            throw new IllegalArgumentException("Line is not close to enough to 2 passages.");
           }
         } catch (Exception e) {
+          LOGGER.log(Level.INFO,  e.toString());
           showPassageAlert(e);
           getChildren().remove(line);
           getChildren().remove(line.getArrowHead());
@@ -186,51 +206,81 @@ public class StoryCreator extends Pane {
    * Adds all buttons to the frame.
    */
   public void addButtons() {
-    Button returnToMainMenu = new Button("Return to main menu");
-    returnToMainMenu.setOnAction(event -> listener.onReturnClicked());
+    enableReturnToMenuButton();
+    enableCreatePassageButton();
+    enableMovingPassageButton();
+    enableDragLineButton();
+    enableResetLinesButton();
+    enableUndoButton();
+    enableToggleGroup();
+    enableRetrieveButton();
+    enableTitleField();
 
-    RadioButton createPassageSquares = new RadioButton("Enable creating passages");
-    createPassageSquares.setOnAction(event -> {
-      if (createPassageSquares.isSelected()) {
-        disableMouseEvent();
-        enableCreatingPassageTextArea();
-      }
-    });
+    VBox buttonBox = new VBox();
 
-    RadioButton movePassage = new RadioButton("Move passage");
-    movePassage.setOnAction(event -> {
-      disableMouseEvent();
-      enableMovingPassages();
-    });
+    buttonBox.getChildren()
+        .addAll(returnToMainMenu, undoButton, saveStory, createPassageInputs, createDragLine,
+            createMovePassageButton, resetLines, storyName);
+    getChildren().add(buttonBox);
+  }
 
-    RadioButton createDragLine = new RadioButton("Enable creating dragging lines");
+  private void enableTitleField() {
+    storyName = new InputField(10, 10);
+  }
+
+  private void enableToggleGroup() {
+    ToggleGroup toggleGroup = new ToggleGroup();
+    createDragLine.setToggleGroup(toggleGroup);
+    createPassageInputs.setToggleGroup(toggleGroup);
+    createMovePassageButton.setToggleGroup(toggleGroup);
+  }
+
+  private void enableRetrieveButton() {
+    saveStory = new Button("Retrieve data");
+    saveStory.setOnAction(event -> retrieveStoryData());
+  }
+
+  private void enableUndoButton() {
+    undoButton = new Button("Undo");
+    undoButton.setOnAction(event -> deleteMostRecentNode());
+  }
+
+  private void enableResetLinesButton() {
+    resetLines = new Button("Reset lines");
+    resetLines.setOnAction(event -> moveAllLinkLines());
+  }
+
+  private void enableDragLineButton() {
+    createDragLine = new RadioButton("Enable creating dragging lines");
     createDragLine.setOnAction(event -> {
       if (createDragLine.isSelected()) {
         disableMouseEvent();
         enableLineCreationDrag();
       }
     });
+  }
 
-    Button resetLines = new Button("Reset lines");
-    resetLines.setOnAction(event -> moveAllLinkLines());
+  private void enableMovingPassageButton() {
+    createMovePassageButton = new RadioButton("Move passage");
+    createMovePassageButton.setOnAction(event -> {
+      disableMouseEvent();
+      enableMovingPassages();
+    });
+  }
 
-    Button undoButton = new Button("Undo");
-    undoButton.setOnAction(event -> deleteMostRecentNode());
+  private void enableReturnToMenuButton() {
+    returnToMainMenu = new Button("Return to main menu");
+    returnToMainMenu.setOnAction(event -> listener.onReturnClicked());
+  }
 
-    ToggleGroup toggleGroup = new ToggleGroup();
-    createDragLine.setToggleGroup(toggleGroup);
-    createPassageSquares.setToggleGroup(toggleGroup);
-    movePassage.setToggleGroup(toggleGroup);
-
-    Button retrieveData = new Button("Retrieve data");
-    retrieveData.setOnAction(event -> retrieveStoryData());
-
-    VBox buttonBox = new VBox();
-
-    buttonBox.getChildren()
-        .addAll(returnToMainMenu, undoButton, retrieveData, createPassageSquares, createDragLine,
-            movePassage, resetLines);
-    getChildren().add(buttonBox);
+  private void enableCreatePassageButton() {
+    createPassageInputs = new RadioButton("Enable creating passages");
+    createPassageInputs.setOnAction(event -> {
+      if (createPassageInputs.isSelected()) {
+        disableMouseEvent();
+        enableCreatingPassageTextArea();
+      }
+    });
   }
 
   /**
@@ -300,14 +350,43 @@ public class StoryCreator extends Pane {
 
   /**
    * Creates a story from the currently added data in the frame.
-   *
-   * @return A story made form the currently added data in the frame.
    */
-  private Story retrieveStoryData() {
-    List<Passage> retrievedPassages = retrievePassages();
-    Story story = new Story("Retrieved story", findFirstPassage());
-    retrievedPassages.forEach(story::addPassage);
-    return story;
+  private void retrieveStoryData() {
+
+    try {
+      String name = storyName.getTextArea().getText();
+      Passage openingPassage = findFirstPassage().getPassage();
+
+      Story story = new Story(name, openingPassage);
+
+      List<PassageInput> retrievedPassages = retrievePassages();
+
+
+      Map<Link, Passage> matches = matchLinksToPassages(retrieveLinks(),retrievedPassages);
+      for(Map.Entry<Link, Passage> entry: matches.entrySet()){
+        System.out.println(entry.getKey() + "," + entry.getValue());
+        entry.getValue().addLink(entry.getKey());
+        story.addPassage(entry.getValue());
+      }
+
+      String path = "src/main/resources/stories/" + name + ".paths";
+      if (!Files.exists(Path.of(path))) {
+        FileStoryHandler.writeStoryToFile(story, path);
+      } else {
+        throw new IllegalArgumentException(
+            "File " + path + " already exists, Please choose a different name");
+      }
+
+      Alert alert = new Alert(AlertType.CONFIRMATION, "File has been saved");
+      alert.showAndWait();
+    } catch (Exception e) {
+      LOGGER.log(Level.INFO,  e.getMessage());
+      Text alertText = new Text("Could not save story to file because: \n" + e.getMessage());
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.getDialogPane().setContent(alertText);
+      alert.showAndWait();
+    }
+
   }
 
   /**
@@ -315,11 +394,11 @@ public class StoryCreator extends Pane {
    *
    * @return A list of all user created passages.
    */
-  private List<Passage> retrievePassages() {
-    List<Passage> retrievedPassages = new ArrayList<>();
+  private List<PassageInput> retrievePassages() {
+    List<PassageInput> retrievedPassages = new ArrayList<>();
     getChildren().stream().filter(node -> node.getClass().equals(PassageInput.class))
         .map(node -> (PassageInput) node)
-        .forEach(passageInput -> retrievedPassages.add(passageInput.getPassage()));
+        .forEach(passageInput -> retrievedPassages.add(passageInput));
     return retrievedPassages;
   }
 
@@ -328,10 +407,10 @@ public class StoryCreator extends Pane {
    *
    * @return A list of all user created links.
    */
-  private List<Link> retrieveLinks() {
-    List<Link> retrievedLinks = new ArrayList<>();
+  private List<LinkLine> retrieveLinks() {
+    List<LinkLine> retrievedLinks = new ArrayList<>();
     getChildren().stream().filter(node -> node.getClass().equals(LinkLine.class))
-        .map(node -> (LinkLine) node).forEach(linkLine -> retrievedLinks.add(linkLine.getLink()));
+        .map(node -> (LinkLine) node).forEach(linkLine -> retrievedLinks.add(linkLine));
     return retrievedLinks;
   }
 
@@ -359,10 +438,21 @@ public class StoryCreator extends Pane {
    * @return the first passage that has been added to the frame.
    * @throws NullPointerException If the frame has no added passage.
    */
-  private Passage findFirstPassage() throws NullPointerException {
+  private PassageInput findFirstPassage() throws NullPointerException {
     return ((PassageInput) Objects.requireNonNull(
         getChildren().stream().filter(node -> node instanceof PassageInput).findFirst()
-            .orElse(null))).getPassage();
+            .orElse(null)));
+  }
+
+
+  private Map<Link, Passage> matchLinksToPassages(List<LinkLine> linkLines, List<PassageInput> passageInputs){
+    Map<Link, Passage> matches = new HashMap<>();
+    linkLines.forEach(linkLine -> passageInputs.forEach(passageInput -> {
+      if (passageInput.getPassage().getTitle().equals(linkLine.getLink().getReference())){
+        matches.put(linkLine.getLink(), passageInput.getPassage());
+      }
+    }));
+    return matches;
   }
 
 }
