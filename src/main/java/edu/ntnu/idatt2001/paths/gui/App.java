@@ -15,7 +15,10 @@ import edu.ntnu.idatt2001.paths.gui.listeners.LoadStoredGamesListener;
 import edu.ntnu.idatt2001.paths.gui.listeners.MainMenuListener;
 import edu.ntnu.idatt2001.paths.gui.listeners.StoryCreatorListener;
 import edu.ntnu.idatt2001.paths.gui.storycreation.ScrollableStoryCreator;
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -34,9 +37,11 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
 
+  private static final Logger logger = Logger.getLogger(App.class.getName());
   private static final int FRAME_HEIGHT = 600;
   private static final int FRAME_WIDTH = 1000;
   private Game currentGame;
+  private Passage currentPassage;
   private MainMenuListener mainMenuListener;
   private BaseFrameListener baseFrameListener;
   private CreateGameListener createGameListener;
@@ -59,7 +64,13 @@ public class App extends Application {
    */
   @Override
   public void start(Stage stage) {
-
+    try {
+      GameManager.initialize("src/main/resources/games/game_objects.json");
+    } catch (IllegalArgumentException | NullPointerException | IllegalStateException | IOException e) {
+      logger.log(Level.SEVERE, e.getMessage(), e);
+      Alert alert = new Alert(AlertType.ERROR, e.getMessage());
+      alert.showAndWait();
+    }
     stage.setTitle("Paths");
     createBaseFrameListener(stage);
     addMainMenuListener(stage);
@@ -99,7 +110,20 @@ public class App extends Application {
        */
       @Override
       public void onExitClicked(boolean shouldSaveGame) {
-        switchToMainMenu(stage);
+        if (shouldSaveGame) {
+          try {
+            GameManager.getInstance().saveGame(currentGame, currentPassage);
+            switchToMainMenu(stage);
+          } catch (IOException | NullPointerException | IllegalArgumentException e) {
+            String errorMessage = "The game could not be saved due to an error: " + e.getMessage();
+            logger.log(Level.SEVERE, errorMessage, e);
+            Alert alert = new Alert(AlertType.ERROR, errorMessage);
+            alert.showAndWait();
+            switchToMainMenu(stage);
+          }
+        } else {
+          switchToMainMenu(stage);
+        }
       }
 
 
@@ -119,6 +143,7 @@ public class App extends Application {
         try {
           newFrame = new BaseFrame(currentGame.getStory().getTitle(), currentGame.go(link),
                   currentGame.getPlayer(), FRAME_WIDTH, FRAME_HEIGHT, this);
+          currentPassage = currentGame.go(link);
         } catch (Exception e) {
           Alert alert = new Alert(AlertType.ERROR,
               "This link is broken, please choose a different button");
@@ -130,13 +155,13 @@ public class App extends Application {
 
         boolean gameFinished = false;
         if (currentGame.getPlayer().getHealth() <= 0) {
-          Alert alert = new Alert(AlertType.CONFIRMATION, "The game is finished, you have died");
+          Alert alert = new Alert(AlertType.CONFIRMATION, "The game is finished, you have died.");
           alert.showAndWait();
           gameFinished = true;
         }
 
         if (currentGame.getStory().getPassage(link).getLinks().isEmpty() && !gameFinished) {
-          Alert alert = new Alert(AlertType.CONFIRMATION, "The game is finished, you have won");
+          Alert alert = new Alert(AlertType.CONFIRMATION, "The game is finished, you have won.");
           alert.showAndWait();
           gameFinished = true;
         }
@@ -318,6 +343,7 @@ public class App extends Application {
   private void loadNewBaseFrame(Stage stage, Passage passage) {
     BaseFrame currentFrame = new BaseFrame(currentGame.getStory().getTitle(), passage,
             currentGame.getPlayer(), FRAME_WIDTH, FRAME_HEIGHT, baseFrameListener);
+    this.currentPassage = passage;
     stage.setScene(new Scene(currentFrame));
   }
 
@@ -358,6 +384,4 @@ public class App extends Application {
       System.exit(0);
     });
   }
-
-
 }
