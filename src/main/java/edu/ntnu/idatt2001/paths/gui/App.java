@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2001.paths.gui;
 
+import com.google.gson.JsonSyntaxException;
 import edu.ntnu.idatt2001.paths.Difficulty;
 import edu.ntnu.idatt2001.paths.Game;
 import edu.ntnu.idatt2001.paths.Link;
@@ -66,7 +67,8 @@ public class App extends Application {
   public void start(Stage stage) {
     try {
       GameManager.initialize("src/main/resources/games/game_objects.json");
-    } catch (IllegalArgumentException | NullPointerException | IllegalStateException | IOException e) {
+    } catch (IllegalArgumentException | NullPointerException | IllegalStateException | IOException
+             | JsonSyntaxException e) {
       logger.log(Level.SEVERE, e.getMessage(), e);
       Alert alert = new Alert(AlertType.ERROR, e.getMessage());
       alert.showAndWait();
