@@ -40,6 +40,6 @@ public class GoalDeserializer implements JsonDeserializer<Goal> {
         return context.deserialize(jsonElement, goalClass);
       }
     }
-    throw new JsonParseException("Unknown goal type: " + jsonElement);
+    throw new JsonParseException("Unknown goal type: " + jsonElement + ".");
   }
 }
