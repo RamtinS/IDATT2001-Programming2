@@ -1,6 +1,5 @@
 package edu.ntnu.idatt2001.paths.gui.uielements;
 
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -11,12 +10,12 @@ import javafx.scene.layout.Pane;
 /**
  * Class that represents the inventory of a player.
  *
- * @author Ramtin Samavat and Tobias Oftedal.
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal
  * @version 1.0
  * @since May 12, 2023.
  */
 public class InventoryPane extends HBox {
-
 
   private final List<String> inventoryItems;
 
@@ -36,7 +35,9 @@ public class InventoryPane extends HBox {
   }
 
   /**
-   * Creates 1 pane for each inventory item, and tries to add the corresponding picture to it.
+   * Creates 1 pane for each inventory item, and tries to add the corresponding picture to it. If
+   * the picture cannot be set, it will be set to a picture holding an exclamation icon. If this
+   * does not work either, a default black background color will be set
    */
   public void createPanes() {
     for (String inventoryItem : inventoryItems) {
@@ -49,7 +50,7 @@ public class InventoryPane extends HBox {
         try {
           setPaneBackground(pane, "exclamation");
         } catch (Exception f) {
-          pane.setStyle("-fx-background-color: #00FF00");
+          pane.setStyle("-fx-background-color: #000000");
         }
       }
       getChildren().add(pane);
@@ -73,7 +74,6 @@ public class InventoryPane extends HBox {
     String location =
         "/items/" + Arrays.stream(images).filter(image -> image.contains(name)).findFirst()
             .orElseThrow(NullPointerException::new);
-    System.out.println(location);
 
     pane.setStyle(
         "-fx-background-image: url('" + location + "');" + "-fx-background-size: stretch");
