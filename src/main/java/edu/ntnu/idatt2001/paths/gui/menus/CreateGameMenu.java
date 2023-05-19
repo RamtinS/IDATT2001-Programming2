@@ -157,7 +157,7 @@ public class CreateGameMenu extends BorderPane {
     gridHolder.setPadding(new Insets(30));
 
     infoGrid.setAlignment(Pos.CENTER);
-    gridHolder.setStyle("-fx-background-color: #88cce3; -fx-border-color: #000000");
+    gridHolder.setStyle("-fx-background-color: #e8e4e4; -fx-border-color: #000000");
     setCenter(gridHolder);
   }
 
