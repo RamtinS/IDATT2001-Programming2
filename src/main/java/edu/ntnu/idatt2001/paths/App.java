@@ -2,6 +2,7 @@ package edu.ntnu.idatt2001.paths;
 
 import edu.ntnu.idatt2001.paths.actions.Action;
 import edu.ntnu.idatt2001.paths.controller.GameManager;
+import edu.ntnu.idatt2001.paths.filehandling.FileStoryHandler;
 import edu.ntnu.idatt2001.paths.goals.Goal;
 import edu.ntnu.idatt2001.paths.gui.listeners.BaseFrameListener;
 import edu.ntnu.idatt2001.paths.gui.listeners.CreateGameListener;
@@ -28,17 +29,16 @@ import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
-
 /**
- * Represents the Path application entrypoint. Responsible for creating "main menu", "base frame"
- * and "create game menu" objects
+ * Represents the Path application entrypoint.
+ * The class is responsible for the creating "main menu",
+ * "base frame", and "create game menu" objects
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since April 26, 2023.
+ * @since May 19, 2023.
  */
 public class App extends Application {
 
@@ -49,6 +49,7 @@ public class App extends Application {
       "file:src/main/resources/stylesheets" + "/StandardStyling.css";
   private Game currentGame;
   private Passage currentPassage;
+  private String pathOStoryFile;
   private MainMenuListener mainMenuListener;
   private BaseFrameListener baseFrameListener;
   private CreateGameListener createGameListener;
@@ -78,8 +79,6 @@ public class App extends Application {
       logger.log(Level.SEVERE, e.getMessage(), e);
       Alert alert = new Alert(AlertType.ERROR, e.getMessage());
       alert.showAndWait();
-
-
     }
 
     stage.setTitle("Paths");
@@ -104,6 +103,22 @@ public class App extends Application {
     stage.setMaxHeight(FRAME_HEIGHT + 200.0);
   }
 
+  /**
+   * The method retrieves a new instance of the original story of the game.
+   *
+   * @return the original story.
+   */
+  private Story getOriginalStory() {
+    Story story = null;
+    try {
+      story = FileStoryHandler.readStoryFromFile(pathOStoryFile);
+    } catch (NullPointerException | IllegalArgumentException | IOException e) {
+      logger.log(Level.SEVERE, e.getMessage(), e);
+      Alert alert = new Alert(AlertType.ERROR, e.getMessage());
+      alert.showAndWait();
+    }
+    return story;
+  }
 
   /**
    * Sets a new {@link BaseFrameListener}.
@@ -114,11 +129,11 @@ public class App extends Application {
     baseFrameListener = new BaseFrameListener() {
 
       /**
-       * Restarts the application to the opening passage.
+       * Restarts the game and takes the player to the opening passage.
        */
       @Override
       public void onRestartClicked() {
-        loadNewBaseFrame(stage, currentGame.resetGame());
+        loadNewBaseFrame(stage, currentGame.resetGame(getOriginalStory()));
       }
 
       /**
@@ -158,7 +173,7 @@ public class App extends Application {
         for (Action action : link.getActions()) {
           action.execute(currentGame.getPlayer());
         }
-
+        link.getActions().clear();
         BaseFrame newFrame;
         try {
           newFrame = new BaseFrame(currentGame.getStory().getTitle(), currentGame.go(link),
@@ -175,27 +190,23 @@ public class App extends Application {
         stage.setScene(scene);
         stage.show();
 
-        boolean gameFinished = false;
+
         if (currentGame.getPlayer().getHealth() <= 0) {
+          TextToSpeech.getInstance().resetSpeech();
           Alert alert = new Alert(AlertType.CONFIRMATION, "The game is finished, you have died.");
           alert.showAndWait();
-          gameFinished = true;
+          loadNewBaseFrame(stage, currentGame.resetGame(getOriginalStory()));
         }
 
-        if (currentGame.getStory().getPassage(link).getLinks().isEmpty() && !gameFinished) {
-          Alert alert = new Alert(AlertType.CONFIRMATION, "The game is finished, you have won.");
+        if (currentGame.getStory().getPassage(link).getLinks().isEmpty()) {
+          Alert alert = new Alert(AlertType.CONFIRMATION, "Congratulations you have won the game.");
           alert.showAndWait();
-          gameFinished = true;
-        }
-
-        if (gameFinished) {
+          currentGame.resetGame(getOriginalStory());
           switchToMainMenu(stage);
         }
-
       }
     };
   }
-
 
   /**
    * Sets a new {@link CreateGameListener}.
@@ -221,25 +232,21 @@ public class App extends Application {
        * @param chosenDifficulty The chosen difficulty for the game
        */
       @Override
-      public void onCreateClicked(List<Goal> chosenGoals, String gameId, String playerName,
-                                  Difficulty chosenDifficulty, Story selectedStory) {
-        Player player = new Player.PlayerBuilder(playerName).health(chosenDifficulty.getHealth())
-            .build();
+      public void onCreateClicked(String pathOfFile, List<Goal> chosenGoals, String gameId,
+                                  String playerName, Difficulty chosenDifficulty, Story selectedStory) {
+        pathOStoryFile = pathOfFile;
+        Player player = new Player.PlayerBuilder(playerName)
+                .health(chosenDifficulty.getHealth())
+                .build();
         try {
           currentGame = GameManager.getInstance()
-              .createGame(gameId, player, selectedStory, chosenGoals);
-        } catch (Exception e) {
-          Alert alert = new Alert(AlertType.CONFIRMATION, "Error while saving game" + e.getMessage()
-              + "\nYour game will not be saved, do you still want to " + "continue?");
+                  .createGame(gameId, player, selectedStory, chosenGoals);
+          loadNewBaseFrame(stage, currentGame.getStory().getOpeningPassage());
+        } catch (NullPointerException | IllegalArgumentException e) {
+          logger.log(Level.WARNING, e.getMessage(), e);
+          Alert alert = new Alert(AlertType.WARNING, e.getMessage());
           alert.showAndWait();
-          if (alert.getResult().equals(ButtonType.OK)) {
-            currentGame = new Game("Game id", player, selectedStory, chosenGoals);
-          } else {
-            return;
-          }
         }
-
-        loadNewBaseFrame(stage, currentGame.getStory().getOpeningPassage());
       }
     };
   }
