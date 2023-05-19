@@ -180,7 +180,7 @@ public class BaseFrame extends AnchorPane {
    */
   private void addExitButton() {
     Button exitButton = new Button("Exit");
-    exitButton.setStyle("-fx-wrap-text: false");
+
     exitButton.prefWidthProperty().bind(widthProperty().divide(15));
     exitButton.prefHeightProperty().bind(widthProperty().divide(30));
     exitButton.setOnAction(event -> {
@@ -227,12 +227,13 @@ public class BaseFrame extends AnchorPane {
     for (Link link : passage.getLinks()) {
       Button button = new Button(link.getText());
       button.setOnAction(event -> listener.onOptionButtonClicked(link));
-      button.setPrefWidth(width / 10);
+
       choiceButtons.getChildren().add(button);
     }
 
     choiceButtons.setLayoutX(width / 1.5);
     choiceButtons.setLayoutY(height - height / 3);
+    setRightAnchor(choiceButtons, width / 5);
     getChildren().add(choiceButtons);
   }
 
@@ -261,19 +262,13 @@ public class BaseFrame extends AnchorPane {
     text.setWrappingWidth(width / 10);
     VBox textPane = new VBox();
     textPane.setStyle("-fx-background-color: #FFFFFF;");
-    textPane.setLayoutX(width * 0.9 - text.getWrappingWidth());
+
 
     textPane.setLayoutY(height / 5);
     textPane.getChildren().add(text);
     textPane.setStyle("-fx-background-color: #add8e6");
 
-    ChangeListener<Number> sizeListener = (observable, oldValue, newValue) -> {
-      text.setWrappingWidth(getWidth() / 7);
-      textPane.setLayoutX(getWidth() * 0.9 - text.getWrappingWidth());
-      textPane.setLayoutY(getHeight() * 0.2);
-    };
-    prefWidthProperty().addListener(sizeListener);
-    prefHeightProperty().addListener(sizeListener);
+    setRightAnchor(textPane, 100.0);
     getChildren().add(textPane);
   }
 
@@ -282,7 +277,7 @@ public class BaseFrame extends AnchorPane {
    */
   private void createInventory() {
     int inventoryHeight = 70;
-    player.getInventory().forEach(System.out::println);
+
     InventoryPane inventoryPane = new InventoryPane(60, inventoryHeight, player.getInventory());
     getChildren().add(inventoryPane);
     inventoryPane.setLayoutY(getPrefHeight() - 70);
