@@ -90,7 +90,7 @@ public class GameManager {
    * @throws NullPointerException if the gameId, player, story, or goals is null.
    */
   public Game createGame(String gameId, Player player, Story story, List<Goal> goals)
-          throws IllegalStateException, IllegalArgumentException, NullPointerException {
+          throws IllegalArgumentException, NullPointerException {
     if (gameId == null) {
       throw new NullPointerException("Game ID cannot be null.");
     }
