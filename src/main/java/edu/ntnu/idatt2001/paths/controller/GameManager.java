@@ -1,13 +1,14 @@
 package edu.ntnu.idatt2001.paths.controller;
 
 import com.google.gson.JsonSyntaxException;
-import edu.ntnu.idatt2001.paths.Game;
-import edu.ntnu.idatt2001.paths.Passage;
-import edu.ntnu.idatt2001.paths.Player;
-import edu.ntnu.idatt2001.paths.Story;
+
 import edu.ntnu.idatt2001.paths.filehandling.FileGameHandler;
 import edu.ntnu.idatt2001.paths.filehandling.FilePathValidator;
 import edu.ntnu.idatt2001.paths.goals.Goal;
+import edu.ntnu.idatt2001.paths.model.Game;
+import edu.ntnu.idatt2001.paths.model.Passage;
+import edu.ntnu.idatt2001.paths.model.Player;
+import edu.ntnu.idatt2001.paths.model.Story;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
