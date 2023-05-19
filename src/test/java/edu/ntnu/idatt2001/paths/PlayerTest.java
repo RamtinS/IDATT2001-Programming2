@@ -195,6 +195,15 @@ class PlayerTest {
     }
 
     @Test
+    @DisplayName("Should decrease score to zero")
+    void shouldDecreaseScoreToZero() {
+      player.decreaseScore(-10);
+      int expectedScore = 0;
+      int actualScore = player.getScore();
+      assertEquals(expectedScore, actualScore);
+    }
+
+    @Test
     @DisplayName("Should increase gold")
     void shouldIncreaseGold() {
       player.increaseGold(1);
@@ -208,6 +217,15 @@ class PlayerTest {
     void shouldDecreaseGold() {
       player.decreaseGold(-1);
       int expectedGold = 2;
+      int actualGold = player.getGold();
+      assertEquals(expectedGold, actualGold);
+    }
+
+    @Test
+    @DisplayName("Should decrease gold to zero")
+    void shouldDecreaseGoldToZero() {
+      player.decreaseGold(-10);
+      int expectedGold = 0;
       int actualGold = player.getGold();
       assertEquals(expectedGold, actualGold);
     }
@@ -248,9 +266,7 @@ class PlayerTest {
     @DisplayName("Should not decrease score throws IllegalArgumentException")
     void shouldNotDecreaseScoreThrowsIllegalArgumentException(){
       int invalidPoints = 1;
-      int invalidOutOfRange = -10;
       assertThrows(IllegalArgumentException.class, () -> player.decreaseScore(invalidPoints));
-      assertThrows(IllegalArgumentException.class, () -> player.decreaseScore(invalidOutOfRange));
     }
 
     @Test
@@ -264,9 +280,7 @@ class PlayerTest {
     @DisplayName("Should not decrease gold throws IllegalArgumentException")
     void shouldNotDecreaseGoldThrowsIllegalArgumentException(){
       int invalidGold = 1;
-      int invalidOutOfRange = -10;
       assertThrows(IllegalArgumentException.class, () -> player.decreaseGold(invalidGold));
-      assertThrows(IllegalArgumentException.class, () -> player.decreaseGold(invalidOutOfRange));
     }
 
     @Test
@@ -281,6 +295,34 @@ class PlayerTest {
     void shouldNotAddToInventoryThrowsNullPointerException(){
       String invalidItem = null;
       assertThrows(NullPointerException.class, () -> player.addToInventory(invalidItem));
+    }
+  }
+
+  @Nested
+  @DisplayName("Test override methods")
+  class TestOtherMethods {
+    @Test
+    @DisplayName("Test equals method true")
+    void testEqualsMethodTrue() {
+      Player testPlayer = new Player.PlayerBuilder("Name")
+              .health(10)
+              .score(2)
+              .gold(3)
+              .build();
+
+      assertEquals(player, testPlayer);
+    }
+
+    @Test
+    @DisplayName("Test equals method false")
+    void testEqualsMethodFalse() {
+      Player testPlayer = new Player.PlayerBuilder("Equal")
+              .health(100)
+              .score(2)
+              .gold(3)
+              .build();
+
+      assertNotEquals(player, testPlayer);
     }
   }
 }
