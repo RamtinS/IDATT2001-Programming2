@@ -18,8 +18,8 @@ import edu.ntnu.idatt2001.paths.model.Link;
 import edu.ntnu.idatt2001.paths.model.Passage;
 import edu.ntnu.idatt2001.paths.model.Player;
 import edu.ntnu.idatt2001.paths.model.Story;
+import edu.ntnu.idatt2001.paths.tts.TextToSpeech;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,6 +30,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+
 
 /**
  * Represents the Path application entrypoint. Responsible for creating "main menu", "base frame"
@@ -44,6 +45,8 @@ public class App extends Application {
   private static final Logger logger = Logger.getLogger(App.class.getName());
   private static final int FRAME_HEIGHT = 600;
   private static final int FRAME_WIDTH = 1000;
+  private static final String STANDARD_STYLING =
+      "file:src/main/resources/stylesheets" + "/StandardStyling.css";
   private Game currentGame;
   private Passage currentPassage;
   private MainMenuListener mainMenuListener;
@@ -75,7 +78,10 @@ public class App extends Application {
       logger.log(Level.SEVERE, e.getMessage(), e);
       Alert alert = new Alert(AlertType.ERROR, e.getMessage());
       alert.showAndWait();
+
+
     }
+
     stage.setTitle("Paths");
     createBaseFrameListener(stage);
     addMainMenuListener(stage);
@@ -92,10 +98,10 @@ public class App extends Application {
   }
 
   private void setStageSizes(Stage stage) {
-    stage.setMinWidth(FRAME_WIDTH - 200);
-    stage.setMaxWidth(FRAME_WIDTH + 200);
-    stage.setMinHeight(FRAME_HEIGHT - 200);
-    stage.setMaxHeight(FRAME_HEIGHT + 200);
+    stage.setMinWidth(FRAME_WIDTH - 200.0);
+    stage.setMaxWidth(FRAME_WIDTH + 200.0);
+    stage.setMinHeight(FRAME_HEIGHT - 200.0);
+    stage.setMaxHeight(FRAME_HEIGHT + 200.0);
   }
 
 
@@ -123,9 +129,9 @@ public class App extends Application {
        */
       @Override
       public void onExitClicked(boolean shouldSaveGame) {
+        TextToSpeech.getInstance().resetSpeech();
         if (shouldSaveGame) {
           try {
-            currentGame.getStory().setCurrentPassage(currentPassage);
             GameManager.getInstance().saveGame(currentGame, currentPassage);
             switchToMainMenu(stage);
           } catch (IOException | NullPointerException | IllegalArgumentException e) {
@@ -165,7 +171,7 @@ public class App extends Application {
           return;
         }
         Scene scene = new Scene(newFrame);
-        setStyleSheet(scene, "file:src/main/resources/stylesheets/StandardStyling.css");
+        setStyleSheet(scene, STANDARD_STYLING);
         stage.setScene(scene);
         stage.show();
 
@@ -296,13 +302,9 @@ public class App extends Application {
   }
 
   private void loadTutorial(Stage stage, BaseFrameListener baseFrameListener) {
-    String gameId = "Test ID";
     Player player = new Player.PlayerBuilder("Test name").health(100).score(100).gold(50).build();
     Passage openingPassage = new Passage("Test title", "Test content");
     Story story = new Story("Test title", openingPassage);
-    List<Goal> goals = new ArrayList<>();
-    Game game = new Game(gameId, player, story, goals);
-
     BaseFrame tutorialFrame = new BaseFrame(story.getTitle(), openingPassage, player, FRAME_WIDTH,
         FRAME_HEIGHT, baseFrameListener);
     stage.setScene(new Scene(tutorialFrame));
@@ -364,7 +366,7 @@ public class App extends Application {
   private void switchToMainMenu(Stage stage) {
     MainMenu mainMenu = new MainMenu(FRAME_WIDTH, FRAME_HEIGHT, mainMenuListener);
     Scene scene = new Scene(mainMenu);
-    setStyleSheet(scene, "file:src/main/resources/stylesheets/StandardStyling.css");
+    setStyleSheet(scene, STANDARD_STYLING);
     stage.setScene(scene);
     stage.show();
   }
@@ -378,7 +380,7 @@ public class App extends Application {
     CreateGameMenu createGameMenu = new CreateGameMenu(FRAME_WIDTH, FRAME_HEIGHT,
         createGameListener);
     Scene scene = new Scene(createGameMenu);
-    setStyleSheet(scene, "file:src/main/resources/stylesheets/StandardStyling.css");
+    setStyleSheet(scene, STANDARD_STYLING);
     stage.setScene(scene);
     stage.show();
   }
@@ -393,7 +395,7 @@ public class App extends Application {
         currentGame.getPlayer(), FRAME_WIDTH, FRAME_HEIGHT, baseFrameListener);
     this.currentPassage = passage;
     Scene scene = new Scene(currentFrame);
-    setStyleSheet(scene, "file:src/main/resources/stylesheets/StandardStyling.css");
+    setStyleSheet(scene, STANDARD_STYLING);
     stage.setScene(scene);
   }
 
@@ -419,7 +421,7 @@ public class App extends Application {
     LoadStoredGamesMenu loadStoredGamesMenu = new LoadStoredGamesMenu(FRAME_WIDTH, FRAME_HEIGHT,
         loadStoredGamesListener);
     Scene scene = new Scene(loadStoredGamesMenu);
-    setStyleSheet(scene, "file:src/main/resources/stylesheets/StandardStyling.css");
+    setStyleSheet(scene, STANDARD_STYLING);
     stage.setScene(scene);
     stage.show();
   }
