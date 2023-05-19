@@ -1,11 +1,5 @@
-package edu.ntnu.idatt2001.paths.gui;
+package edu.ntnu.idatt2001.paths;
 
-import edu.ntnu.idatt2001.paths.Difficulty;
-import edu.ntnu.idatt2001.paths.Game;
-import edu.ntnu.idatt2001.paths.Link;
-import edu.ntnu.idatt2001.paths.Passage;
-import edu.ntnu.idatt2001.paths.Player;
-import edu.ntnu.idatt2001.paths.Story;
 import edu.ntnu.idatt2001.paths.actions.Action;
 import edu.ntnu.idatt2001.paths.controller.GameManager;
 import edu.ntnu.idatt2001.paths.goals.Goal;
@@ -14,8 +8,18 @@ import edu.ntnu.idatt2001.paths.gui.listeners.CreateGameListener;
 import edu.ntnu.idatt2001.paths.gui.listeners.LoadStoredGamesListener;
 import edu.ntnu.idatt2001.paths.gui.listeners.MainMenuListener;
 import edu.ntnu.idatt2001.paths.gui.listeners.StoryCreatorListener;
+import edu.ntnu.idatt2001.paths.gui.menus.BaseFrame;
+import edu.ntnu.idatt2001.paths.gui.menus.CreateGameMenu;
+import edu.ntnu.idatt2001.paths.gui.menus.LoadStoredGamesMenu;
+import edu.ntnu.idatt2001.paths.gui.menus.MainMenu;
 import edu.ntnu.idatt2001.paths.gui.storycreation.ScrollableStoryCreator;
+import edu.ntnu.idatt2001.paths.model.Game;
+import edu.ntnu.idatt2001.paths.model.Link;
+import edu.ntnu.idatt2001.paths.model.Passage;
+import edu.ntnu.idatt2001.paths.model.Player;
+import edu.ntnu.idatt2001.paths.model.Story;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,7 +70,8 @@ public class App extends Application {
   public void start(Stage stage) {
     try {
       GameManager.initialize("src/main/resources/games/game_objects.json");
-    } catch (IllegalArgumentException | NullPointerException | IllegalStateException | IOException e) {
+    } catch (IllegalArgumentException | NullPointerException | IllegalStateException |
+             IOException e) {
       logger.log(Level.SEVERE, e.getMessage(), e);
       Alert alert = new Alert(AlertType.ERROR, e.getMessage());
       alert.showAndWait();
@@ -79,10 +84,18 @@ public class App extends Application {
     addStoryCreatorListener(stage);
     switchToMainMenu(stage);
     setCloseAction(stage);
+    setStageSizes(stage);
   }
 
   private void setStyleSheet(Scene scene, String filePath) {
     scene.getStylesheets().add(filePath);
+  }
+
+  private void setStageSizes(Stage stage) {
+    stage.setMinWidth(FRAME_WIDTH - 200);
+    stage.setMaxWidth(FRAME_WIDTH + 200);
+    stage.setMinHeight(FRAME_HEIGHT - 200);
+    stage.setMaxHeight(FRAME_HEIGHT + 200);
   }
 
 
@@ -141,8 +154,9 @@ public class App extends Application {
 
         BaseFrame newFrame;
         try {
+          System.out.println(stage.getHeight());
           newFrame = new BaseFrame(currentGame.getStory().getTitle(), currentGame.go(link),
-                  currentGame.getPlayer(), FRAME_WIDTH, FRAME_HEIGHT, this);
+              currentGame.getPlayer(), FRAME_WIDTH, FRAME_HEIGHT, this);
           currentPassage = currentGame.go(link);
         } catch (Exception e) {
           Alert alert = new Alert(AlertType.ERROR,
@@ -199,13 +213,13 @@ public class App extends Application {
        * @param chosenDifficulty The chosen difficulty for the game
        */
       @Override
-      public void onCreateClicked(List<Goal> chosenGoals, String playerName,
+      public void onCreateClicked(List<Goal> chosenGoals, String gameId, String playerName,
                                   Difficulty chosenDifficulty, Story selectedStory) {
         Player player = new Player.PlayerBuilder(playerName).health(chosenDifficulty.getHealth())
             .build();
         try {
           currentGame = GameManager.getInstance()
-              .createGame("Game id", player, selectedStory, chosenGoals);
+              .createGame(gameId, player, selectedStory, chosenGoals);
         } catch (Exception e) {
           Alert alert = new Alert(AlertType.CONFIRMATION,
               "Error while saving game\nYour game will not be saved, do you still want to "
@@ -252,6 +266,25 @@ public class App extends Application {
        */
       @Override
       public void onTutorialButtonClicked() {
+        BaseFrameListener tutorialListener = new BaseFrameListener() {
+          @Override
+          public void onRestartClicked() {
+
+          }
+
+          @Override
+          public void onExitClicked(boolean shouldSaveGame) {
+            switchToMainMenu(stage);
+          }
+
+          @Override
+          public void onOptionButtonClicked(Link link) {
+
+          }
+        };
+        loadTutorial(stage, tutorialListener);
+
+
       }
 
       @Override
@@ -259,6 +292,23 @@ public class App extends Application {
         loadStoryCreator(stage);
       }
     };
+  }
+
+  private void loadTutorial(Stage stage, BaseFrameListener baseFrameListener) {
+    String gameId = "Test ID";
+    Player player = new Player.PlayerBuilder("Test name")
+        .health(100)
+        .score(100)
+        .gold(50)
+        .build();
+    Passage openingPassage = new Passage("Test title", "Test content");
+    Story story = new Story("Test title", openingPassage);
+    List<Goal> goals = new ArrayList<>();
+    Game game = new Game(gameId, player, story, goals);
+
+    BaseFrame tutorialFrame = new BaseFrame(story.getTitle(), openingPassage, player, FRAME_WIDTH, FRAME_HEIGHT, baseFrameListener);
+    stage.setScene(new Scene(tutorialFrame));
+
   }
 
   /**
@@ -330,7 +380,7 @@ public class App extends Application {
     CreateGameMenu createGameMenu = new CreateGameMenu(FRAME_WIDTH, FRAME_HEIGHT,
         createGameListener);
     Scene scene = new Scene(createGameMenu);
-    setStyleSheet(scene, "file:src/main/resources/stylesheets/CreateGameStyling.css");
+    setStyleSheet(scene, "file:src/main/resources/stylesheets/StandardStyling.css");
     stage.setScene(scene);
     stage.show();
   }
@@ -342,7 +392,7 @@ public class App extends Application {
    */
   private void loadNewBaseFrame(Stage stage, Passage passage) {
     BaseFrame currentFrame = new BaseFrame(currentGame.getStory().getTitle(), passage,
-            currentGame.getPlayer(), FRAME_WIDTH, FRAME_HEIGHT, baseFrameListener);
+        currentGame.getPlayer(), FRAME_WIDTH, FRAME_HEIGHT, baseFrameListener);
     this.currentPassage = passage;
     stage.setScene(new Scene(currentFrame));
   }
@@ -368,8 +418,9 @@ public class App extends Application {
   private void loadStoredGames(Stage stage) {
     LoadStoredGamesMenu loadStoredGamesMenu = new LoadStoredGamesMenu(FRAME_WIDTH, FRAME_HEIGHT,
         loadStoredGamesListener);
-    Scene newScene = new Scene(loadStoredGamesMenu);
-    stage.setScene(newScene);
+    Scene scene = new Scene(loadStoredGamesMenu);
+    setStyleSheet(scene, "file:src/main/resources/stylesheets/StandardStyling.css");
+    stage.setScene(scene);
     stage.show();
   }
 
