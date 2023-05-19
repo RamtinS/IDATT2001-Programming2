@@ -11,12 +11,12 @@ import java.util.Objects;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since May 6, 2023.
+ * @since May 19, 2023.
  */
 public class Game {
   private final String gameId;
   private final Player player;
-  private final Story story;
+  private Story story;
   private final List<Goal> goals;
 
   /**
@@ -38,6 +38,16 @@ public class Game {
     this.story = Objects.requireNonNull(story, "Story cannot be null.");
     this.goals = new ArrayList<>();
     this.goals.addAll(Objects.requireNonNull(goals, "Goals cannot be null."));
+  }
+
+  /**
+   * The method sets a new story to the game.
+   *
+   * @param story the new story.
+   * @throws NullPointerException if the story object is null.
+   */
+  private void setStory(Story story) throws NullPointerException {
+    this.story = Objects.requireNonNull(story, "Story cannot be null.");
   }
 
   /**
@@ -89,9 +99,12 @@ public class Game {
    * The method resets the game by resetting the
    * player and returning the opening passage of the story.
    *
+   * @param originalStory new instance of the original story of the game.
    * @return the opening passage of the story.
+   * @throws NullPointerException if the story object is null.
    */
-  public Passage resetGame() {
+  public Passage resetGame(Story originalStory) throws NullPointerException {
+    setStory(originalStory);
     player.resetPlayer();
     story.setCurrentPassage(story.getOpeningPassage());
     return story.getOpeningPassage();
