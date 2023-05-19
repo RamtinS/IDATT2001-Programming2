@@ -1,8 +1,5 @@
 package edu.ntnu.idatt2001.paths.actions;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
 /**
  * The ActionFactory class is responsible for creating
  * action objects based on action descriptions and values.
@@ -11,7 +8,7 @@ import java.lang.reflect.InvocationTargetException;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since May 15, 2023.
+ * @since May 19, 2023.
  */
 public class ActionFactory {
 
@@ -33,19 +30,26 @@ public class ActionFactory {
     if (actionValue == null) {
       throw new NullPointerException("Action value cannot be null.");
     }
+
     ActionType actionType = ActionType.getActionType(actionDescription);
-    Class<? extends Action> actionClass = actionType.getActionClass();
+
+    Action action;
     try {
-      if (actionValue.matches("^[0-9+-]+$")) {
-        Constructor<? extends Action> constructor = actionClass.getConstructor(Integer.TYPE);
-        return constructor.newInstance(Integer.parseInt(actionValue));
-      } else {
-        Constructor<? extends Action> constructor = actionClass.getConstructor(String.class);
-        return constructor.newInstance(actionValue);
+      switch (actionType) {
+        case GOLD -> action = new GoldAction(Integer.parseInt(actionValue));
+        case HEALTH -> action = new HealthAction(Integer.parseInt(actionValue));
+        case INVENTORY -> action = new InventoryAction(actionValue);
+        case SCORE -> action = new ScoreAction(Integer.parseInt(actionValue));
+        default -> action = null;
       }
-    } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-             | InvocationTargetException | NoSuchMethodException e) {
-      throw new IllegalArgumentException("Invalid action value for " + actionDescription + ": " + actionValue);
+    } catch (NumberFormatException e) {
+      throw new NumberFormatException("Invalid action value for " + actionDescription + ": "
+              + actionValue + ". " + actionDescription
+              + "action expects a numeric value in integer format.");
+    } catch (IllegalArgumentException  e) {
+      throw new IllegalArgumentException("Invalid action value for " + actionDescription + ": "
+              + actionValue + ". " + e.getMessage());
     }
+    return action;
   }
 }
