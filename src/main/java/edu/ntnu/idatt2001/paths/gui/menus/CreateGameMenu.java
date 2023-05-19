@@ -80,8 +80,8 @@ public class CreateGameMenu extends BorderPane {
   /**
    * Constructor for a CreateGameMenu object.
    *
-   * @param width    The width of the frame.
-   * @param height   The height of the frame.
+   * @param width The width of the frame.
+   * @param height The height of the frame.
    * @param listener The listener used to activate button functionality.
    */
   public CreateGameMenu(double width, double height, CreateGameListener listener) {
@@ -157,7 +157,7 @@ public class CreateGameMenu extends BorderPane {
     gridHolder.setPadding(new Insets(30));
 
     infoGrid.setAlignment(Pos.CENTER);
-    gridHolder.setStyle("-fx-background-color: #DAD870; -fx-border-color: #000000");
+    gridHolder.setStyle("-fx-background-color: #88cce3; -fx-border-color: #000000");
     setCenter(gridHolder);
   }
 
@@ -312,7 +312,7 @@ public class CreateGameMenu extends BorderPane {
 
   /**
    * Sends information used to create a game to the listener by using the
-   * {@link CreateGameListener#onCreateClicked(List, String, String, Difficulty, Story)
+   * {@link CreateGameListener#onCreateClicked(String, List, String, String, Difficulty, Story)
    * onCreateClicked} method.
    */
   private void createGameClicked() {
@@ -323,14 +323,14 @@ public class CreateGameMenu extends BorderPane {
 
     try {
       getChosenDifficulty();
-      selectedStory = FileStoryHandler.readStoryFromFile(
-          "src/main/resources/stories/" + storyBox.getValue());
+      String pathOfFile = "src/main/resources/stories/" + storyBox.getValue();
+      selectedStory = FileStoryHandler.readStoryFromFile(pathOfFile);
 
       List<Link> brokenLinks = selectedStory.getBrokenLinks();
       if (!brokenLinks.isEmpty()) {
-        String alertMessage = "The selected story has " + brokenLinks.size() + " broken links";
+        String alertMessage = "The selected story has " + brokenLinks.size() + " broken links.";
         for (Link link : brokenLinks) {
-          alertMessage = alertMessage.concat("\n" + link.getText() + " -> " + link.getReference());
+          alertMessage = alertMessage.concat("\n" + link.getText() + "  ->  " + link.getReference());
         }
         alertMessage = alertMessage.concat("\nAre you sure you want to continue?");
 
@@ -341,7 +341,7 @@ public class CreateGameMenu extends BorderPane {
         }
       }
 
-      listener.onCreateClicked(chosenGoals, id, chosenName, getChosenDifficulty(), selectedStory);
+      listener.onCreateClicked(pathOfFile, chosenGoals, id, chosenName, getChosenDifficulty(), selectedStory);
 
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, "Error while creating game: " + e.getMessage(), e);
@@ -480,6 +480,4 @@ public class CreateGameMenu extends BorderPane {
       }
     });
   }
-
-
 }
