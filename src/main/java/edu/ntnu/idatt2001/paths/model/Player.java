@@ -55,7 +55,7 @@ public class Player {
    */
   public void increaseHealth(int health) throws IllegalArgumentException {
     if (health < 0) {
-      throw new IllegalArgumentException("Health increase has to be a positive number");
+      throw new IllegalArgumentException("Health increase has to be a positive number.");
     }
     if (getHealth() + health > 100) {
       this.health = 100;
@@ -72,7 +72,7 @@ public class Player {
    */
   public void decreaseHealth(int health) throws IllegalArgumentException {
     if (health > 0) {
-      throw new IllegalArgumentException("Health decrease has to be a negative number ");
+      throw new IllegalArgumentException("Health decrease has to be a negative number.");
     }
     this.health += health;
   }
@@ -107,12 +107,13 @@ public class Player {
    */
   public void decreaseScore(int points) throws IllegalArgumentException {
     if (points > 0) {
-      throw new IllegalArgumentException("Point decrease has to be negative");
+      throw new IllegalArgumentException("Point decrease has to be negative.");
     }
     if (getScore() + points < 0) {
-      throw new IllegalArgumentException("Score cannot be less than zero.");
+      this.score = 0;
+    } else {
+      this.score += points;
     }
-    this.score += points;
   }
 
   /**
@@ -132,7 +133,7 @@ public class Player {
    */
   public void increaseGold(int gold) throws IllegalArgumentException {
     if (gold < 0) {
-      throw new IllegalArgumentException("\nGold increase has to be positive.");
+      throw new IllegalArgumentException("Gold increase has to be positive.");
     }
     this.gold += gold;
   }
@@ -148,9 +149,10 @@ public class Player {
       throw new IllegalArgumentException("Gold decrease has to be negative.");
     }
     if (getGold() + gold < 0) {
-      throw new IllegalArgumentException("Gold cannot be less than zero");
+      this.gold = 0;
+    } else {
+      this.gold += gold;
     }
-    this.gold += gold;
   }
 
   /**
@@ -171,10 +173,10 @@ public class Player {
    */
   public void addToInventory(String item) throws NullPointerException, IllegalArgumentException {
     if (item == null) {
-      throw new NullPointerException("Item cannot be null");
+      throw new NullPointerException("Item cannot be null.");
     }
     if (item.isBlank()) {
-      throw new IllegalArgumentException("Item cannot be blank");
+      throw new IllegalArgumentException("Item cannot be blank.");
     }
     inventory.add(item);
   }
