@@ -4,15 +4,15 @@ import edu.ntnu.idatt2001.paths.model.Player;
 import java.util.Objects;
 
 /**
- * The class represents a gold goal for the player. To
- * achieve the goal, the player must obtain a minimum
- * amount of gold.
+ * The class represents a gold goal for the player. To achieve the goal, the player must obtain a
+ * minimum amount of gold.
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
  * @since April 23, 2023.
  */
 public class GoldGoal implements Goal {
+
   private final int minimumGold;
 
   /**
@@ -78,5 +78,15 @@ public class GoldGoal implements Goal {
   @Override
   public int hashCode() {
     return Objects.hash(getMinimumGold());
+  }
+
+  /**
+   * Creates a string containing the minimum gold of the goal.
+   *
+   * @return a string containing the minimum gold of the goal.
+   */
+  @Override
+  public String toString() {
+    return "Gold goal:" + getMinimumGold();
   }
 }

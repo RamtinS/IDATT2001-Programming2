@@ -76,4 +76,12 @@ class ScoreGoalTest {
     ScoreGoal scoreGoalEqual = new ScoreGoal(50);
     assertEquals(scoreGoal, scoreGoalEqual);
   }
+
+  @Test
+  @DisplayName("Test toString")
+  void testToString() {
+    String expected = "Score goal:50";
+    String actual = scoreGoal.toString();
+    assertEquals(expected, actual);
+  }
 }

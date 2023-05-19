@@ -76,4 +76,12 @@ class GoldGoalTest {
     GoldGoal goldGoalEqual = new GoldGoal(10);
     assertEquals(goldGoal, goldGoalEqual);
   }
+
+  @Test
+  @DisplayName("Test toString")
+  void testToString() {
+    String expected = "Gold goal:10";
+    String actual = goldGoal.toString();
+    assertEquals(expected, actual);
+  }
 }

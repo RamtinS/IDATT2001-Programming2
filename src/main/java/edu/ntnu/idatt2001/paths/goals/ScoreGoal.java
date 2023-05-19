@@ -79,4 +79,14 @@ public class ScoreGoal implements Goal {
   public int hashCode() {
     return Objects.hash(getMinimumPoints());
   }
+
+  /**
+   * Creates a string containing the minimum score of the goal.
+   *
+   * @return a string containing the minimum score of the goal.
+   */
+  @Override
+  public String toString() {
+    return "Score goal:" + getMinimumPoints();
+  }
 }

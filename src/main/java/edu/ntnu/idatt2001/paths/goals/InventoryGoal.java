@@ -79,4 +79,16 @@ public class InventoryGoal implements Goal {
   public int hashCode() {
     return Objects.hash(getMandatoryItems());
   }
+
+  /**
+   * Creates a string containing the mandatory items of the goal.
+   *
+   * @return a string containing the mandatory items of the goal.
+   */
+  @Override
+  public String toString() {
+    StringBuilder stringBuilder = new StringBuilder("Inventory goal: ");
+    getMandatoryItems().forEach(item -> stringBuilder.append("\n").append(item));
+    return stringBuilder.toString();
+  }
 }

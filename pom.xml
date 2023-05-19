@@ -28,7 +28,7 @@
       <artifactId>javafx-media</artifactId>
       <version>20-ea+9</version>
     </dependency>
-    <!-- Dependencies for text to speech -->
+    <!-- Dependency for text to speech engine -->
     <dependency>
       <groupId>cmu_time_awb</groupId>
       <artifactId>cmu_time_awb</artifactId>
@@ -36,7 +36,7 @@
       <version>1.0</version>
       <systemPath>${pom.basedir}/libs/cmu_time_awb.jar</systemPath>
     </dependency>
-
+    <!-- Voice library used in text to speech -->
     <dependency>
       <groupId>cmu_us_kal</groupId>
       <artifactId>cmu_us_kal</artifactId>
@@ -44,7 +44,7 @@
       <version>1.0</version>
       <systemPath>${pom.basedir}/libs/cmu_us_kal.jar</systemPath>
     </dependency>
-
+    <!-- CMU dictionary for word pronunciation with wide range-->
     <dependency>
       <groupId>cmudict04</groupId>
       <artifactId>cmudict04</artifactId>
@@ -52,7 +52,7 @@
       <version>1.0</version>
       <systemPath>${pom.basedir}/libs/cmudict04.jar</systemPath>
     </dependency>
-
+    <!-- CMU dictionary for word pronunciation for a smaller range of words-->
     <dependency>
       <groupId>cmulex</groupId>
       <artifactId>cmulex</artifactId>
@@ -60,7 +60,7 @@
       <version>1.0</version>
       <systemPath>${pom.basedir}/libs/cmulex.jar</systemPath>
     </dependency>
-
+    <!-- Dependency for using CMU lexicon-->
     <dependency>
       <groupId>cmutimelex</groupId>
       <artifactId>cmutimelex</artifactId>
@@ -68,7 +68,7 @@
       <version>1.0</version>
       <systemPath>${pom.basedir}/libs/cmutimelex.jar</systemPath>
     </dependency>
-
+    <!-- English (us) language dependency for text to speech -->
     <dependency>
       <groupId>en_us</groupId>
       <artifactId>en_us</artifactId>
@@ -76,7 +76,7 @@
       <version>1.0</version>
       <systemPath>${pom.basedir}/libs/en_us.jar</systemPath>
     </dependency>
-
+    <!-- Dependency for freeTTS synthesis system-->
     <dependency>
       <groupId>freets</groupId>
       <artifactId>freets</artifactId>
@@ -84,7 +84,7 @@
       <version>1.0</version>
       <systemPath>${pom.basedir}/libs/freetts.jar</systemPath>
     </dependency>
-
+    <!-- Dependency for freeTTS synthesis system-->
     <dependency>
       <groupId>freets-jsapi10</groupId>
       <artifactId>freets-jsapi10</artifactId>
@@ -92,7 +92,7 @@
       <version>1.0</version>
       <systemPath>${pom.basedir}/libs/freetts-jsapi10.jar</systemPath>
     </dependency>
-
+    <!-- Speech synthesis software providing diphone databases-->
     <dependency>
       <groupId>mbrola</groupId>
       <artifactId>mbrola</artifactId>
@@ -100,7 +100,7 @@
       <version>1.0</version>
       <systemPath>${pom.basedir}/libs/mbrola.jar</systemPath>
     </dependency>
-
+    <!-- Framework for using Jsapi compliant speech engines -->
     <dependency>
       <groupId>jsapi</groupId>
       <artifactId>jsapi</artifactId>
@@ -108,7 +108,12 @@
       <version>1.0</version>
       <systemPath>${pom.basedir}/libs/jsapi.jar</systemPath>
     </dependency>
-
+    <!-- Dependency for working with controlsFX for sending notifications -->
+    <dependency>
+      <groupId>org.controlsfx</groupId>
+      <artifactId>controlsfx</artifactId>
+      <version>11.1.2</version>
+    </dependency>
     <!-- The JUnit Jupiter dependency for testing -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
