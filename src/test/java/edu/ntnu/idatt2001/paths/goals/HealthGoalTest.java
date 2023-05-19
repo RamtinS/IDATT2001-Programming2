@@ -76,4 +76,12 @@ class HealthGoalTest {
     HealthGoal healthGoalEqual = new HealthGoal(10);
     assertEquals(healthGoal, healthGoalEqual);
   }
+
+  @Test
+  @DisplayName("Test toString")
+  void testToString() {
+    String expected = "Health goal:10";
+    String actual = healthGoal.toString();
+    assertEquals(expected, actual);
+  }
 }

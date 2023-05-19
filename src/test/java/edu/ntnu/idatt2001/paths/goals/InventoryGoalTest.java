@@ -1,13 +1,16 @@
 package edu.ntnu.idatt2001.paths.goals;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import edu.ntnu.idatt2001.paths.model.Player;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * The class tests the InventoryGoal class.
@@ -17,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @since March 29, 2023.
  */
 class InventoryGoalTest {
+
   private InventoryGoal inventoryGoal;
   private Player player;
   private List<String> mandatoryItems;
@@ -27,8 +31,7 @@ class InventoryGoalTest {
     mandatoryItems.add("Sword");
     mandatoryItems.add("Hammer");
     inventoryGoal = new InventoryGoal(mandatoryItems);
-    player = new Player.PlayerBuilder("Test name")
-            .build();
+    player = new Player.PlayerBuilder("Test name").build();
   }
 
   @Test
@@ -83,5 +86,16 @@ class InventoryGoalTest {
   void testEqualsMethod() {
     InventoryGoal inventoryGoalEqual = new InventoryGoal(mandatoryItems);
     assertEquals(inventoryGoal, inventoryGoalEqual);
+  }
+
+  @Test
+  @DisplayName("Test toString")
+  void testToString() {
+    String expected = """
+        Inventory goal:\s
+        Sword
+        Hammer""";
+    String actual = inventoryGoal.toString();
+    assertEquals(expected, actual);
   }
 }
