@@ -41,6 +41,6 @@ public class ActionDeserializer implements JsonDeserializer<Action> {
         return context.deserialize(jsonElement, actionClass);
       }
     }
-    throw new JsonParseException("Unknown action type: " + jsonElement);
+    throw new JsonParseException("Unknown action type: " + jsonElement + ".");
   }
 }

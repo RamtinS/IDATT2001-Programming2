@@ -1,9 +1,10 @@
 package edu.ntnu.idatt2001.paths.controller;
 
-import edu.ntnu.idatt2001.paths.model.Game;
-import edu.ntnu.idatt2001.paths.model.Passage;
-import edu.ntnu.idatt2001.paths.model.Player;
-import edu.ntnu.idatt2001.paths.model.Story;
+import com.google.gson.JsonSyntaxException;
+import edu.ntnu.idatt2001.paths.Game;
+import edu.ntnu.idatt2001.paths.Passage;
+import edu.ntnu.idatt2001.paths.Player;
+import edu.ntnu.idatt2001.paths.Story;
 import edu.ntnu.idatt2001.paths.filehandling.FileGameHandler;
 import edu.ntnu.idatt2001.paths.filehandling.FilePathValidator;
 import edu.ntnu.idatt2001.paths.goals.Goal;
@@ -29,12 +30,13 @@ public class GameManager {
    * Constructor for the GameManager class.
    *
    * @param pathOfFile the path to the file for reading and writing Game objects.
-   * @throws NullPointerException if the pathOfFile or FILE_EXTENSION is null.
+   * @throws NullPointerException if the pathOfFile or file extension is null.
    * @throws IllegalArgumentException if the pathOfFile is blank or has an incorrect file extension.
    * @throws IOException if there is an error reading the list of games form the file.
+   * @throws JsonSyntaxException if the file does not have the correct JSON syntax.
    */
   private GameManager(String pathOfFile) throws NullPointerException,
-          IllegalArgumentException, IOException {
+          IllegalArgumentException, IOException, JsonSyntaxException {
     FilePathValidator.validatePathOfFile(pathOfFile, FileGameHandler.getFileExtension());
     this.pathOfFile = pathOfFile;
     this.games = new ArrayList<>();
