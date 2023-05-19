@@ -117,7 +117,9 @@ class GameTest {
     @Test
     @DisplayName("Should reset the game")
     void shouldResetTheGame() {
-      Passage gameStartPassage = game.resetGame();
+      Story testStory = new Story("New story", openingPassage);
+      Passage gameStartPassage = game.resetGame(testStory);
+      assertEquals("New story", game.getStory().getTitle());
       assertEquals(openingPassage, game.getStory().getCurrentPassage());
       assertEquals(openingPassage, gameStartPassage);
     }
@@ -133,9 +135,33 @@ class GameTest {
     }
 
     @Test
+    @DisplayName("Should not reset the game throws NullPointerException")
+    void shouldNotResetTheGameThrowsNullPointerException() {
+      assertThrows(NullPointerException.class, () -> game.resetGame(null));
+    }
+
+    @Test
     @DisplayName("Should not go throws NullPointerException")
     void shouldNotGoThrowsNullPointerException() {
       assertThrows(NullPointerException.class, () -> game.go(null));
+    }
+  }
+
+  @Nested
+  @DisplayName("Test override methods")
+  class TestOverrideMethods {
+    @Test
+    @DisplayName("Test equals method true")
+    void testEqualsMethodTrue() {
+      Game testGame = new Game(gameId, player, story, goals);
+      assertEquals(game, testGame);
+    }
+
+    @Test
+    @DisplayName("Test equals method false")
+    void testEqualsMethodFalse() {
+      Game testGame = new Game("New ID", player, story, goals);
+      assertNotEquals(game, testGame);
     }
   }
 }
