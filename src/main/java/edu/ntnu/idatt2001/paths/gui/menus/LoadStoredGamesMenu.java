@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2001.paths.gui.menus;
 
 import edu.ntnu.idatt2001.paths.controller.GameManager;
+import edu.ntnu.idatt2001.paths.filehandling.FileGameHandler;
 import edu.ntnu.idatt2001.paths.gui.listeners.LoadStoredGamesListener;
 import edu.ntnu.idatt2001.paths.model.Game;
 import edu.ntnu.idatt2001.paths.model.Link;
@@ -8,6 +9,7 @@ import edu.ntnu.idatt2001.paths.model.Story;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.binding.BooleanBinding;
@@ -60,34 +62,54 @@ public class LoadStoredGamesMenu extends BorderPane {
    */
   public LoadStoredGamesMenu(int width, int height, LoadStoredGamesListener listener)
       throws IllegalArgumentException {
-    if (listener == null) {
-      throw new IllegalArgumentException("Listener cannot be null");
-    }
+    this.listener = Objects.requireNonNull(listener, "Listener cannot be null");
+    gameManager = GameManager.getInstance();
 
-    rightButtonPane = new VBox();
-    rightButtonPane.setSpacing(100);
-    rightButtonPane.setPadding(new Insets(0, 0, 0, 40));
-    rightButtonPane.setAlignment(Pos.CENTER);
-    rightButtonPane.setPrefWidth(getPrefWidth() * 0.2);
-
-    leftButtonPane = new VBox();
-    leftButtonPane.setPadding(new Insets(0, 40, 0, 0));
-    setLeft(leftButtonPane);
-    setRight(rightButtonPane);
-
+    createRightButtonPane();
+    createLefButtonPane();
     setBackgroundImage("images/forestadventure/beginnings.png");
-
-    this.gameManager = GameManager.getInstance();
-    this.listener = listener;
     setHeadline("Saved games");
-    setPrefWidth(width);
-    setPrefHeight(height);
+    setDimensions(width, height);
     fillGamesData();
     addGameTable();
     addButtons();
     setPadding(new Insets(20));
+    showInvalidGames();
+  }
 
-    setMinWidth(500);
+  private void showInvalidGames() {
+    List<String> invalidGames = FileGameHandler.getInvalidGames();
+
+    if (invalidGames.size() == 0){
+      return;
+    }
+
+    String alertMessage = "You have " + invalidGames.size() + " invalid games:/n";
+    for (String invalidGame : invalidGames){
+      alertMessage = alertMessage.concat(invalidGame);
+    }
+    Alert alert = new Alert(AlertType.ERROR, alertMessage);
+    alert.showAndWait();
+  }
+
+  private void setDimensions(int width, int height) {
+    setPrefWidth(width);
+    setPrefHeight(height);
+  }
+
+  private void createLefButtonPane() {
+    leftButtonPane = new VBox();
+    leftButtonPane.setPadding(new Insets(0, 40, 0, 0));
+    setLeft(leftButtonPane);
+  }
+
+  private void createRightButtonPane() {
+    rightButtonPane = new VBox();
+    rightButtonPane.setSpacing(20);
+    rightButtonPane.setPadding(new Insets(0, 0, 0, 40));
+    rightButtonPane.setAlignment(Pos.TOP_CENTER);
+    rightButtonPane.setPrefWidth(getPrefWidth() * 0.2);
+    setRight(rightButtonPane);
   }
 
   /**
@@ -117,10 +139,8 @@ public class LoadStoredGamesMenu extends BorderPane {
    */
   private void addDeleteButton() {
     Button deleteButton = new Button("Delete");
-    rightButtonPane.getChildren().add(deleteButton);
     deleteButton.setPrefWidth(Double.MAX_VALUE);
-
-
+    deleteButton.setId("delete-button");
     deleteButton.setOnAction(event -> {
       Game selectedGame = gameTable.getSelectionModel().getSelectedItem();
       try {
@@ -134,6 +154,7 @@ public class LoadStoredGamesMenu extends BorderPane {
     });
 
     deleteButton.disableProperty().bind(gameIsNotSelected());
+    rightButtonPane.getChildren().add(deleteButton);
   }
 
   /**
@@ -145,20 +166,19 @@ public class LoadStoredGamesMenu extends BorderPane {
    */
   private void addConfirmButton() {
     Button confirmButton = new Button("Confirm");
+    confirmButton.disableProperty().bind(gameIsNotSelected());
+    confirmButton.setMinWidth(100);
+    HBox.setHgrow(rightButtonPane, Priority.NEVER);
 
     confirmButton.setOnAction(event -> {
 
       Game game = gameTable.getSelectionModel().getSelectedItem();
 
-      if (!showBrokenLinks(game.getStory())) {
+      if (!showBrokenLinks(game.getStory()) ) {
         return;
       }
       listener.onSelectedGameClicked(game);
     });
-
-    confirmButton.disableProperty().bind(gameIsNotSelected());
-    confirmButton.setMinWidth(100);
-    HBox.setHgrow(rightButtonPane, Priority.NEVER);
 
     rightButtonPane.getChildren().add(confirmButton);
   }
@@ -216,17 +236,15 @@ public class LoadStoredGamesMenu extends BorderPane {
         String.valueOf(cellData.getValue().getStory().getBrokenLinks().size())));
     brokenLinksColumn.setText("Broken links");
 
-
-    gameTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-    gameTable.setStyle("-fx-border-color: #000000");
     gameTable.getColumns().add(gameIdColumn);
     gameTable.getColumns().add(playerColumn);
     gameTable.getColumns().add(storyColumn);
     gameTable.getColumns().add(brokenLinksColumn);
     gameTable.setItems(FXCollections.observableList(gameList));
+    gameTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+    gameTable.setStyle("-fx-border-color: #000000");
     gameTable.setPrefWidth(getPrefWidth() * 0.5);
     gameTable.setMinWidth(getPrefWidth() * 0.3);
-
     gameTable.setPrefHeight(getPrefHeight() * 0.8);
 
     setCenter(gameTable);
@@ -266,23 +284,18 @@ public class LoadStoredGamesMenu extends BorderPane {
       errorMessage = errorMessage.concat("\n\nAre you sure you want to continue?");
       Alert alert = new Alert(AlertType.CONFIRMATION, errorMessage);
       alert.showAndWait();
-      return !alert.getResult().equals(ButtonType.OK);
+      return alert.getResult().equals(ButtonType.OK);
 
     }
     return true;
   }
 
 
-
-
-
   private void setBackgroundImage(String imagePath) {
     try {
       Image image = new Image(imagePath);
-
       BackgroundImage backgroundImage = new BackgroundImage(image, null, null, null, null);
       Background background = new Background(backgroundImage);
-
       setBackground(background);
     } catch (Exception e) {
       LOGGER.log(Level.INFO, "Could not add background because" + e.getMessage());
