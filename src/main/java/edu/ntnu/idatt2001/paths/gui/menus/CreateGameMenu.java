@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -34,9 +35,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -71,7 +74,7 @@ public class CreateGameMenu extends BorderPane {
   private List<String> inputInventoryGoals;
   private Stage inventoryCheckList;
   private Hyperlink hyperlink;
-  private double buttonWidth;
+  private final double buttonWidth;
   private InputField gameId;
 
   /**
@@ -88,15 +91,30 @@ public class CreateGameMenu extends BorderPane {
     this.storyBox = new ComboBox<>();
     this.inventoryButton = new Button("Select");
     this.infoGrid = new GridPane();
+    setPadding(new Insets(20));
 
     setDimensions(width, height);
-    setHeadLine("Create game");
+    setHeadline("Create game");
     createGrid();
     createUploadFilesHyperLink();
     addInputs();
     addInputLabels();
     addReturnButton();
     addCreateGameButton();
+    setBackgroundImage("images/forestadventure/beginnings.png");
+  }
+
+  private void setBackgroundImage(String imagePath) {
+    try {
+      Image image = new Image(imagePath);
+
+      BackgroundImage backgroundImage = new BackgroundImage(image, null, null, null, null);
+      Background background = new Background(backgroundImage);
+
+      setBackground(background);
+    } catch (Exception e) {
+      LOGGER.log(Level.INFO, "Could not add background because" + e.getMessage());
+    }
   }
 
   /**
@@ -113,16 +131,17 @@ public class CreateGameMenu extends BorderPane {
   /**
    * Sets a headline for the frame.
    *
-   * @param headLineText The headline to be set.
+   * @param headline The headline to be set.
    */
   @SuppressWarnings("SameParameterValue")
-  private void setHeadLine(String headLineText) {
-    Label headLine = new Label(headLineText);
-    headLine.setFont(Font.font("Arial", 30));
-    headLine.setId("headline");
-    headLine.setTextAlignment(TextAlignment.CENTER);
-    setAlignment(headLine, Pos.CENTER);
-    setTop(headLine);
+  private void setHeadline(String headline) {
+    Label headLabel = new Label(headline);
+    headLabel.setFont(new Font(40));
+    headLabel.setId("headline-background");
+    setTop(headLabel);
+    setAlignment(headLabel, Pos.CENTER);
+    headLabel.setTextAlignment(TextAlignment.CENTER);
+    headLabel.setPadding(new Insets(0, 30, 0, 30));
   }
 
   /**
@@ -131,12 +150,14 @@ public class CreateGameMenu extends BorderPane {
   private void createGrid() {
     infoGrid.setHgap(10);
     infoGrid.setVgap(10);
-    infoGrid.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
     VBox gridHolder = new VBox();
     gridHolder.getChildren().add(infoGrid);
     gridHolder.setAlignment(Pos.CENTER);
+    gridHolder.setPadding(new Insets(30));
+
     infoGrid.setAlignment(Pos.CENTER);
-    gridHolder.setStyle("-fx-border-color: #000000");
+    gridHolder.setStyle("-fx-background-color: #DAD870; -fx-border-color: #000000");
     setCenter(gridHolder);
   }
 
@@ -177,7 +198,7 @@ public class CreateGameMenu extends BorderPane {
    * Adds all input labels to the menu.
    */
   private void addInputLabels() {
-    Label gameId = new Label("Game ID:");
+    Label gameIdLabel = new Label("Game ID:");
     Label difficulty = new Label("Difficulty:");
     Label playerName = new Label("Player name:");
     Label healthGoal = new Label("Health goal:");
@@ -186,7 +207,7 @@ public class CreateGameMenu extends BorderPane {
     Label scoreGoal = new Label("Score goal:");
     Label story = new Label("Story:");
 
-    List<Label> inputDescriptors = Arrays.asList(gameId, playerName, healthGoal, goldGoal,
+    List<Label> inputDescriptors = Arrays.asList(gameIdLabel, playerName, healthGoal, goldGoal,
         scoreGoal, inventoryGoal, story, difficulty);
     for (int i = 0; i < inputDescriptors.size(); i++) {
       infoGrid.add(inputDescriptors.get(i), 0, i);
@@ -260,7 +281,11 @@ public class CreateGameMenu extends BorderPane {
     });
     returnButton.setId("return-button");
 
-    setLeft(returnButton);
+    VBox returnButtonPane = new VBox(returnButton);
+    returnButtonPane.setAlignment(Pos.TOP_CENTER);
+    returnButtonPane.setPadding(new Insets(0, 40, 0, 0));
+
+    setLeft(returnButtonPane);
   }
 
   /**
@@ -271,7 +296,9 @@ public class CreateGameMenu extends BorderPane {
     createGame.setOnAction(event -> createGameClicked());
     createGame.disableProperty().bind(inputIsValid().not());
 
-    Pane createButtonPane = new Pane();
+    VBox createButtonPane = new VBox();
+    createButtonPane.setAlignment(Pos.TOP_CENTER);
+    createButtonPane.setPadding(new Insets(0, 0, 0, 40));
 
     createButtonPane.setOnMouseEntered(event -> {
       if (createGame.isDisable()) {
@@ -279,7 +306,6 @@ public class CreateGameMenu extends BorderPane {
         Tooltip.install(createButtonPane, tooltip);
       }
     });
-
     createButtonPane.getChildren().add(createGame);
     setRight(createButtonPane);
   }
@@ -301,7 +327,7 @@ public class CreateGameMenu extends BorderPane {
           "src/main/resources/stories/" + storyBox.getValue());
 
       List<Link> brokenLinks = selectedStory.getBrokenLinks();
-      if (brokenLinks.size() > 0) {
+      if (!brokenLinks.isEmpty()) {
         String alertMessage = "The selected story has " + brokenLinks.size() + " broken links";
         for (Link link : brokenLinks) {
           alertMessage = alertMessage.concat("\n" + link.getText() + " -> " + link.getReference());
@@ -310,13 +336,13 @@ public class CreateGameMenu extends BorderPane {
 
         Alert alert = new Alert(AlertType.CONFIRMATION, alertMessage);
         alert.showAndWait();
-        if (alert.getResult() !=null && !alert.getResult().equals(ButtonType.OK)){
+        if (alert.getResult() != null && !alert.getResult().equals(ButtonType.OK)) {
           return;
         }
       }
 
       listener.onCreateClicked(chosenGoals, id, chosenName, getChosenDifficulty(), selectedStory);
-      //TODO add alert for telling broken links
+
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, "Error while creating game: " + e.getMessage(), e);
       Alert alert = new Alert(AlertType.WARNING);
@@ -330,7 +356,7 @@ public class CreateGameMenu extends BorderPane {
    * {@link BooleanBinding} for checking if all inputs that should be parseable are so.
    *
    * @return A BooleanBinding representing true parseable inputs are parseable, if not, it will
-   * represent true.
+   *        represent true.
    */
   private BooleanBinding inputIsValid() {
     return Bindings.createBooleanBinding(
@@ -365,7 +391,7 @@ public class CreateGameMenu extends BorderPane {
       listOfGoals.add(new ScoreGoal(Integer.parseInt(scoreGoalInput.getTextArea().getText())));
     }
 
-    if (inputInventoryGoals != null && inputInventoryGoals.size() > 0) {
+    if (inputInventoryGoals != null && !inputInventoryGoals.isEmpty()) {
       listOfGoals.add(new InventoryGoal(inputInventoryGoals));
     }
     return listOfGoals;
@@ -430,7 +456,7 @@ public class CreateGameMenu extends BorderPane {
 
       try {
         List<Link> brokenLinks = story.getBrokenLinks();
-        if (brokenLinks.size() > 0) {
+        if (!brokenLinks.isEmpty()) {
           String errorMessage =
               "The uploaded passage has: " + brokenLinks.size() + " broken links.";
 
