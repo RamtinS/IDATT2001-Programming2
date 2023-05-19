@@ -70,8 +70,8 @@ public class App extends Application {
   public void start(Stage stage) {
     try {
       GameManager.initialize("src/main/resources/games/game_objects.json");
-    } catch (IllegalArgumentException | NullPointerException | IllegalStateException |
-             IOException e) {
+    } catch (IllegalArgumentException | NullPointerException | IllegalStateException
+             | IOException e) {
       logger.log(Level.SEVERE, e.getMessage(), e);
       Alert alert = new Alert(AlertType.ERROR, e.getMessage());
       alert.showAndWait();
@@ -125,6 +125,7 @@ public class App extends Application {
       public void onExitClicked(boolean shouldSaveGame) {
         if (shouldSaveGame) {
           try {
+            currentGame.getStory().setCurrentPassage(currentPassage);
             GameManager.getInstance().saveGame(currentGame, currentPassage);
             switchToMainMenu(stage);
           } catch (IOException | NullPointerException | IllegalArgumentException e) {
@@ -154,7 +155,6 @@ public class App extends Application {
 
         BaseFrame newFrame;
         try {
-          System.out.println(stage.getHeight());
           newFrame = new BaseFrame(currentGame.getStory().getTitle(), currentGame.go(link),
               currentGame.getPlayer(), FRAME_WIDTH, FRAME_HEIGHT, this);
           currentPassage = currentGame.go(link);
@@ -164,7 +164,9 @@ public class App extends Application {
           alert.showAndWait();
           return;
         }
-        stage.setScene(new Scene(newFrame));
+        Scene scene = new Scene(newFrame);
+        setStyleSheet(scene, "file:src/main/resources/stylesheets/StandardStyling.css");
+        stage.setScene(scene);
         stage.show();
 
         boolean gameFinished = false;
@@ -221,9 +223,8 @@ public class App extends Application {
           currentGame = GameManager.getInstance()
               .createGame(gameId, player, selectedStory, chosenGoals);
         } catch (Exception e) {
-          Alert alert = new Alert(AlertType.CONFIRMATION,
-              "Error while saving game\nYour game will not be saved, do you still want to "
-                  + "continue?");
+          Alert alert = new Alert(AlertType.CONFIRMATION, "Error while saving game" + e.getMessage()
+              + "\nYour game will not be saved, do you still want to " + "continue?");
           alert.showAndWait();
           if (alert.getResult().equals(ButtonType.OK)) {
             currentGame = new Game("Game id", player, selectedStory, chosenGoals);
@@ -296,17 +297,14 @@ public class App extends Application {
 
   private void loadTutorial(Stage stage, BaseFrameListener baseFrameListener) {
     String gameId = "Test ID";
-    Player player = new Player.PlayerBuilder("Test name")
-        .health(100)
-        .score(100)
-        .gold(50)
-        .build();
+    Player player = new Player.PlayerBuilder("Test name").health(100).score(100).gold(50).build();
     Passage openingPassage = new Passage("Test title", "Test content");
     Story story = new Story("Test title", openingPassage);
     List<Goal> goals = new ArrayList<>();
     Game game = new Game(gameId, player, story, goals);
 
-    BaseFrame tutorialFrame = new BaseFrame(story.getTitle(), openingPassage, player, FRAME_WIDTH, FRAME_HEIGHT, baseFrameListener);
+    BaseFrame tutorialFrame = new BaseFrame(story.getTitle(), openingPassage, player, FRAME_WIDTH,
+        FRAME_HEIGHT, baseFrameListener);
     stage.setScene(new Scene(tutorialFrame));
 
   }
@@ -327,7 +325,7 @@ public class App extends Application {
       @Override
       public void onSelectedGameClicked(Game game) {
         currentGame = game;
-        loadNewBaseFrame(stage, game.getStory().getOpeningPassage());
+        loadNewBaseFrame(stage, game.getStory().getCurrentPassage());
       }
 
       /**
@@ -366,7 +364,7 @@ public class App extends Application {
   private void switchToMainMenu(Stage stage) {
     MainMenu mainMenu = new MainMenu(FRAME_WIDTH, FRAME_HEIGHT, mainMenuListener);
     Scene scene = new Scene(mainMenu);
-    setStyleSheet(scene, "file:src/main/resources/stylesheets/MainMenuStyling.css");
+    setStyleSheet(scene, "file:src/main/resources/stylesheets/StandardStyling.css");
     stage.setScene(scene);
     stage.show();
   }
@@ -394,7 +392,9 @@ public class App extends Application {
     BaseFrame currentFrame = new BaseFrame(currentGame.getStory().getTitle(), passage,
         currentGame.getPlayer(), FRAME_WIDTH, FRAME_HEIGHT, baseFrameListener);
     this.currentPassage = passage;
-    stage.setScene(new Scene(currentFrame));
+    Scene scene = new Scene(currentFrame);
+    setStyleSheet(scene, "file:src/main/resources/stylesheets/StandardStyling.css");
+    stage.setScene(scene);
   }
 
   /**
