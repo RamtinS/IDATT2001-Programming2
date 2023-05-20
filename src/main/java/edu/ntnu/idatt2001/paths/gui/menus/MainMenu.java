@@ -3,6 +3,7 @@ package edu.ntnu.idatt2001.paths.gui.menus;
 import edu.ntnu.idatt2001.paths.gui.listeners.MainMenuListener;
 import edu.ntnu.idatt2001.paths.gui.utility.GuiUtils;
 import edu.ntnu.idatt2001.paths.tts.TextToSpeech;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.Animation;
@@ -44,11 +45,9 @@ public class MainMenu extends BorderPane {
    * @param height   The height of the menu.
    * @param listener The listener of the main menu, used to activate button functionality.
    */
-  public MainMenu(double width, double height, MainMenuListener listener) {
-    if (listener == null) {
-      throw new NullPointerException("Listener cannot be null");
-    }
-    this.mainMenuListener = listener;
+  public MainMenu(double width, double height, MainMenuListener listener)
+          throws NullPointerException {
+    this.mainMenuListener = Objects.requireNonNull(listener, "MainMenuListener cannot be null.");
     ListView<HBox> settingsView = createSettingsView();
     settingsStage = new Stage();
     settingsStage.setScene(new Scene(settingsView));
@@ -65,11 +64,15 @@ public class MainMenu extends BorderPane {
 
   /**
    * Adds buttons for all user options to the pane.
-   * <li>"New game" button: triggers {@link MainMenuListener#onNewGameClicked()}</li>
-   * <li>"Load game" button: triggers {@link MainMenuListener#onLoadGameClicked()} ()}</li>
-   * <li>"Tutorial" button: triggers {@link MainMenuListener#onTutorialButtonClicked()} ()}</li>
-   * <li>"Create game" button: triggers {@link MainMenuListener#onCreateStoryMenuClicked()}
-   * ()}</li>
+   *
+   * <p>Options available:</p>
+   * <ul>
+   *   <li>"New Game" button: triggers {@link MainMenuListener#onNewGameClicked()}</li>
+   *   <li>"Load Game" button: triggers {@link MainMenuListener#onLoadGameClicked()}</li>
+   *   <li>"Tutorial" button: triggers {@link MainMenuListener#onTutorialButtonClicked()}</li>
+   *   <li>"Create Story" button: triggers {@link MainMenuListener#onCreateStoryMenuClicked()}</li>
+   *   <li>"Exit" button: triggers {@link MainMenuListener#onExitClicked()}</li>
+   * </ul>
    */
   private void setOptionButtons() {
     final VBox buttonBox = new VBox();
@@ -81,7 +84,6 @@ public class MainMenu extends BorderPane {
     Button loadGame = createButton("Load Game", mainMenuListener::onLoadGameClicked);
     Button tutorial = createButton("Tutorial", mainMenuListener::onTutorialButtonClicked);
     Button createGame = createButton("Create Story", mainMenuListener::onCreateStoryMenuClicked);
-
     Button exit = createButton("Exit", mainMenuListener::onExitClicked);
 
     buttonBox.getChildren().addAll(newGame, loadGame, tutorial, createGame, settingsButton(), exit);
@@ -117,13 +119,9 @@ public class MainMenu extends BorderPane {
   }
 
   /**
-   * Creates a {@link ListView} containing all settings for the application.
-   * <p>
-   * Includes:
-   * <li>Mute switch</li>
-   * </p>
+   * Creates and returns a ListView containing settings for the application.
    *
-   * @return A {@link ListView} containing all settings for the application
+   * @return A ListView object containing all settings for the application
    */
   private ListView<HBox> createSettingsView() {
     ListView<HBox> settings = new ListView<>();
