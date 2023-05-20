@@ -9,7 +9,7 @@ import javafx.scene.layout.HBox;
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since May 12, 2023.
+ * @since May 21, 2023.
  */
 public class ScrollableStoryCreator extends HBox {
 
@@ -18,12 +18,14 @@ public class ScrollableStoryCreator extends HBox {
   /**
    * Constructor that creates a scrollPane that contains a StoryCreator.
    *
-   * @param width                The width of the pane.
-   * @param height               The height of the pane.
+   * @param width The width of the pane.
+   * @param height The height of the pane.
    * @param storyCreatorListener The story creator listener used to handle button actions.
+   * @throws NullPointerException if the listener is null.
    */
   public ScrollableStoryCreator(double width, double height,
-                                StoryCreatorListener storyCreatorListener) {
+                                StoryCreatorListener storyCreatorListener)
+          throws NullPointerException {
 
     ScrollPane scrollPane = new ScrollPane();
     storyCreator = new StoryCreator(width, height, storyCreatorListener);
