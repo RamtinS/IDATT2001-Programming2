@@ -1,11 +1,11 @@
 package edu.ntnu.idatt2001.paths.gui.menus;
 
+import edu.ntnu.idatt2001.paths.gui.listeners.BaseFrameListener;
+import edu.ntnu.idatt2001.paths.gui.uielements.InventoryPane;
 import edu.ntnu.idatt2001.paths.gui.utility.GuiUtils;
 import edu.ntnu.idatt2001.paths.model.Link;
 import edu.ntnu.idatt2001.paths.model.Passage;
 import edu.ntnu.idatt2001.paths.model.Player;
-import edu.ntnu.idatt2001.paths.gui.uielements.InventoryPane;
-import edu.ntnu.idatt2001.paths.gui.listeners.BaseFrameListener;
 import edu.ntnu.idatt2001.paths.tts.TextToSpeech;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,7 +14,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.value.ChangeListener;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -24,9 +23,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 /**
- * The BaseFrame class represents a frame for the game.
- * It shows the passage text of the current passage and
- * has buttons for the links that the player can follow.
+ * The BaseFrame class represents a frame for the game. It shows the passage text of the current
+ * passage and has buttons for the links that the player can follow.
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
@@ -45,11 +43,11 @@ public class BaseFrame extends AnchorPane {
    * Constructor for a BaseFrame object.
    *
    * @param storyTitle The title of the story.
-   * @param passage Passage to present to the user.
-   * @param player The player used to represent player values.
-   * @param width The width of the frame.
-   * @param height The height of the frame.
-   * @param listener The listener used to send out button activations from the frame.
+   * @param passage    Passage to present to the user.
+   * @param player     The player used to represent player values.
+   * @param width      The width of the frame.
+   * @param height     The height of the frame.
+   * @param listener   The listener used to send out button activations from the frame.
    */
   public BaseFrame(String storyTitle, Passage passage, Player player, double width, double height,
                    BaseFrameListener listener) throws NullPointerException {
@@ -169,8 +167,6 @@ public class BaseFrame extends AnchorPane {
   private void addExitButton() {
     Button exitButton = new Button("Exit");
 
-    exitButton.prefWidthProperty().bind(widthProperty().divide(15));
-    exitButton.prefHeightProperty().bind(widthProperty().divide(30));
     exitButton.setOnAction(event -> {
       Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Would you like to save the game?");
       ButtonType yesButton = new ButtonType("Yes");
@@ -193,13 +189,8 @@ public class BaseFrame extends AnchorPane {
   private void addRestartButton() {
     Button restartButton = new Button("Restart");
     restartButton.setStyle("-fx-wrap-text: false");
-    restartButton.prefWidthProperty().bind(widthProperty().divide(15));
-    restartButton.prefHeightProperty().bind(widthProperty().divide(30));
     restartButton.setOnAction(event -> listener.onRestartClicked());
-    ChangeListener<Number> sizeListener =
-        (observable, oldValue, newValue) -> restartButton.setLayoutX(
-        restartButton.getPrefWidth());
-    widthProperty().addListener(sizeListener);
+
     restartButton.setLayoutX(100);
 
     getChildren().add(restartButton);
@@ -211,17 +202,16 @@ public class BaseFrame extends AnchorPane {
    */
   private void addLinkButtons() {
     VBox choiceButtons = new VBox();
+    choiceButtons.setSpacing(10);
 
     for (Link link : passage.getLinks()) {
       Button button = new Button(link.getText());
       button.setOnAction(event -> listener.onOptionButtonClicked(link));
-
       choiceButtons.getChildren().add(button);
     }
 
-    choiceButtons.setLayoutX(width / 1.5);
-    choiceButtons.setLayoutY(height - height / 3);
     setRightAnchor(choiceButtons, width / 5);
+    setBottomAnchor(choiceButtons, height / 5);
     getChildren().add(choiceButtons);
   }
 
@@ -251,7 +241,6 @@ public class BaseFrame extends AnchorPane {
     VBox textPane = new VBox();
     textPane.setStyle("-fx-background-color: #FFFFFF;");
 
-
     textPane.setLayoutY(height / 5);
     textPane.getChildren().add(text);
     textPane.setStyle("-fx-background-color: #add8e6");
@@ -269,7 +258,8 @@ public class BaseFrame extends AnchorPane {
     InventoryPane inventoryPane = new InventoryPane(60, inventoryHeight, player.getInventory());
     getChildren().add(inventoryPane);
     inventoryPane.setLayoutY(getPrefHeight() - 70);
-    inventoryPane.setLayoutX(10);
+    setBottomAnchor(inventoryPane, 10.0);
+    setLeftAnchor(inventoryPane, 10.0);
   }
 }
 
