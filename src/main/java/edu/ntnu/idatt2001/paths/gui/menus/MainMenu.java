@@ -1,24 +1,30 @@
 package edu.ntnu.idatt2001.paths.gui.menus;
 
 import edu.ntnu.idatt2001.paths.gui.listeners.MainMenuListener;
+import edu.ntnu.idatt2001.paths.gui.utility.GuiUtils;
+import edu.ntnu.idatt2001.paths.tts.TextToSpeech;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import edu.ntnu.idatt2001.paths.gui.utility.GuiUtils;
 import javafx.animation.Animation;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.controlsfx.control.ToggleSwitch;
 
 /**
- * The class represents the main menu of the application,
- * providing options for creating a new game, loading a
- * previously created game, or entering the tutorial.
+ * The class represents the main menu of the application, providing options for creating a new game,
+ * loading a previously created game, or entering the tutorial.
  *
  * @author Ramtin Samavat
  * @author Tobias Oftedal
@@ -29,12 +35,13 @@ public class MainMenu extends BorderPane {
 
   private static final Logger logger = Logger.getLogger(MainMenu.class.getName());
   private final MainMenuListener mainMenuListener;
+  private final Stage settingsStage;
 
   /**
    * Constructor for a MainMenu object.
    *
-   * @param width The width of the menu.
-   * @param height The height of the menu.
+   * @param width    The width of the menu.
+   * @param height   The height of the menu.
    * @param listener The listener of the main menu, used to activate button functionality.
    */
   public MainMenu(double width, double height, MainMenuListener listener) {
@@ -42,6 +49,9 @@ public class MainMenu extends BorderPane {
       throw new NullPointerException("Listener cannot be null");
     }
     this.mainMenuListener = listener;
+    ListView<HBox> settingsView = createSettingsView();
+    settingsStage = new Stage();
+    settingsStage.setScene(new Scene(settingsView));
 
     GuiUtils.setBackgroundImage(this, "images/forestadventure/beginnings.png");
     GuiUtils.setHeadline(this, "Paths", 40, 10, 30, 10, 30);
@@ -71,16 +81,17 @@ public class MainMenu extends BorderPane {
     Button loadGame = createButton("Load Game", mainMenuListener::onLoadGameClicked);
     Button tutorial = createButton("Tutorial", mainMenuListener::onTutorialButtonClicked);
     Button createGame = createButton("Create Story", mainMenuListener::onCreateStoryMenuClicked);
+
     Button exit = createButton("Exit", mainMenuListener::onExitClicked);
 
-    buttonBox.getChildren().addAll(newGame, loadGame, tutorial, createGame, exit);
+    buttonBox.getChildren().addAll(newGame, loadGame, tutorial, createGame, settingsButton(), exit);
     setCenter(buttonBox);
   }
 
   /**
    * The method creates a button with the given label and action handler.
    *
-   * @param label The label text of the button.
+   * @param label  The label text of the button.
    * @param action The action handler for the button.
    * @return The created button.
    */
@@ -92,11 +103,52 @@ public class MainMenu extends BorderPane {
   }
 
   /**
+   * Creates a mute switch that mutes the {@link TextToSpeech} instance when selected.
+   *
+   * @return a mute switch that mutes the {@link TextToSpeech} instance when selected.
+   */
+  private ToggleSwitch muteSwitch() {
+    ToggleSwitch toggleSwitch = new ToggleSwitch();
+    TextToSpeech textToSpeech = TextToSpeech.getInstance();
+    toggleSwitch.setSelected(textToSpeech.isSpeechEnabled());
+    toggleSwitch.selectedProperty().addListener(
+        (observable, oldValue, newValue) -> TextToSpeech.getInstance().setSpeechEnabled(newValue));
+    return toggleSwitch;
+  }
+
+  /**
+   * Creates a {@link ListView} containing all settings for the application.
+   * <p>
+   * Includes:
+   * <li>Mute switch</li>
+   * </p>
+   *
+   * @return A {@link ListView} containing all settings for the application
+   */
+  private ListView<HBox> createSettingsView() {
+    ListView<HBox> settings = new ListView<>();
+    settings.getItems().add(new HBox(new Label("Text to speech"), muteSwitch()));
+    return settings;
+  }
+
+  /**
+   * Creates a settings button that sets the {@link #settingsStage} visible.
+   *
+   * @return A button that sets the {@link #settingsStage} visible on activation.
+   */
+  private Button settingsButton() {
+    Button settings = new Button("Settings");
+    settings.setPrefWidth(Double.MAX_VALUE);
+    settings.setOnAction(event -> settingsStage.show());
+    return settings;
+  }
+
+  /**
    * The method adds a moving image to the menu.
    *
    * @param imagePath The path to the image file.
    * @param fitHeight The preferred height of the image.
-   * @param alignment  The alignment of the image within the menu.
+   * @param alignment The alignment of the image within the menu.
    */
   private void addMovingImage(String imagePath, double fitHeight, Pos alignment) {
     try {
