@@ -7,7 +7,8 @@ import java.util.Objects;
  * The class represents an action where a player's gold is
  * changed by a certain amount.
  *
- * @author Ramtin Samavat and Tobias Oftedal.
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal
  * @version 1.0
  * @since April 23, 2023.
  */

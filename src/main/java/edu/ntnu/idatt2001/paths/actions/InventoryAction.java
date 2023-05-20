@@ -7,7 +7,8 @@ import java.util.Objects;
  * The class represents an action that adds an item to
  * the player's inventory.
  *
- * @author Ramtin Samavat and Tobias Oftedal.
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal
  * @version 1.0
  * @since March 28, 2023.
  */
