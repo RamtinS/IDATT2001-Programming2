@@ -1,45 +1,40 @@
 package edu.ntnu.idatt2001.paths.gui.menus;
 
-
 import edu.ntnu.idatt2001.paths.gui.listeners.MainMenuListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import edu.ntnu.idatt2001.paths.gui.utility.GuiUtils;
 import javafx.animation.Animation;
 import javafx.animation.TranslateTransition;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 /**
- * Represents the main menu of the application, with options for creating a new game, loading a
+ * The class represents the main menu of the application,
+ * providing options for creating a new game, loading a
  * previously created game, or entering the tutorial.
  *
  * @author Ramtin Samavat
  * @author Tobias Oftedal
  * @version 1.0
- * @since April 26, 2023.
+ * @since May 20, 2023.
  */
 public class MainMenu extends BorderPane {
 
-  private static final Logger LOGGER = Logger.getLogger(MainMenu.class.getName());
-
+  private static final Logger logger = Logger.getLogger(MainMenu.class.getName());
   private final MainMenuListener mainMenuListener;
 
   /**
    * Constructor for a MainMenu object.
    *
-   * @param width    The width of the menu.
-   * @param height   The height of the menu.
+   * @param width The width of the menu.
+   * @param height The height of the menu.
    * @param listener The listener of the main menu, used to activate button functionality.
    */
   public MainMenu(double width, double height, MainMenuListener listener) {
@@ -47,26 +42,15 @@ public class MainMenu extends BorderPane {
       throw new NullPointerException("Listener cannot be null");
     }
     this.mainMenuListener = listener;
+
+    GuiUtils.setBackgroundImage(this, "images/forestadventure/beginnings.png");
+    GuiUtils.setHeadline(this, "Paths", 40, 10, 30, 10, 30);
+
     setPrefWidth(width);
     setPrefHeight(height);
-    setHeadline("Paths");
     setOptionButtons();
-    setBackgroundImage();
-    addTroll();
-    addGuardian();
-  }
-
-  /**
-   * Sets the headline of the menu to "Main Menu".
-   */
-  private void setHeadline(String headline) {
-    Label headLabel = new Label(headline);
-    headLabel.setFont(new Font(40));
-    headLabel.setId("headline-background");
-    setTop(headLabel);
-    setAlignment(headLabel, Pos.CENTER);
-    headLabel.setTextAlignment(TextAlignment.CENTER);
-    headLabel.setPadding(new Insets(10, 30, 10, 30));
+    addMovingImage("images/troll_transparent.png", getPrefHeight() * 0.3, Pos.BOTTOM_RIGHT);
+    addMovingImage("images/guardian_transparent.png", getPrefHeight() * 0.4, Pos.BOTTOM_LEFT);
   }
 
   /**
@@ -82,76 +66,64 @@ public class MainMenu extends BorderPane {
     buttonBox.setMaxWidth(getPrefWidth() * 0.5);
     buttonBox.setSpacing(10);
     buttonBox.setAlignment(Pos.CENTER);
-    Button newGame = new Button("New Game");
-    Button loadGame = new Button("Load Game");
-    Button tutorial = new Button("Tutorial");
-    Button createGame = new Button("Create Story");
 
-    newGame.setPrefWidth(Double.MAX_VALUE);
-    loadGame.setPrefWidth(Double.MAX_VALUE);
-    tutorial.setPrefWidth(Double.MAX_VALUE);
-    createGame.setPrefWidth(Double.MAX_VALUE);
-
-    newGame.setOnAction(event -> mainMenuListener.onNewGameClicked());
-    loadGame.setOnAction(event -> mainMenuListener.onLoadGameClicked());
-    tutorial.setOnAction(event -> mainMenuListener.onTutorialButtonClicked());
-    createGame.setOnAction(event -> mainMenuListener.onCreateStoryMenuClicked());
+    Button newGame = createButton("New Game", mainMenuListener::onNewGameClicked);
+    Button loadGame = createButton("Load Game", mainMenuListener::onLoadGameClicked);
+    Button tutorial = createButton("Tutorial", mainMenuListener::onTutorialButtonClicked);
+    Button createGame = createButton("Create Story", mainMenuListener::onCreateStoryMenuClicked);
 
     buttonBox.getChildren().addAll(newGame, loadGame, tutorial, createGame);
     setCenter(buttonBox);
-
   }
 
+  /**
+   * The method creates a button with the given label and action handler.
+   *
+   * @param label The label text of the button.
+   * @param action The action handler for the button.
+   * @return The created button.
+   */
+  private Button createButton(String label, Runnable action) {
+    Button button = new Button(label);
+    button.setPrefWidth(Double.MAX_VALUE);
+    button.setOnAction(event -> action.run());
+    return button;
+  }
 
   /**
-   * Sets the image background to a picture of a forest.
+   * The method adds a moving image to the menu.
+   *
+   * @param imagePath The path to the image file.
+   * @param fitHeight The preferred height of the image.
+   * @param alignment  The alignment of the image within the menu.
    */
-  private void setBackgroundImage() {
+  private void addMovingImage(String imagePath, double fitHeight, Pos alignment) {
     try {
-      Image image = new Image("images/forestadventure/beginnings.png");
+      if (imagePath == null) {
+        throw new NullPointerException("The file path for the image is null.");
+      }
+      Image image = new Image(imagePath);
+      ImageView imageView = new ImageView(image);
+      imageView.setFitHeight(fitHeight);
+      imageView.setPreserveRatio(true);
+      setAlignment(imageView, alignment);
 
-      BackgroundImage backgroundImage = new BackgroundImage(image, null, null, null, null);
-      Background background = new Background(backgroundImage);
+      TranslateTransition transition = new TranslateTransition(Duration.seconds(5), imageView);
+      transition.setByY(-100);
+      transition.setCycleCount(Animation.INDEFINITE);
+      transition.setAutoReverse(true);
+      transition.play();
 
-      setBackground(background);
+      if (alignment == Pos.BOTTOM_RIGHT) {
+        setRight(imageView);
+      } else if (alignment == Pos.BOTTOM_LEFT) {
+        setLeft(imageView);
+      }
     } catch (Exception e) {
-      LOGGER.log(Level.INFO, "Could not add background because" + e.getMessage(), e);
+      String errorMessage = "Could not load image: " + e.getMessage();
+      logger.log(Level.WARNING, errorMessage, e);
+      Alert alert = new Alert(Alert.AlertType.WARNING, errorMessage);
+      alert.showAndWait();
     }
-
   }
-
-  /**
-   * Adds an image of a troll to the right side of the menu.
-   */
-  private void addTroll() {
-    ImageView troll = new ImageView(new Image("images/troll_transparent.png"));
-
-    troll.setFitHeight(getPrefHeight() * 0.3);
-    troll.setPreserveRatio(true);
-    setAlignment(troll, Pos.BOTTOM_CENTER);
-
-    setRight(troll);
-    TranslateTransition transition = new TranslateTransition(Duration.seconds(5), troll);
-    transition.setByY(-100);
-    transition.setCycleCount(Animation.INDEFINITE);
-    transition.setAutoReverse(true);
-    transition.play();
-  }
-
-  private void addGuardian() {
-    ImageView guardian = new ImageView(new Image("images/guardian_transparent.png"));
-
-    guardian.setFitHeight(getPrefHeight() * 0.4);
-    guardian.setPreserveRatio(true);
-    setAlignment(guardian, Pos.BOTTOM_CENTER);
-
-    TranslateTransition transition = new TranslateTransition(Duration.seconds(5), guardian);
-    transition.setByY(-100);
-    transition.setCycleCount(Animation.INDEFINITE);
-    transition.setAutoReverse(true);
-    transition.play();
-    setLeft(guardian);
-  }
-
-
 }
