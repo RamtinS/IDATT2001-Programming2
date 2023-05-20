@@ -50,6 +50,7 @@ public class BaseFrame extends AnchorPane {
    * @param width The width of the frame.
    * @param height The height of the frame.
    * @param listener The listener used to send out button activations from the frame.
+   * @throws NullPointerException if the listener is null.
    */
   public BaseFrame(String storyTitle, Passage passage, Player player, double width, double height,
                    BaseFrameListener listener) throws NullPointerException {
