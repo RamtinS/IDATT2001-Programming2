@@ -2,9 +2,11 @@ package edu.ntnu.idatt2001.paths.gui.utility;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
@@ -14,6 +16,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
@@ -82,5 +85,23 @@ public class GuiUtils {
     BorderPane.setAlignment(headLabel, Pos.CENTER);
     headLabel.setTextAlignment(TextAlignment.CENTER);
     headLabel.setPadding(new Insets(topInset, rightInset, bottomInset, leftInset));
+  }
+
+  /**
+   * The method creates a return button and adds it to the specified BorderPane.
+   *
+   * @param boarderPane The BorderPane to which the return button will be added.
+   * @param label The label text for the return button.
+   * @param action The action to be performed when the return button is clicked
+   * @param position The position of the return button.
+   */
+  public static void createReturnButton(BorderPane boarderPane, String label, Runnable action, Pos position) {
+    Button button = new Button(label);
+    button.setOnAction(event -> action.run());
+    button.setId("return-button");
+    VBox buttonPane = new VBox(button);
+    buttonPane.setAlignment(position);
+    buttonPane.setPadding(new Insets(0, 40, 0, 0));
+    boarderPane.setLeft(buttonPane);
   }
 }
