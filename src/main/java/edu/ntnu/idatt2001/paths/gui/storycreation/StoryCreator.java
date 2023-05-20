@@ -51,16 +51,17 @@ public class StoryCreator extends Pane {
   /**
    * Constructor for a StoryCreator object. Adds buttons, and adds the keyboard shortcuts.
    *
-   * @param width    The width of the frame.
-   * @param height   The height of the frame.
+   * @param width The width of the frame.
+   * @param height The height of the frame.
    * @param listener The listener used to handle button activities.
+   * @throws NullPointerException if the listener is null.
    */
-  public StoryCreator(double width, double height, StoryCreatorListener listener) {
-    this.listener = listener;
+  public StoryCreator(double width, double height, StoryCreatorListener listener)
+          throws NullPointerException {
+    this.listener = Objects.requireNonNull(listener, "StoryCreatorListener cannot be null.");
     setFrameDimensions(width, height);
     addInputElements();
     addKeyboardShortcuts();
-
   }
 
   /**
@@ -523,6 +524,4 @@ public class StoryCreator extends Pane {
     return ((PassageInput) Objects.requireNonNull(
         getChildren().stream().filter(PassageInput.class::isInstance).findFirst().orElse(null)));
   }
-
-
 }
