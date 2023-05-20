@@ -63,7 +63,7 @@ public class MainMenu extends BorderPane {
    */
   private void setOptionButtons() {
     final VBox buttonBox = new VBox();
-    buttonBox.setMaxWidth(getPrefWidth() * 0.5);
+    buttonBox.setMaxWidth(getPrefWidth() * 0.2);
     buttonBox.setSpacing(10);
     buttonBox.setAlignment(Pos.CENTER);
 
@@ -71,8 +71,9 @@ public class MainMenu extends BorderPane {
     Button loadGame = createButton("Load Game", mainMenuListener::onLoadGameClicked);
     Button tutorial = createButton("Tutorial", mainMenuListener::onTutorialButtonClicked);
     Button createGame = createButton("Create Story", mainMenuListener::onCreateStoryMenuClicked);
+    Button exit = createButton("Exit", mainMenuListener::onExitClicked);
 
-    buttonBox.getChildren().addAll(newGame, loadGame, tutorial, createGame);
+    buttonBox.getChildren().addAll(newGame, loadGame, tutorial, createGame, exit);
     setCenter(buttonBox);
   }
 
