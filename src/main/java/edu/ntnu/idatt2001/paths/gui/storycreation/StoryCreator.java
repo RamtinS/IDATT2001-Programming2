@@ -4,6 +4,7 @@ import edu.ntnu.idatt2001.paths.filehandling.FileStoryHandler;
 import edu.ntnu.idatt2001.paths.gui.listeners.StoryCreatorListener;
 import edu.ntnu.idatt2001.paths.model.Passage;
 import edu.ntnu.idatt2001.paths.model.Story;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class StoryCreator extends Pane {
   private Button resetLinesButton;
   private Button undoButton;
   private Button saveStoryButton;
-  private TextField storyNameButton;
+  private TextField storyNameField;
   private static final Logger LOGGER = Logger.getLogger(StoryCreator.class.getName());
 
   /**
@@ -60,7 +61,27 @@ public class StoryCreator extends Pane {
     setFrameDimensions(width, height);
     addInputElements();
     addKeyboardShortcuts();
+    showPrototypeAlert();
 
+  }
+
+  private void showPrototypeAlert() {
+    Alert alert = new Alert(AlertType.INFORMATION);
+
+    alert.setTitle("Under Construction");
+
+    String information =
+        "This part of the application is still under construction. Because of this, some things "
+            + "will not work optimally, but it should still be usefull to create simple stories. "
+            + "This can be done by pressing the \"create passage\" and clicking at 2 points on "
+            + "the canvas. Then you can create links by dragging the mouse between them. If you "
+            + "prefer making stories manually, this can be done by uploading them through "
+            + "the\"create game\" menu.";
+
+    Text text = new Text(information);
+    text.setWrappingWidth(getPrefWidth() / 2);
+    alert.getDialogPane().setContent(text);
+    alert.showAndWait();
   }
 
   /**
@@ -251,11 +272,6 @@ public class StoryCreator extends Pane {
     enableRetrieveButton();
     enableTitleField();
 
-    storyNameButton.setPrefWidth(getPrefWidth() / 4);
-    storyNameButton.setLayoutX((getPrefWidth() - storyNameButton.getPrefWidth()) / 2);
-
-    getChildren().add(storyNameButton);
-
     VBox buttonBox = new VBox();
     buttonBox.setId("unbreakable");
     buttonBox.setPadding(new Insets(10));
@@ -267,13 +283,18 @@ public class StoryCreator extends Pane {
     getChildren().add(buttonBox);
   }
 
+
   /**
-   * Declares the {@link #storyNameButton} and adds a "story title" prompt to it.
+   * Declares the {@link #storyNameField} and adds a "story title" prompt to it.
    */
   private void enableTitleField() {
 
-    storyNameButton = new TextField();
-    storyNameButton.setPromptText("Story title");
+    storyNameField = new TextField();
+    storyNameField.setPromptText("Story title");
+    storyNameField.setPrefWidth(getPrefWidth() / 4);
+    storyNameField.setLayoutX((getPrefWidth() - storyNameField.getPrefWidth()) / 2);
+
+    getChildren().add(storyNameField);
   }
 
   /**
@@ -316,7 +337,7 @@ public class StoryCreator extends Pane {
    * Creates a button that activates the {@link #enableLineCreationDrag()} method.
    */
   private void enableDragLineButton() {
-    createDragLineButton = new RadioButton("Enable creating dragging lines");
+    createDragLineButton = new RadioButton("Create link");
     createDragLineButton.setOnAction(event -> {
       if (createDragLineButton.isSelected()) {
         disableMouseEvent();
@@ -349,7 +370,7 @@ public class StoryCreator extends Pane {
    * Creates a button that activates the {@link #enableCreatingPassageInput()} method.
    */
   private void enableCreatePassageButton() {
-    createPassageInputsButton = new RadioButton("Enable creating passages");
+    createPassageInputsButton = new RadioButton("Create passage");
     createPassageInputsButton.setOnAction(event -> {
       if (createPassageInputsButton.isSelected()) {
         disableMouseEvent();
@@ -423,41 +444,20 @@ public class StoryCreator extends Pane {
   private void retrieveStoryData() {
 
     try {
-      String name = storyNameButton.getText();
+      String name = storyNameField.getText();
       Passage openingPassage = findFirstPassage().getPassage();
 
       List<Passage> passages = new ArrayList<>(
           retrievePassages().stream().map(PassageInput::getPassage).toList());
       List<LinkLine> linkLines = retrieveLinks();
 
-      for (Passage passage : passages) {
-        for (LinkLine linkLine : linkLines) {
-          if (passage.getTitle().equals(linkLine.getFirstPassageInput().getPassage().getTitle())) {
-            passage.addLink(linkLine.getLink());
-          }
-        }
+      matchLinksToPassages(passages, linkLines);
 
-      }
-
-      Iterator<Passage> iterator = passages.iterator();
-      while (iterator.hasNext()) {
-        Passage passage = iterator.next();
-        if (passage.getTitle().equals(openingPassage.getTitle())) {
-          openingPassage = passage;
-          iterator.remove();
-        }
-      }
-
+      openingPassage = replaceOpeningPassage(openingPassage, passages);
       Story story = new Story(name, openingPassage);
       passages.forEach(story::addPassage);
 
-      String path = "src/main/resources/stories/" + name + ".paths";
-      if (!Files.exists(Path.of(path))) {
-        FileStoryHandler.writeStoryToFile(story, path);
-      } else {
-        throw new IllegalArgumentException(
-            "File " + path + " already exists, Please choose a different name");
-      }
+      saveStory(story, "src/main/resources/stories/");
 
       Alert alert = new Alert(AlertType.CONFIRMATION, "File has been saved");
       alert.showAndWait();
@@ -469,6 +469,68 @@ public class StoryCreator extends Pane {
       alert.showAndWait();
     }
 
+  }
+
+  /**
+   * Saves a given story at a given location.
+   *
+   * @param story    Story to be saved.
+   * @param location The location where the story will be saved.
+   * @throws IOException              If the file cannot be saved.
+   * @throws IllegalArgumentException If a file with the same name already exists.
+   */
+  private void saveStory(Story story, String location)
+      throws IOException, IllegalArgumentException {
+    String path = location + story.getTitle() + ".paths";
+    if (!Files.exists(Path.of(path))) {
+      FileStoryHandler.writeStoryToFile(story, path);
+    } else {
+      throw new IllegalArgumentException(
+          "File " + path + " already exists, Please choose a different name");
+    }
+  }
+
+  /**
+   * Finds the passage in the list of passages that should be the opening passage. It then returns
+   * the opening passage, and removes it from the list of passages.
+   *
+   * @param openingPassage The opening passage to look for.
+   * @param passages       The list of passages containing an opening passage that should be
+   *                       transferred as the new opening passage.
+   * @return The new opening passage.
+   */
+  private Passage replaceOpeningPassage(Passage openingPassage, List<Passage> passages) {
+    Iterator<Passage> iterator = passages.iterator();
+    while (iterator.hasNext()) {
+      Passage passage = iterator.next();
+      if (passage.getTitle().equals(openingPassage.getTitle())) {
+        openingPassage = passage;
+        iterator.remove();
+        break;
+      }
+    }
+    return openingPassage;
+  }
+
+  /**
+   * Matches a list of {@link LinkLine linklines} up to a list of {@link Passage passages}.
+   * <p>
+   * If a linkLine has the same first passage input as a passage, the link of the LinkLine will be
+   * added to the passage.
+   * </p>
+   *
+   * @param passages  The passages to that the links will be added to.
+   * @param linkLines The LinkLines used to retrieve matching links.
+   */
+  private void matchLinksToPassages(List<Passage> passages, List<LinkLine> linkLines) {
+    for (Passage passage : passages) {
+      for (LinkLine linkLine : linkLines) {
+        if (passage.getTitle().equals(linkLine.getFirstPassageInput().getPassage().getTitle())) {
+          passage.addLink(linkLine.getLink());
+        }
+      }
+
+    }
   }
 
   /**
