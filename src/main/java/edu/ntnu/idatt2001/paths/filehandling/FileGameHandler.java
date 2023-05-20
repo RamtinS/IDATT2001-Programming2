@@ -160,9 +160,8 @@ public class FileGameHandler {
             Game game = new Game(gameId, player, story, goals);
             games.add(game);
           } catch (JsonParseException | NullPointerException | IllegalArgumentException e) {
-            String errorMessage = "Error in " + pathOfFile + " file for game: "
-                    + jsonObject.get(GAME_ID_KEY) + ". " + e.getMessage()
-                    + " The current game cannot be played before it is fixed.";
+            String errorMessage = "Failed to load game: " + jsonObject.get(GAME_ID_KEY) + ". "
+                    + e.getMessage() + " The current game cannot be played before it is fixed.";
 
             logger.log(Level.WARNING, errorMessage, e);
             invalidGames.add(errorMessage);
