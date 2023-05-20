@@ -116,8 +116,9 @@ public class Game {
    * @param link The link used to find the corresponding passage
    * @return Passage from the corresponding link.
    * @throws NullPointerException If the link is null.
+   * @throws IllegalStateException If the passage is not found.
    */
-  public Passage go(Link link) throws NullPointerException {
+  public Passage go(Link link) throws NullPointerException, IllegalStateException {
     if (link == null) {
       throw new NullPointerException("Link cannot be null");
     }
