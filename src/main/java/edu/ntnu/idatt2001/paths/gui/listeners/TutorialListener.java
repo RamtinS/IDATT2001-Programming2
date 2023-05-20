@@ -7,7 +7,7 @@ package edu.ntnu.idatt2001.paths.gui.listeners;
  * @version 1.0
  * @since May 20, 2023.
  */
-public interface LoadTutorialListener {
+public interface TutorialListener {
 
   /**
    * The method handles the return action
