@@ -2,6 +2,7 @@ package edu.ntnu.idatt2001.paths.goals;
 
 import edu.ntnu.idatt2001.paths.model.Player;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,7 +11,8 @@ import java.util.Objects;
  * To achieve the goal, the player must obtain all the
  * mandatoryItems.
  *
- * @author Ramtin Samavat and Tobias Oftedal.
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal
  * @version 1.0
  * @since April 23, 2023.
  */
@@ -49,7 +51,7 @@ public class InventoryGoal implements Goal {
     if (player == null) {
       throw new NullPointerException("Player cannot be null");
     }
-    return player.getInventory().containsAll(getMandatoryItems());
+    return new HashSet<>(player.getInventory()).containsAll(getMandatoryItems());
   }
 
   /**

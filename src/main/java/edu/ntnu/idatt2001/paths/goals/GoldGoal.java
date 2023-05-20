@@ -7,7 +7,8 @@ import java.util.Objects;
  * The class represents a gold goal for the player. To achieve the goal, the player must obtain a
  * minimum amount of gold.
  *
- * @author Ramtin Samavat and Tobias Oftedal.
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal
  * @version 1.0
  * @since April 23, 2023.
  */
