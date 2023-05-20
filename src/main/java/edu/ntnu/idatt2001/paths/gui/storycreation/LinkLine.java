@@ -1,35 +1,68 @@
 package edu.ntnu.idatt2001.paths.gui.storycreation;
 
 import edu.ntnu.idatt2001.paths.model.Link;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import javafx.stage.Stage;
 
 /**
  * Represents a line that connects two passage inputs together. Has a text area used to create a
  * link referring to the second connected passage. Has an arrowhead on the end of the line to
  * represent direction.
  *
- * @author Ramtin Samavat and Tobias Oftedal.
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal
  * @version 1.0
  * @since May 12, 2023.
  */
 public class LinkLine extends Line {
 
-  private final TextArea textArea;
+  private Button actionsButton;
+  private final ActionCreator actionCreator;
+  private final VBox textHolder;
+  private final TextArea linkText;
   private PassageInput firstPassageInput;
   private PassageInput secondPassageInput;
   private final Polygon arrowHead;
+  private Stage actionStage;
 
   /**
    * Constructor for a linkLine object.
    */
   public LinkLine() {
-    this.textArea = new TextArea();
-    this.firstPassageInput = new PassageInput();
-    textArea.setPrefWidth(30);
-    textArea.setPrefHeight(10);
+    this.textHolder = new VBox();
+    actionCreator = new ActionCreator();
+    createActionStage();
+    createActionsButton();
+    textHolder.setPrefWidth(100);
+
+
+    this.linkText = new TextArea();
+    textHolder.getChildren().addAll(linkText, actionsButton);
+
+    textHolder.setPrefHeight(10);
     arrowHead = new Polygon();
+  }
+
+  /**
+   * Creates new action stage from an {@link ActionCreator}.
+   */
+  private void createActionStage() {
+    actionStage = new Stage();
+    actionStage.setScene(new Scene(actionCreator));
+  }
+
+  /**
+   * Creates a button for showing the action stage.
+   */
+  private void createActionsButton() {
+    actionsButton = new Button("Add actions");
+    actionsButton.setOnAction(actionEvent -> actionStage.show());
+    actionsButton.setId("action-button");
   }
 
   /**
@@ -75,8 +108,8 @@ public class LinkLine extends Line {
    * @param position The position to the se the text area to.
    */
   private void setTextAreaPosition(Position position) {
-    textArea.setLayoutX(position.getX());
-    textArea.setLayoutY(position.getY());
+    textHolder.setLayoutX(position.getX());
+    textHolder.setLayoutY(position.getY());
   }
 
   /**
@@ -93,8 +126,8 @@ public class LinkLine extends Line {
    *
    * @return The text area of the LinkLine
    */
-  public TextArea getTextArea() {
-    return textArea;
+  public VBox getTextHolder() {
+    return textHolder;
   }
 
   /**
@@ -105,7 +138,9 @@ public class LinkLine extends Line {
    *        passage as the reference.
    */
   public Link getLink() {
-    return new Link(textArea.getText(), getSecondPassageInput().getPassage().getTitle());
+    Link link = new Link(linkText.getText(), getSecondPassageInput().getPassage().getTitle());
+    actionCreator.retrieveActions().forEach(link::addAction);
+    return link;
   }
 
   /**
