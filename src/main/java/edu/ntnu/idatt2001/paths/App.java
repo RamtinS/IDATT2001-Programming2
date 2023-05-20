@@ -4,6 +4,7 @@ import edu.ntnu.idatt2001.paths.actions.Action;
 import edu.ntnu.idatt2001.paths.controller.GameManager;
 import edu.ntnu.idatt2001.paths.filehandling.FileStoryHandler;
 import edu.ntnu.idatt2001.paths.goals.Goal;
+
 import edu.ntnu.idatt2001.paths.gui.listeners.BaseFrameListener;
 import edu.ntnu.idatt2001.paths.gui.listeners.CreateGameListener;
 import edu.ntnu.idatt2001.paths.gui.listeners.LoadStoredGamesListener;
@@ -21,6 +22,7 @@ import edu.ntnu.idatt2001.paths.model.Player;
 import edu.ntnu.idatt2001.paths.model.Story;
 import edu.ntnu.idatt2001.paths.tts.TextToSpeech;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,6 +32,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
+import org.controlsfx.control.Notifications;
 
 /**
  * Represents the Path application entrypoint.
@@ -55,6 +58,7 @@ public class App extends Application {
   private CreateGameListener createGameListener;
   private LoadStoredGamesListener loadStoredGamesListener;
   private StoryCreatorListener storyCreatorListener;
+  private List<Goal> completedGoals;
 
   /**
    * Launches the application.
@@ -72,6 +76,8 @@ public class App extends Application {
    */
   @Override
   public void start(Stage stage) {
+
+
     try {
       GameManager.initialize("src/main/resources/games/game_objects.json");
     } catch (IllegalArgumentException | NullPointerException | IllegalStateException
@@ -80,7 +86,7 @@ public class App extends Application {
       Alert alert = new Alert(AlertType.ERROR, e.getMessage());
       alert.showAndWait();
     }
-
+    completedGoals = new ArrayList<>();
     stage.setTitle("Paths");
     createBaseFrameListener(stage);
     addMainMenuListener(stage);
@@ -173,6 +179,21 @@ public class App extends Application {
         for (Action action : link.getActions()) {
           action.execute(currentGame.getPlayer());
         }
+
+        for (Goal goal : currentGame.getGoals()){
+          if (goal.isFulfilled(currentGame.getPlayer())){
+            if (completedGoals.contains(goal)){
+              break;
+            }
+            completedGoals.add(goal);
+            Notifications.create()
+                .title("Goal achieved")
+                .text(goal.toString())
+                .threshold(3, Notifications.create().title("Collapsed Notification"))
+                .showWarning();
+          }
+        }
+
         link.getActions().clear();
         BaseFrame newFrame;
         try {
@@ -363,6 +384,7 @@ public class App extends Application {
        */
       @Override
       public void onReturnClicked() {
+        stage.setResizable(true);
         switchToMainMenu(stage);
       }
     };
@@ -419,7 +441,10 @@ public class App extends Application {
   private void loadStoryCreator(Stage stage) {
     ScrollableStoryCreator scrollableStoryCreator = new ScrollableStoryCreator(FRAME_WIDTH,
         FRAME_HEIGHT, storyCreatorListener);
-    stage.setScene(new Scene(scrollableStoryCreator));
+    Scene scene = new Scene(scrollableStoryCreator);
+    setStyleSheet(scene, STANDARD_STYLING);
+    stage.setResizable(false);
+    stage.setScene(scene);
   }
 
   /**
