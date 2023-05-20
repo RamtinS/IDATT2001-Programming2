@@ -9,7 +9,11 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
@@ -30,21 +34,27 @@ public class GuiUtils {
   /**
    * The method sets the background image of a BorderPane.
    *
-   * @param borderPane The BorderPane to set the background image for.
+   * @param pane The pane to set the background image for.
    * @param pathOfFile The file path of the background image.
    */
-  public static void setBackgroundImage(BorderPane borderPane, String pathOfFile) {
+  public static void setBackgroundImage(Pane pane, String pathOfFile) {
     try {
       if (pathOfFile == null) {
         throw new NullPointerException("The file path for the background image is null.");
       }
+
       Image image = new Image(pathOfFile);
-      BackgroundImage backgroundImage = new BackgroundImage(image, null,
-              null, null, null);
+
+      BackgroundSize backgroundSize = new BackgroundSize(1, 1, true, true, false, false);
+
+      BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT,
+              BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
+
       Background background = new Background(backgroundImage);
-      borderPane.setBackground(background);
+
+      pane.setBackground(background);
     } catch (Exception e) {
-      String errorMessage = "Could not add background because: " + e.getMessage();
+      String errorMessage = "Failed to load background image: " + e.getMessage();
       logger.log(Level.WARNING, errorMessage, e);
       Alert alert = new Alert(Alert.AlertType.WARNING, errorMessage);
       alert.showAndWait();
