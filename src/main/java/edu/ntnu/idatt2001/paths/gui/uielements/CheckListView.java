@@ -91,16 +91,14 @@ public class CheckListView extends VBox {
       HBox currentBox = listView.getItems().get(i);
 
       for (Node node : currentBox.getChildren()) {
-        if (node instanceof CheckBox && ((CheckBox) node).isSelected()) {
+        if (node instanceof CheckBox checkBox && checkBox.isSelected()) {
           for (Node possibleLabel : currentBox.getChildren()) {
-            if (possibleLabel instanceof Label) {
-              selectedItems.add(((Label) possibleLabel).getText());
+            if (possibleLabel instanceof Label label) {
+              selectedItems.add(label.getText());
             }
           }
         }
       }
-
-
     }
     return selectedItems;
   }
