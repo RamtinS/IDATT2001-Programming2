@@ -1,6 +1,5 @@
 package edu.ntnu.idatt2001.paths.gui.menus;
 
-
 import edu.ntnu.idatt2001.paths.Difficulty;
 import edu.ntnu.idatt2001.paths.filehandling.FileStoryHandler;
 import edu.ntnu.idatt2001.paths.goals.Goal;
@@ -13,12 +12,14 @@ import edu.ntnu.idatt2001.paths.gui.listeners.CreateGameListener;
 import edu.ntnu.idatt2001.paths.gui.uielements.CheckListView;
 import edu.ntnu.idatt2001.paths.gui.uielements.InputField;
 import edu.ntnu.idatt2001.paths.gui.utility.DimensionUtility;
+import edu.ntnu.idatt2001.paths.gui.utility.GuiUtils;
 import edu.ntnu.idatt2001.paths.model.Link;
 import edu.ntnu.idatt2001.paths.model.Story;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
@@ -35,23 +36,17 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
 /**
- * Class that represents a menu for creating a game. Holds input fields for all values needed to
- * create a game. Includes input validation to make sure that all input is valid.
+ * Class that represents a menu for creating a game.
+ * Holds input fields for all values needed to create a game.
+ * Includes input validation to make sure that all input is valid.
  *
  * @author Ramtin Samavat
  * @author Tobias Oftedal
@@ -60,10 +55,10 @@ import javafx.stage.Stage;
  */
 public class CreateGameMenu extends BorderPane {
 
-  private static final Logger LOGGER = Logger.getLogger(CreateGameMenu.class.getName());
-  private final CreateGameListener listener;
+  private static final Logger logger = Logger.getLogger(CreateGameMenu.class.getName());
   private final Button inventoryButton;
   private final GridPane infoGrid;
+  private final CreateGameListener listener;
   private ComboBox<Difficulty> difficultyBox;
   private ComboBox<String> storyBox;
   private InputField playerNameInput;
@@ -83,38 +78,29 @@ public class CreateGameMenu extends BorderPane {
    * @param width The width of the frame.
    * @param height The height of the frame.
    * @param listener The listener used to activate button functionality.
+   * @throws NullPointerException if the listener is null.
    */
-  public CreateGameMenu(double width, double height, CreateGameListener listener) {
+  public CreateGameMenu(double width, double height, CreateGameListener listener)
+          throws NullPointerException{
+    this.listener = Objects.requireNonNull(listener, "CreateGameListener cannot be null.");
+
     buttonWidth = width / 4;
-    this.listener = listener;
     this.difficultyBox = new ComboBox<>();
     this.storyBox = new ComboBox<>();
     this.inventoryButton = new Button("Select");
     this.infoGrid = new GridPane();
-    setPadding(new Insets(20));
 
+    GuiUtils.setBackgroundImage(this, "images/forestadventure/beginnings.png");
+    GuiUtils.setHeadline(this, "Create game", 40, 0, 30, 0, 30);
+    GuiUtils.createReturnButton(this, "Return", listener::onReturnClicked, Pos.TOP_CENTER);
+
+    setPadding(new Insets(20));
     setDimensions(width, height);
-    setHeadline("Create game");
     createGrid();
     createUploadFilesHyperLink();
     addInputs();
     addInputLabels();
-    addReturnButton();
     addCreateGameButton();
-    setBackgroundImage("images/forestadventure/beginnings.png");
-  }
-
-  private void setBackgroundImage(String imagePath) {
-    try {
-      Image image = new Image(imagePath);
-
-      BackgroundImage backgroundImage = new BackgroundImage(image, null, null, null, null);
-      Background background = new Background(backgroundImage);
-
-      setBackground(background);
-    } catch (Exception e) {
-      LOGGER.log(Level.INFO, "Could not add background because" + e.getMessage());
-    }
   }
 
   /**
@@ -126,22 +112,6 @@ public class CreateGameMenu extends BorderPane {
   private void setDimensions(double width, double height) {
     DimensionUtility.changeAllPaneWidths(this, width);
     DimensionUtility.changeAllPaneHeights(this, height);
-  }
-
-  /**
-   * Sets a headline for the frame.
-   *
-   * @param headline The headline to be set.
-   */
-  @SuppressWarnings("SameParameterValue")
-  private void setHeadline(String headline) {
-    Label headLabel = new Label(headline);
-    headLabel.setFont(new Font(40));
-    headLabel.setId("headline-background");
-    setTop(headLabel);
-    setAlignment(headLabel, Pos.CENTER);
-    headLabel.setTextAlignment(TextAlignment.CENTER);
-    headLabel.setPadding(new Insets(0, 30, 0, 30));
   }
 
   /**
@@ -265,30 +235,6 @@ public class CreateGameMenu extends BorderPane {
   }
 
   /**
-   * Adds a return button to the frame, and adds the listener to it. Retrieves all game data of the
-   * created game, and sends it to the listener.
-   */
-  private void addReturnButton() {
-    Button returnButton = new Button("Return");
-    returnButton.setOnAction(event -> {
-      listener.onReturnClicked();
-
-      Media sound = new Media(
-          new File("src/main/resources/audio/mouse_click.mp3").toURI().toString());
-      MediaPlayer mediaPlayer = new MediaPlayer(sound);
-      mediaPlayer.play();
-
-    });
-    returnButton.setId("return-button");
-
-    VBox returnButtonPane = new VBox(returnButton);
-    returnButtonPane.setAlignment(Pos.TOP_CENTER);
-    returnButtonPane.setPadding(new Insets(0, 40, 0, 0));
-
-    setLeft(returnButtonPane);
-  }
-
-  /**
    * Adds a "create game" button and adds the listener to it.
    */
   private void addCreateGameButton() {
@@ -344,12 +290,11 @@ public class CreateGameMenu extends BorderPane {
       listener.onCreateClicked(pathOfFile, chosenGoals, id, chosenName, getChosenDifficulty(), selectedStory);
 
     } catch (Exception e) {
-      LOGGER.log(Level.SEVERE, "Error while creating game: " + e.getMessage(), e);
+      logger.log(Level.SEVERE, "Error while creating game: " + e.getMessage(), e);
       Alert alert = new Alert(AlertType.WARNING);
       alert.setContentText("Something went wrong when creating the game: " + e.getMessage());
       alert.showAndWait();
     }
-
   }
 
   /**
