@@ -1,30 +1,30 @@
 package edu.ntnu.idatt2001.paths.gui.storycreation;
 
-import edu.ntnu.idatt2001.paths.model.Link;
+import edu.ntnu.idatt2001.paths.filehandling.FileStoryHandler;
+import edu.ntnu.idatt2001.paths.gui.listeners.StoryCreatorListener;
 import edu.ntnu.idatt2001.paths.model.Passage;
 import edu.ntnu.idatt2001.paths.model.Story;
-import edu.ntnu.idatt2001.paths.filehandling.FileStoryHandler;
-import edu.ntnu.idatt2001.paths.gui.uielements.InputField;
-import edu.ntnu.idatt2001.paths.gui.listeners.StoryCreatorListener;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -38,15 +38,15 @@ public class StoryCreator extends Pane {
   private Position firstposition;
   private Position secondPosition;
   private final StoryCreatorListener listener;
-  private RadioButton createPassageInputs;
+  private RadioButton createPassageInputsButton;
   private RadioButton createMovePassageButton;
-  private RadioButton createDragLine;
-  private Button returnToMainMenu;
-  private Button resetLines;
+  private RadioButton createDragLineButton;
+  private Button mainMenuButton;
+  private Button resetLinesButton;
   private Button undoButton;
-  private Button saveStory;
-  private InputField storyName;
-  private static final Logger LOGGER =Logger.getLogger(StoryCreator.class.getName());
+  private Button saveStoryButton;
+  private TextField storyNameButton;
+  private static final Logger LOGGER = Logger.getLogger(StoryCreator.class.getName());
 
   /**
    * Constructor for a StoryCreator object. Adds buttons, and adds the keyboard shortcuts.
@@ -58,8 +58,9 @@ public class StoryCreator extends Pane {
   public StoryCreator(double width, double height, StoryCreatorListener listener) {
     this.listener = listener;
     setFrameDimensions(width, height);
-    addButtons();
+    addInputElements();
     addKeyboardShortcuts();
+
   }
 
   /**
@@ -87,7 +88,7 @@ public class StoryCreator extends Pane {
   private void addKeyboardShortcuts() {
     KeyCodeCombination shiftZ = new KeyCodeCombination(KeyCode.Z, KeyCombination.SHIFT_DOWN);
 
-    setOnKeyPressed(keyEvent -> {
+    setOnKeyReleased(keyEvent -> {
       if (shiftZ.match(keyEvent)) {
         deleteMostRecentNode();
       }
@@ -128,62 +129,93 @@ public class StoryCreator extends Pane {
     setOnMousePressed(event -> {
       LinkLine line = new LinkLine();
 
-      Position firstDrawnPosition = new Position(event.getX(), event.getY());
-      line.setStartPosition(firstDrawnPosition);
-      line.setEndPosition(firstDrawnPosition);
-      getChildren().add(line);
-      getChildren().add(line.getArrowHead());
+      Position firstDrawnPosition = setInitialPosition(event, line);
 
-      setOnMouseDragged(dragEvent -> {
-        Position draggedPosition = new Position(dragEvent.getX(), dragEvent.getY());
-        line.setEndPosition(draggedPosition);
-        line.moveArrowHead();
-      });
+      setOnMouseDragged(dragEvent -> dragLine(line, dragEvent));
 
-      setOnMouseReleased(releaseEvent -> {
+      setOnMouseReleased(
+          releaseEvent -> setFinalLinePoint(event, line, firstDrawnPosition, releaseEvent)
 
-        try {
-          Position releasePositionStart = new Position(event.getX(), event.getY());
-          Position releasePositionEnd = new Position(releaseEvent.getX(), releaseEvent.getY());
-
-          PassageInput startClosestPassage = getClosestPassage(releasePositionStart.getIcon());
-          PassageInput endClosestPassage = getClosestPassage(releasePositionEnd.getIcon());
-
-          double distanceToStartPassage = releasePositionStart.getDistance(
-              Position.getCenterOfNode(startClosestPassage));
-          double distanceToEndPassage = releasePositionEnd.getDistance(
-              Position.getCenterOfNode(endClosestPassage));
-
-          if (distanceToStartPassage < 300 && distanceToEndPassage < 300) {
-            Position finalPositionStart = Position.getClosestSideMiddlePosition(startClosestPassage,
-                releasePositionStart);
-            Position finalPositionEnd = Position.getClosestSideMiddlePosition(endClosestPassage,
-                releasePositionEnd);
-            line.setStartPosition(finalPositionStart);
-            line.setEndPosition(finalPositionEnd);
-
-            line.setFirstPassageInput(startClosestPassage);
-            line.setSecondPassageInput(endClosestPassage);
-
-            line.getFirstPassageInput().addLinkLine(line);
-
-            getChildren().add(line.getTextArea());
-            line.setTextAreaInMiddleOfLine();
-
-            getChildren().remove(firstDrawnPosition.getIcon());
-            line.moveArrowHead();
-          } else {
-            throw new IllegalArgumentException("Line is not close to enough to 2 passages.");
-          }
-        } catch (Exception e) {
-          LOGGER.log(Level.INFO,  e.toString());
-          showPassageAlert(e);
-          getChildren().remove(line);
-          getChildren().remove(line.getArrowHead());
-        }
-
-      });
+      );
     });
+  }
+
+  /**
+   * Sets the final points of a {@link LinkLine} to the closest passages.
+   *
+   * @param event              The event used to calculate the initial position for when the line is
+   *                           released.
+   * @param line               The line to change the points of.
+   * @param firstDrawnPosition The initial position of the line.
+   * @param releaseEvent       The mouse event used to calculate the new release position.
+   */
+  private void setFinalLinePoint(MouseEvent event, LinkLine line, Position firstDrawnPosition,
+                                 MouseEvent releaseEvent) {
+    try {
+      Position releasePositionStart = new Position(event.getX(), event.getY());
+      Position releasePositionEnd = new Position(releaseEvent.getX(), releaseEvent.getY());
+
+      PassageInput startClosestPassage = getClosestPassage(releasePositionStart.getIcon());
+      PassageInput endClosestPassage = getClosestPassage(releasePositionEnd.getIcon());
+
+      double distanceToStartPassage = releasePositionStart.getDistance(
+          Position.getCenterOfNode(startClosestPassage));
+      double distanceToEndPassage = releasePositionEnd.getDistance(
+          Position.getCenterOfNode(endClosestPassage));
+
+      if (distanceToStartPassage < 300 && distanceToEndPassage < 300) {
+        Position finalPositionStart = Position.getClosestSideMiddlePosition(startClosestPassage,
+            releasePositionStart);
+        Position finalPositionEnd = Position.getClosestSideMiddlePosition(endClosestPassage,
+            releasePositionEnd);
+        line.setStartPosition(finalPositionStart);
+        line.setEndPosition(finalPositionEnd);
+
+        line.setFirstPassageInput(startClosestPassage);
+        line.setSecondPassageInput(endClosestPassage);
+
+        getChildren().add(line.getTextHolder());
+        line.setTextAreaInMiddleOfLine();
+
+        getChildren().remove(firstDrawnPosition.getIcon());
+        line.moveArrowHead();
+      } else {
+        throw new IllegalArgumentException("Line is not close to enough to 2 passages.");
+      }
+    } catch (Exception e) {
+      LOGGER.log(Level.INFO, e.toString());
+      showPassageAlert(e);
+      getChildren().remove(line);
+      getChildren().remove(line.getArrowHead());
+    }
+  }
+
+  /**
+   * Sets the initial position for a link line to the location of a given {@link MouseEvent}.
+   *
+   * @param event The event used to calculate the initial position.
+   * @param line  The line used to set the initial position.
+   * @return The initial position that has been set to the line.
+   */
+  private Position setInitialPosition(MouseEvent event, LinkLine line) {
+    Position firstDrawnPosition = new Position(event.getX(), event.getY());
+    line.setStartPosition(firstDrawnPosition);
+    line.setEndPosition(firstDrawnPosition);
+    getChildren().add(line);
+    getChildren().add(line.getArrowHead());
+    return firstDrawnPosition;
+  }
+
+  /**
+   * Moves the line to the location of a given {@link LinkLine}.
+   *
+   * @param line      The line that will be moved.
+   * @param dragEvent The new location of the end position of the drag event.
+   */
+  private void dragLine(LinkLine line, MouseEvent dragEvent) {
+    Position draggedPosition = new Position(dragEvent.getX(), dragEvent.getY());
+    line.setEndPosition(draggedPosition);
+    line.moveArrowHead();
   }
 
   /**
@@ -202,9 +234,13 @@ public class StoryCreator extends Pane {
   }
 
   /**
-   * Adds all buttons to the frame.
+   * Adds all input elements to the frame.
+   * <p>
+   * This includes:
+   * <li>Return button</li>
+   * </p>
    */
-  public void addButtons() {
+  public void addInputElements() {
     enableReturnToMenuButton();
     enableCreatePassageButton();
     enableMovingPassageButton();
@@ -215,50 +251,83 @@ public class StoryCreator extends Pane {
     enableRetrieveButton();
     enableTitleField();
 
+    storyNameButton.setPrefWidth(getPrefWidth() / 4);
+    storyNameButton.setLayoutX((getPrefWidth() - storyNameButton.getPrefWidth()) / 2);
+
+    getChildren().add(storyNameButton);
+
     VBox buttonBox = new VBox();
+    buttonBox.setId("unbreakable");
+    buttonBox.setPadding(new Insets(10));
+    buttonBox.setSpacing(30);
 
     buttonBox.getChildren()
-        .addAll(returnToMainMenu, undoButton, saveStory, createPassageInputs, createDragLine,
-            createMovePassageButton, resetLines, storyName);
+        .addAll(mainMenuButton, undoButton, resetLinesButton, createPassageInputsButton,
+            createDragLineButton, createMovePassageButton, saveStoryButton);
     getChildren().add(buttonBox);
   }
 
+  /**
+   * Declares the {@link #storyNameButton} and adds a "story title" prompt to it.
+   */
   private void enableTitleField() {
-    storyName = new InputField(10, 10);
+
+    storyNameButton = new TextField();
+    storyNameButton.setPromptText("Story title");
   }
 
+  /**
+   * Adds {@link #createDragLineButton}, {@link #createPassageInputsButton} &
+   * {@link #createMovePassageButton} to a common toggle group.
+   */
   private void enableToggleGroup() {
     ToggleGroup toggleGroup = new ToggleGroup();
-    createDragLine.setToggleGroup(toggleGroup);
-    createPassageInputs.setToggleGroup(toggleGroup);
+    createDragLineButton.setToggleGroup(toggleGroup);
+    createPassageInputsButton.setToggleGroup(toggleGroup);
     createMovePassageButton.setToggleGroup(toggleGroup);
   }
 
+  /**
+   * Creates a button that activates the {@link #retrieveStoryData()} method.
+   */
   private void enableRetrieveButton() {
-    saveStory = new Button("Retrieve data");
-    saveStory.setOnAction(event -> retrieveStoryData());
+    saveStoryButton = new Button("Retrieve data");
+    saveStoryButton.setId("confirm-button");
+    saveStoryButton.setOnAction(event -> retrieveStoryData());
   }
 
+  /**
+   * Creates a button that activates the {@link #deleteMostRecentNode()} method.
+   */
   private void enableUndoButton() {
     undoButton = new Button("Undo");
     undoButton.setOnAction(event -> deleteMostRecentNode());
   }
 
+  /**
+   * Creates a button that activates the {@link #moveAllLinkLines()} method.
+   */
   private void enableResetLinesButton() {
-    resetLines = new Button("Reset lines");
-    resetLines.setOnAction(event -> moveAllLinkLines());
+    resetLinesButton = new Button("Reset lines");
+    resetLinesButton.setOnAction(event -> moveAllLinkLines());
   }
 
+  /**
+   * Creates a button that activates the {@link #enableLineCreationDrag()} method.
+   */
   private void enableDragLineButton() {
-    createDragLine = new RadioButton("Enable creating dragging lines");
-    createDragLine.setOnAction(event -> {
-      if (createDragLine.isSelected()) {
+    createDragLineButton = new RadioButton("Enable creating dragging lines");
+    createDragLineButton.setOnAction(event -> {
+      if (createDragLineButton.isSelected()) {
         disableMouseEvent();
         enableLineCreationDrag();
       }
     });
   }
 
+  /**
+   * Creates a button that activates the {@link #enableMovingPassages()} method.
+   */
   private void enableMovingPassageButton() {
     createMovePassageButton = new RadioButton("Move passage");
     createMovePassageButton.setOnAction(event -> {
@@ -267,17 +336,24 @@ public class StoryCreator extends Pane {
     });
   }
 
+  /**
+   * Creates a button that activates the {@link StoryCreatorListener#onReturnClicked()} method.
+   */
   private void enableReturnToMenuButton() {
-    returnToMainMenu = new Button("Return to main menu");
-    returnToMainMenu.setOnAction(event -> listener.onReturnClicked());
+    mainMenuButton = new Button("Return to main menu");
+    mainMenuButton.setId("return-button");
+    mainMenuButton.setOnAction(event -> listener.onReturnClicked());
   }
 
+  /**
+   * Creates a button that activates the {@link #enableCreatingPassageInput()} method.
+   */
   private void enableCreatePassageButton() {
-    createPassageInputs = new RadioButton("Enable creating passages");
-    createPassageInputs.setOnAction(event -> {
-      if (createPassageInputs.isSelected()) {
+    createPassageInputsButton = new RadioButton("Enable creating passages");
+    createPassageInputsButton.setOnAction(event -> {
+      if (createPassageInputsButton.isSelected()) {
         disableMouseEvent();
-        enableCreatingPassageTextArea();
+        enableCreatingPassageInput();
       }
     });
   }
@@ -287,9 +363,7 @@ public class StoryCreator extends Pane {
    */
   private void deleteMostRecentNode() {
     Node lastChild = getChildren().get(getChildren().size() - 1);
-
-    if ((lastChild instanceof VBox && !(lastChild instanceof PassageInput))
-        || lastChild instanceof Button || lastChild instanceof RadioButton) {
+    if (lastChild.getId() != null && lastChild.getId().equals("unbreakable")) {
       Alert alert = new Alert(AlertType.WARNING, "There are no more elements to remove");
       alert.showAndWait();
     } else {
@@ -300,7 +374,7 @@ public class StoryCreator extends Pane {
   /**
    * Creates a {@link PassageInput} between two points selected by the user.
    */
-  private void enableCreatingPassageTextArea() {
+  private void enableCreatingPassageInput() {
     setOnMouseClicked(event -> {
       if (firstposition == null) {
         firstposition = new Position(event.getX(), event.getY());
@@ -326,10 +400,7 @@ public class StoryCreator extends Pane {
       firstposition = null;
       secondPosition = null;
       getChildren().add(passageInput);
-
     });
-
-
   }
 
   /**
@@ -340,10 +411,9 @@ public class StoryCreator extends Pane {
    * @throws NullPointerException If there are no existing passages.
    */
   private PassageInput getClosestPassage(Node node) throws NullPointerException {
-    return (PassageInput) getChildren().stream()
-        .filter(currentNode -> (currentNode instanceof PassageInput)).min(
-            Comparator.comparingDouble(currentNode -> Position.getCenterOfNode(currentNode)
-                .getDistance(Position.getCenterOfNode(node)))).orElse(null);
+    return (PassageInput) getChildren().stream().filter(PassageInput.class::isInstance).min(
+        Comparator.comparingDouble(currentNode -> Position.getCenterOfNode(currentNode)
+            .getDistance(Position.getCenterOfNode(node)))).orElse(null);
 
   }
 
@@ -353,20 +423,33 @@ public class StoryCreator extends Pane {
   private void retrieveStoryData() {
 
     try {
-      String name = storyName.getTextArea().getText();
+      String name = storyNameButton.getText();
       Passage openingPassage = findFirstPassage().getPassage();
 
-      Story story = new Story(name, openingPassage);
+      List<Passage> passages = new ArrayList<>(
+          retrievePassages().stream().map(PassageInput::getPassage).toList());
+      List<LinkLine> linkLines = retrieveLinks();
 
-      List<PassageInput> retrievedPassages = retrievePassages();
+      for (Passage passage : passages) {
+        for (LinkLine linkLine : linkLines) {
+          if (passage.getTitle().equals(linkLine.getFirstPassageInput().getPassage().getTitle())) {
+            passage.addLink(linkLine.getLink());
+          }
+        }
 
-
-      Map<Link, Passage> matches = matchLinksToPassages(retrieveLinks(),retrievedPassages);
-      for(Map.Entry<Link, Passage> entry: matches.entrySet()){
-        System.out.println(entry.getKey() + "," + entry.getValue());
-        entry.getValue().addLink(entry.getKey());
-        story.addPassage(entry.getValue());
       }
+
+      Iterator<Passage> iterator = passages.iterator();
+      while (iterator.hasNext()) {
+        Passage passage = iterator.next();
+        if (passage.getTitle().equals(openingPassage.getTitle())) {
+          openingPassage = passage;
+          iterator.remove();
+        }
+      }
+
+      Story story = new Story(name, openingPassage);
+      passages.forEach(story::addPassage);
 
       String path = "src/main/resources/stories/" + name + ".paths";
       if (!Files.exists(Path.of(path))) {
@@ -379,7 +462,7 @@ public class StoryCreator extends Pane {
       Alert alert = new Alert(AlertType.CONFIRMATION, "File has been saved");
       alert.showAndWait();
     } catch (Exception e) {
-      LOGGER.log(Level.INFO,  e.getMessage());
+      LOGGER.log(Level.INFO, e.getMessage(), e);
       Text alertText = new Text("Could not save story to file because: \n" + e.getMessage());
       Alert alert = new Alert(AlertType.ERROR);
       alert.getDialogPane().setContent(alertText);
@@ -396,8 +479,7 @@ public class StoryCreator extends Pane {
   private List<PassageInput> retrievePassages() {
     List<PassageInput> retrievedPassages = new ArrayList<>();
     getChildren().stream().filter(node -> node.getClass().equals(PassageInput.class))
-        .map(node -> (PassageInput) node)
-        .forEach(passageInput -> retrievedPassages.add(passageInput));
+        .map(PassageInput.class::cast).forEach(retrievedPassages::add);
     return retrievedPassages;
   }
 
@@ -409,7 +491,7 @@ public class StoryCreator extends Pane {
   private List<LinkLine> retrieveLinks() {
     List<LinkLine> retrievedLinks = new ArrayList<>();
     getChildren().stream().filter(node -> node.getClass().equals(LinkLine.class))
-        .map(node -> (LinkLine) node).forEach(linkLine -> retrievedLinks.add(linkLine));
+        .map(LinkLine.class::cast).forEach(retrievedLinks::add);
     return retrievedLinks;
   }
 
@@ -418,7 +500,7 @@ public class StoryCreator extends Pane {
    * {@link PassageInput passage inputs}.
    */
   private void moveAllLinkLines() {
-    getChildren().stream().filter(node -> node instanceof LinkLine).forEach(node -> {
+    getChildren().stream().filter(LinkLine.class::isInstance).forEach(node -> {
       LinkLine linkline = (LinkLine) node;
       linkline.setStartPosition(
           Position.getClosestSideMiddlePosition(linkline.getFirstPassageInput(),
@@ -439,19 +521,8 @@ public class StoryCreator extends Pane {
    */
   private PassageInput findFirstPassage() throws NullPointerException {
     return ((PassageInput) Objects.requireNonNull(
-        getChildren().stream().filter(node -> node instanceof PassageInput).findFirst()
-            .orElse(null)));
+        getChildren().stream().filter(PassageInput.class::isInstance).findFirst().orElse(null)));
   }
 
-
-  private Map<Link, Passage> matchLinksToPassages(List<LinkLine> linkLines, List<PassageInput> passageInputs){
-    Map<Link, Passage> matches = new HashMap<>();
-    linkLines.forEach(linkLine -> passageInputs.forEach(passageInput -> {
-      if (passageInput.getPassage().getTitle().equals(linkLine.getLink().getReference())){
-        matches.put(linkLine.getLink(), passageInput.getPassage());
-      }
-    }));
-    return matches;
-  }
 
 }
