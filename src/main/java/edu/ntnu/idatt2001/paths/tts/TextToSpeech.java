@@ -1,23 +1,29 @@
 package edu.ntnu.idatt2001.paths.tts;
 
+import java.beans.PropertyVetoException;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.speech.AudioException;
 import javax.speech.Central;
+import javax.speech.EngineException;
+import javax.speech.EngineStateError;
 import javax.speech.synthesis.Synthesizer;
 import javax.speech.synthesis.SynthesizerModeDesc;
 import javax.speech.synthesis.Voice;
 
 /**
- * Singleton class for handling TTS (text to speech) requests. Has methods for speaking text objects
- * out loud using synthetic English voice using an emulator.
+ * Singleton class for handling TTS (text to speech) requests.
+ * The class contains methods for speaking text objects out loud using
+ * synthetic English voice using an emulator.
  */
 public class TextToSpeech {
 
+  private static final Logger logger = Logger.getLogger(TextToSpeech.class.getName());
   private static Synthesizer synthesizer;
   private static Voice voice;
-  private static TextToSpeech instance;
-  private static final Logger LOGGER = Logger.getLogger(TextToSpeech.class.getName());
+  private static TextToSpeech instance = null;
+  private boolean speechEnabled;
 
   /**
    * Creates a TextToSpeechObject. If no instance of the class already exists, an instance will be
@@ -39,6 +45,7 @@ public class TextToSpeech {
    * <li>Creates a {@link Synthesizer object} used to emulate a real person's voice</li>
    */
   private TextToSpeech() {
+    speechEnabled = false;
     try {
       System.setProperty("FreeTTSSynthEngineCentral",
           "com.sun.speech.freetts.jsapi.FreeTTSEngineCentral");
@@ -54,10 +61,28 @@ public class TextToSpeech {
       TextToSpeech.voice = new Voice("Geir", Voice.GENDER_FEMALE, Voice.AGE_CHILD, "casual");
       synthesizer.getSynthesizerProperties().setVoice(voice);
       synthesizer.resume();
-    } catch (Exception e) {
-      LOGGER.log(Level.INFO,
-          "Error while initiating text to speak class because: " + e.getMessage());
+    } catch (EngineException | PropertyVetoException | AudioException | EngineStateError e) {
+      logger.log(Level.WARNING, "Error while initiating text to speak class because: "
+              + e.getMessage(), e);
     }
+  }
+
+  /**
+   * Sets the speech enabled or disabled.
+   *
+   * @param enabled true to enable speech, false to disable speech
+   */
+  public void setSpeechEnabled(boolean enabled) {
+    this.speechEnabled = enabled;
+  }
+
+  /**
+   * Checks if speech is enabled.
+   *
+   * @return true if speech is enabled, false otherwise
+   */
+  public boolean isSpeechEnabled() {
+    return speechEnabled;
   }
 
   /**
@@ -66,11 +91,14 @@ public class TextToSpeech {
    * @param text The text used to be played out loud.
    */
   public void speech(String text) {
+    if (!speechEnabled) {
+      return;
+    }
+    resetSpeech();
     try {
-      resetSpeech();
       synthesizer.speakPlainText(text, null);
-    } catch (Exception e) {
-      LOGGER.log(Level.INFO, "Error while speaking text because: " + e.getMessage());
+    } catch (EngineStateError e) {
+      logger.log(Level.WARNING, "Error while speaking text because: " + e.getMessage(), e);
     }
   }
 
@@ -78,6 +106,10 @@ public class TextToSpeech {
    * Clears the queue of text to speech requests for the {@link Synthesizer}.
    */
   public void resetSpeech() {
-    synthesizer.cancel();
+    try {
+      synthesizer.cancel();
+    } catch (EngineStateError e) {
+      logger.log(Level.WARNING, "Error while resting text because: " + e.getMessage(), e);
+    }
   }
 }
