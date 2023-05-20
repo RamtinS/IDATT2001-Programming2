@@ -24,8 +24,11 @@ import javafx.util.Duration;
 import org.controlsfx.control.ToggleSwitch;
 
 /**
- * The class represents the main menu of the application, providing options for creating a new game,
- * loading a previously created game, or entering the tutorial.
+ * This class represents the main menu of the application,
+ * providing various options for the user. The options
+ * include creating a new game, loading a previously saved
+ * game, entering the tutorial, creating a new story, exiting the
+ * application, or using the settings.
  *
  * @author Ramtin Samavat
  * @author Tobias Oftedal
@@ -85,8 +88,9 @@ public class MainMenu extends BorderPane {
     Button tutorial = createButton("Tutorial", mainMenuListener::onTutorialButtonClicked);
     Button createGame = createButton("Create Story", mainMenuListener::onCreateStoryMenuClicked);
     Button exit = createButton("Exit", mainMenuListener::onExitClicked);
+    Button settingsButton = createButton("Settings", settingsStage::show);
 
-    buttonBox.getChildren().addAll(newGame, loadGame, tutorial, createGame, settingsButton(), exit);
+    buttonBox.getChildren().addAll(newGame, loadGame, tutorial, createGame, settingsButton, exit);
     setCenter(buttonBox);
   }
 
@@ -126,18 +130,6 @@ public class MainMenu extends BorderPane {
   private ListView<HBox> createSettingsView() {
     ListView<HBox> settings = new ListView<>();
     settings.getItems().add(new HBox(new Label("Text to speech"), muteSwitch()));
-    return settings;
-  }
-
-  /**
-   * Creates a settings button that sets the {@link #settingsStage} visible.
-   *
-   * @return A button that sets the {@link #settingsStage} visible on activation.
-   */
-  private Button settingsButton() {
-    Button settings = new Button("Settings");
-    settings.setPrefWidth(Double.MAX_VALUE);
-    settings.setOnAction(event -> settingsStage.show());
     return settings;
   }
 
