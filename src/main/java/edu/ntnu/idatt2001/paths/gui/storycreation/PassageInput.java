@@ -1,8 +1,6 @@
 package edu.ntnu.idatt2001.paths.gui.storycreation;
 
 import edu.ntnu.idatt2001.paths.model.Passage;
-import java.util.ArrayList;
-import java.util.List;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 
@@ -18,7 +16,6 @@ public class PassageInput extends VBox {
 
   private final TextArea titleField;
   private final TextArea passageText;
-  private final List<LinkLine> linkLines;
 
   /**
    * Constructor for a PassageInputObject. Contains input fields for the passage title and text.
@@ -26,7 +23,6 @@ public class PassageInput extends VBox {
   public PassageInput() {
     titleField = createTitleField();
     passageText = new TextArea();
-    linkLines = new ArrayList<>();
 
     getChildren().add(titleField);
     getChildren().add(passageText);
@@ -44,32 +40,13 @@ public class PassageInput extends VBox {
   }
 
   /**
-   * Adds a LinkLine to the list of connected link lines.
-   *
-   * @param linkLine The LinkLine to be added to the list of link lines.
-   */
-  public void addLinkLine(LinkLine linkLine) {
-    linkLines.add(linkLine);
-  }
-
-  /**
-   * Gets the list of all connected link lines.
-   *
-   * @return The list of alle connected link lines.
-   */
-  public List<LinkLine> getLinkLines() {
-    return linkLines;
-  }
-
-  /**
    * Creates a passage from the given input values, with the input title as the title, the connected
    * links, and the input text area as the text.
    *
    * @return A passage with the input title and text.
    */
   public Passage getPassage() {
-    Passage passage = new Passage(titleField.getText(), passageText.getText());
-    return passage;
+    return new Passage(titleField.getText(), passageText.getText());
   }
 
 
