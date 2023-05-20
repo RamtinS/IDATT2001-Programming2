@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2001.paths.gui.menus;
 
+import edu.ntnu.idatt2001.paths.gui.utility.GuiUtils;
 import edu.ntnu.idatt2001.paths.model.Link;
 import edu.ntnu.idatt2001.paths.model.Passage;
 import edu.ntnu.idatt2001.paths.model.Player;
@@ -18,13 +19,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -133,16 +128,9 @@ public class BaseFrame extends AnchorPane {
 
       String pathOfFile = imageFolderPathRelative + fileName + imageExtension;
 
-      Image image = new Image(pathOfFile);
+      GuiUtils.setBackgroundImage(this, pathOfFile);
 
-      BackgroundSize backgroundSize = new BackgroundSize(1, 1, true, true, false, false);
-
-      BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT,
-              BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
-
-      Background background = new Background(backgroundImage);
-      setBackground(background);
-    } catch (Exception e) {
+    } catch (FileNotFoundException e) {
       String errorMessage = "Failed to load background image: " + e.getMessage();
       logger.log(Level.WARNING, errorMessage, e);
       Alert alert = new Alert(Alert.AlertType.WARNING, errorMessage);
