@@ -47,6 +47,7 @@ public class MainMenu extends BorderPane {
    * @param width    The width of the menu.
    * @param height   The height of the menu.
    * @param listener The listener of the main menu, used to activate button functionality.
+   * @throws NullPointerException if the listener is null.
    */
   public MainMenu(double width, double height, MainMenuListener listener)
           throws NullPointerException {
