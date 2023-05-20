@@ -297,13 +297,16 @@ public class App extends Application {
           }
         };
         loadTutorial(stage, tutorialListener);
-
-
       }
 
       @Override
       public void onCreateStoryMenuClicked() {
         loadStoryCreator(stage);
+      }
+
+      @Override
+      public void onExitClicked() {
+        stage.close();
       }
     };
   }
