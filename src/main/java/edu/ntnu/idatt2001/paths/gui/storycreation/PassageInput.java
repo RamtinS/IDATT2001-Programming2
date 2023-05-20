@@ -1,6 +1,8 @@
 package edu.ntnu.idatt2001.paths.gui.storycreation;
 
 import edu.ntnu.idatt2001.paths.model.Passage;
+import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 
@@ -21,11 +23,23 @@ public class PassageInput extends VBox {
    * Constructor for a PassageInputObject. Contains input fields for the passage title and text.
    */
   public PassageInput() {
+    setPadding(new Insets(3));
+    setStyle("-fx-background-color: #000000");
+    setOnMouseEntered(event -> {
+      setCursor(Cursor.HAND); // Set cursor to hand when mouse enters the button
+    });
+
     titleField = createTitleField();
-    passageText = new TextArea();
+    passageText = createPassageText();
 
     getChildren().add(titleField);
     getChildren().add(passageText);
+  }
+
+  private TextArea createPassageText() {
+    TextArea textArea = new TextArea();
+    textArea.setPromptText("Passage text");
+    return textArea;
   }
 
   /**
@@ -35,7 +49,7 @@ public class PassageInput extends VBox {
    */
   private TextArea createTitleField() {
     TextArea inputField = new TextArea();
-    inputField.setPromptText("Enter passage title");
+    inputField.setPromptText("Title");
     return inputField;
   }
 

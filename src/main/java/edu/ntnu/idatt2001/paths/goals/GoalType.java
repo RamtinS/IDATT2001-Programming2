@@ -4,7 +4,8 @@ package edu.ntnu.idatt2001.paths.goals;
  * Enum representing different types of goals.
  * Each goal type has a corresponding description and goal class.
  *
- * @author Ramtin Samavat and Tobias Oftedal.
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal
  * @version 1.0
  * @since May 15, 2023.
  */

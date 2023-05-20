@@ -6,7 +6,8 @@ import edu.ntnu.idatt2001.paths.model.Player;
  * The interface represents a target value or a desired
  * result related to the player's condition.
  *
- * @author ...
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal
  * @version JDK 17
  */
 public interface Goal {

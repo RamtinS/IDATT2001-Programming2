@@ -48,7 +48,8 @@ public class InventoryPane extends HBox {
         setPaneBackground(pane, inventoryItem);
       } catch (Exception e) {
         try {
-          setPaneBackground(pane, "exclamation");
+          pane.setStyle("-fx-background-image: url('" + "/images/exclamation.png" + "');"
+              + "-fx-background-size: stretch");
         } catch (Exception f) {
           pane.setStyle("-fx-background-color: #000000");
         }

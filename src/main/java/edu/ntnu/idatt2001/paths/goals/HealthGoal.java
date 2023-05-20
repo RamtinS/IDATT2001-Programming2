@@ -8,7 +8,8 @@ import java.util.Objects;
  * achieve the goal, the player must keep a minimum
  * amount of health.
  *
- * @author Ramtin Samavat and Tobias Oftedal.
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal
  * @version 1.0
  * @since April 23, 2023.
  */

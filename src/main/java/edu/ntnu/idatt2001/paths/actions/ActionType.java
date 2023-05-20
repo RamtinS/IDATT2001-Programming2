@@ -6,15 +6,16 @@ import java.util.Arrays;
  * Enum representing different types of cations in the application.
  * Each action type has a corresponding value description and action class.
  *
- * @author Ramtin Samavat and Tobias Oftedal.
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal
  * @version 1.0
  * @since May 15, 2023.
  */
 public enum ActionType {
   GOLD("gold",  GoldAction.class),
   HEALTH("health", HealthAction.class),
-  INVENTORY( "item", InventoryAction.class),
-  SCORE( "points", ScoreAction.class);
+  INVENTORY("item", InventoryAction.class),
+  SCORE("points", ScoreAction.class);
 
   private final String actionValueDescription;
   private final Class<? extends Action> actionClass;

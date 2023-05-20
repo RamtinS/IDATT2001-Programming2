@@ -6,7 +6,8 @@ import edu.ntnu.idatt2001.paths.model.Player;
  * The interface represents an action, which
  * represents a future change in the state of a player.
  *
- * @author Ramtin Samavat and Tobias Oftedal.
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal
  * @version 1.0
  * @since March 24, 2023.
  */

@@ -8,7 +8,8 @@ import java.util.Objects;
  * achieve the goal, the player must obtain a minimum
  * amount of points.
  *
- * @author Ramtin Samavat and Tobias Oftedal.
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal
  * @version 1.0
  * @since April 23, 2023.
  */

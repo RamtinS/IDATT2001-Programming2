@@ -1,29 +1,37 @@
 package edu.ntnu.idatt2001.paths.actions;
 
 /**
- * The ActionFactory class is responsible for creating
- * action objects based on action descriptions and values.
- * The class supports only the creation of action objects
- * determined by the ActionType enum.
+ * The ActionFactory class is responsible for creating action objects based on action descriptions
+ * and values. The class supports only the creation of action objects determined by the ActionType
+ * enum.
  *
- * @author Ramtin Samavat and Tobias Oftedal.
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal
  * @version 1.0
  * @since May 19, 2023.
  */
 public class ActionFactory {
 
   /**
-   * The method creates an action based on the given action
-   * description and action value.
+   * Private constructor for the factory.
+   *
+   * @throws IllegalStateException If the constructor is used.
+   */
+  private ActionFactory() throws IllegalStateException {
+    throw new IllegalStateException("Cannot instantiate an ActionFactory object");
+  }
+
+  /**
+   * The method creates an action based on the given action description and action value.
    *
    * @param actionDescription the action description.
-   * @param actionValue the action value.
+   * @param actionValue       the action value.
    * @return the created action object.
    * @throws IllegalArgumentException if action description or value is invalid.
-   * @throws NullPointerException if actionDescription or actionValue is null.
+   * @throws NullPointerException     if actionDescription or actionValue is null.
    */
   public static Action createAction(String actionDescription, String actionValue)
-          throws IllegalArgumentException, NullPointerException {
+      throws IllegalArgumentException, NullPointerException {
     if (actionDescription == null) {
       throw new NullPointerException("Action description cannot be null.");
     }
@@ -43,12 +51,13 @@ public class ActionFactory {
         default -> action = null;
       }
     } catch (NumberFormatException e) {
-      throw new NumberFormatException("Invalid action value for " + actionDescription + ": "
-              + actionValue + ". " + actionDescription
-              + "action expects a numeric value in integer format.");
-    } catch (IllegalArgumentException  e) {
-      throw new IllegalArgumentException("Invalid action value for " + actionDescription + ": "
-              + actionValue + ". " + e.getMessage());
+      throw new NumberFormatException(
+          "Invalid action value for " + actionDescription + ": " + actionValue + ". "
+              + actionDescription + "action expects a numeric value in integer format.");
+    } catch (IllegalArgumentException e) {
+      throw new IllegalArgumentException(
+          "Invalid action value for " + actionDescription + ": " + actionValue + ". "
+              + e.getMessage());
     }
     return action;
   }
