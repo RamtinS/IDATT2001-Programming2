@@ -14,7 +14,8 @@ import java.lang.reflect.Type;
  * the Goal interface, that deserializes JSON elements into
  * their corresponding Goal objects.
  *
- * @author Ramtin Samavat and Tobias Oftedal.
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal
  * @version 1.0
  * @since May 15, 2023.
  */

@@ -1,10 +1,10 @@
 package edu.ntnu.idatt2001.paths.filehandling;
 
+import edu.ntnu.idatt2001.paths.actions.Action;
+import edu.ntnu.idatt2001.paths.actions.ActionFactory;
 import edu.ntnu.idatt2001.paths.model.Link;
 import edu.ntnu.idatt2001.paths.model.Passage;
 import edu.ntnu.idatt2001.paths.model.Story;
-import edu.ntnu.idatt2001.paths.actions.Action;
-import edu.ntnu.idatt2001.paths.actions.ActionFactory;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -16,29 +16,40 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The FileStoryHandler class provides methods to write and read
- * a story object to/from a text file.
+ * The FileStoryHandler class provides methods to write and read a story object to/from a text
+ * file.
  *
- * @author Ramtin Samavat and Tobias Oftedal.
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal
  * @version 1.0
  * @since May 15, 2023.
  */
 public class FileStoryHandler {
+
   private static final Logger logger = Logger.getLogger(FileStoryHandler.class.getName());
   private static final String FILE_EXTENSION = ".paths";
   private static final List<String> invalidActions = new ArrayList<>();
 
   /**
+   * Private constructor for the factory.
+   *
+   * @throws IllegalStateException If the constructor is used.
+   */
+  private FileStoryHandler() throws IllegalStateException {
+    throw new IllegalStateException("Cannot instantiate a FileStoryHandler object");
+  }
+
+  /**
    * The method writes a story object to a text file.
    *
-   * @param story the story object to be written.
+   * @param story      the story object to be written.
    * @param pathOfFile the path of the file to write the story to.
-   * @throws NullPointerException if the story or pathOfFile is null.
+   * @throws NullPointerException     if the story or pathOfFile is null.
    * @throws IllegalArgumentException if pathOfFile is blank or does not end with FILE_EXTENSION.
-   * @throws IOException if there is an error writing story to file.
+   * @throws IOException              if there is an error writing story to file.
    */
   public static void writeStoryToFile(Story story, String pathOfFile)
-          throws NullPointerException, IllegalArgumentException, IOException {
+      throws NullPointerException, IllegalArgumentException, IOException {
 
     if (story == null) {
       throw new NullPointerException("The story cannot be null.");
@@ -46,7 +57,7 @@ public class FileStoryHandler {
     FilePathValidator.validatePathOfFile(pathOfFile, FILE_EXTENSION);
 
     try (BufferedWriter writer = new BufferedWriter(
-            new FileWriter(pathOfFile.toLowerCase().trim()))) {
+        new FileWriter(pathOfFile.toLowerCase().trim()))) {
       writer.write(story.getTitle() + "\n\n");
       writer.write("::" + story.getOpeningPassage().getTitle() + "\n");
       writer.write(story.getOpeningPassage().getContent() + "\n");
@@ -71,7 +82,7 @@ public class FileStoryHandler {
    * Helper method to write the given Link object with its associated actions.
    *
    * @param writer the BufferedWriter object to write to.
-   * @param link the Link object to write.
+   * @param link   the Link object to write.
    * @throws IOException if there is an error writing to the BufferedWriter.
    */
   private static void writeLinkWithActions(BufferedWriter writer, Link link) throws IOException {
@@ -87,19 +98,19 @@ public class FileStoryHandler {
    *
    * @param pathOfFile the path of the file to read the story from.
    * @return the story object read from the file.
-   * @throws NullPointerException if the pathOfFile is null.
+   * @throws NullPointerException     if the pathOfFile is null.
    * @throws IllegalArgumentException if pathOfFile is blank or does not end with FILE_EXTENSION.
-   * @throws IOException if there is an error reading story from file.
+   * @throws IOException              if there is an error reading story from file.
    */
   public static Story readStoryFromFile(String pathOfFile)
-          throws NullPointerException, IllegalArgumentException, IOException {
+      throws NullPointerException, IllegalArgumentException, IOException {
 
     FilePathValidator.validatePathOfFile(pathOfFile, FILE_EXTENSION);
     invalidActions.clear();
 
     Story story;
     try (BufferedReader reader = new BufferedReader(
-            new FileReader(pathOfFile.toLowerCase().trim()))) {
+        new FileReader(pathOfFile.toLowerCase().trim()))) {
       String storyTitle = reader.readLine();
       List<Passage> passages = readPassagesFromFile(reader);
       Passage openingPassage = passages.get(0);
@@ -122,8 +133,7 @@ public class FileStoryHandler {
    * @return a list of Passage objects read from the BufferedReader.
    * @throws IOException if there is an error reading from the BufferedReader.
    */
-  private static List<Passage> readPassagesFromFile(BufferedReader reader)
-          throws IOException {
+  private static List<Passage> readPassagesFromFile(BufferedReader reader) throws IOException {
     List<Passage> passages = new ArrayList<>();
     String line;
     while ((line = reader.readLine()) != null) {
@@ -142,7 +152,7 @@ public class FileStoryHandler {
   /**
    * Helper method to parse a passage.
    *
-   * @param titleLine the title string.
+   * @param titleLine   the title string.
    * @param contentLine the content string.
    * @return the Passage object created from the title and content string.
    */
@@ -170,7 +180,7 @@ public class FileStoryHandler {
   /**
    * Helper method to parse actions from a link string and add them to a Link object.
    *
-   * @param link the link object to add actions to.
+   * @param link      the link object to add actions to.
    * @param linkParts array of strings representing the link and its actions.
    */
   private static void parseLinkActions(Link link, String[] linkParts) {
@@ -179,8 +189,8 @@ public class FileStoryHandler {
         try {
           String[] actionParts = linkPart.split(":");
           if (actionParts.length < 2) {
-            throw new IllegalArgumentException("Invalid action format: "
-                    + linkPart.replace("{", "") + ". Action description and"
+            throw new IllegalArgumentException(
+                "Invalid action format: " + linkPart.replace("{", "") + ". Action description and"
                     + " action value must be separated by a colon.");
           }
           String actionDescription = actionParts[0].substring(1).trim();
@@ -196,8 +206,8 @@ public class FileStoryHandler {
   }
 
   /**
-   * The method retrieves the list with information about
-   * invalid actions which was not parsed from the file.
+   * The method retrieves the list with information about invalid actions which was not parsed from
+   * the file.
    *
    * @return list of invalid and non parsed actions.
    */

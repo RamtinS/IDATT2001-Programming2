@@ -8,12 +8,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import edu.ntnu.idatt2001.paths.actions.Action;
+import edu.ntnu.idatt2001.paths.goals.Goal;
 import edu.ntnu.idatt2001.paths.model.Game;
 import edu.ntnu.idatt2001.paths.model.Passage;
 import edu.ntnu.idatt2001.paths.model.Player;
 import edu.ntnu.idatt2001.paths.model.Story;
-import edu.ntnu.idatt2001.paths.actions.Action;
-import edu.ntnu.idatt2001.paths.goals.Goal;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -25,16 +25,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The FileGameHandler class provides methods to write and read
- * a list of Game objects to/from a JSON file.
+ * The FileGameHandler class provides methods to write and read a list of Game objects to/from a
+ * JSON file.
  *
- * @author Ramtin Samavat and Tobias Oftedal.
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal
  * @version 1.0
  * @since May 14, 2023.
  */
 public class FileGameHandler {
 
-  private static final Logger logger = Logger.getLogger(FileStoryHandler.class.getName());
+  private static final Logger logger = Logger.getLogger(FileGameHandler.class.getName());
   private static final List<String> invalidGames = new ArrayList<>();
   private static final String FILE_EXTENSION = ".json";
   private static final String GAME_ID_KEY = "game ID";
@@ -46,25 +47,31 @@ public class FileGameHandler {
   private static final String GOALS_KEY = "goals";
 
   /**
+   * Private constructor for the FileGameHandler.
+   *
+   * @throws IllegalStateException If the constructor is used.
+   */
+  private FileGameHandler() throws IllegalStateException {
+    throw new IllegalStateException("Cannot instantiate a FileGameHandler object");
+  }
+
+  /**
    * The method writes a list of Game objects to a JSON file.
    *
-   * @param games the list of Game objects to write to the file.
+   * @param games      the list of Game objects to write to the file.
    * @param pathOfFile the path to the file to write to.
-   * @throws NullPointerException if games or pathOfFile is null.
+   * @throws NullPointerException     if games or pathOfFile is null.
    * @throws IllegalArgumentException if pathOfFile is blank or does not end with FILE_EXTENSION.
-   * @throws IOException if there is an error writing list of games to file
+   * @throws IOException              if there is an error writing list of games to file
    */
   public static void writeGamesToFile(List<Game> games, String pathOfFile)
-          throws NullPointerException, IllegalArgumentException, IOException {
+      throws NullPointerException, IllegalArgumentException, IOException {
     if (games == null) {
       throw new NullPointerException("The list of games cannot be null.");
     }
     FilePathValidator.validatePathOfFile(pathOfFile, FILE_EXTENSION);
 
-    Gson gson = new GsonBuilder()
-            .setPrettyPrinting()
-            .setLenient()
-            .create();
+    Gson gson = new GsonBuilder().setPrettyPrinting().setLenient().create();
 
     JsonArray jsonArray = new JsonArray();
     for (Game game : games) {
@@ -77,10 +84,10 @@ public class FileGameHandler {
       jsonObject.addProperty(STORY_TITLE_KEY, game.getStory().getTitle());
 
       jsonObject.add(STORY_OPENING_PASSAGE_KEY,
-              gson.toJsonTree(game.getStory().getOpeningPassage()));
+          gson.toJsonTree(game.getStory().getOpeningPassage()));
 
       jsonObject.add(STORY_CURRENT_PASSAGE_KEY,
-              gson.toJsonTree(game.getStory().getCurrentPassage()));
+          gson.toJsonTree(game.getStory().getCurrentPassage()));
 
       List<Passage> passages = new ArrayList<>(game.getStory().getPassages());
       jsonObject.add(STORY_PASSAGES_KEY, gson.toJsonTree(passages));
@@ -90,7 +97,7 @@ public class FileGameHandler {
       jsonArray.add(jsonObject);
     }
     try (BufferedWriter writer = new BufferedWriter(
-            new FileWriter(pathOfFile.toLowerCase().trim()))) {
+        new FileWriter(pathOfFile.toLowerCase().trim()))) {
       writer.write(gson.toJson(jsonArray));
     } catch (IOException e) {
       String errorMessage = "Error writing the list of games to the file: " + e.getMessage();
@@ -104,28 +111,25 @@ public class FileGameHandler {
    *
    * @param pathOfFile the path ot the file to read from.
    * @return the list of Game objects read from the file.
-   * @throws NullPointerException if the pathOfFile is null.
+   * @throws NullPointerException     if the pathOfFile is null.
    * @throws IllegalArgumentException if pathOfFile is blank or does not end with FILE_EXTENSION.
-   * @throws IOException if there is an error reading list of games from file.
-   * @throws JsonSyntaxException if the file does not have the correct JSON syntax.
+   * @throws IOException              if there is an error reading list of games from file.
+   * @throws JsonSyntaxException      if the file does not have the correct JSON syntax.
    */
-  public static List<Game> parseGamesFromFile(String pathOfFile) throws NullPointerException,
-          IllegalArgumentException, IOException, JsonSyntaxException {
+  public static List<Game> parseGamesFromFile(String pathOfFile)
+      throws NullPointerException, IllegalArgumentException, IOException, JsonSyntaxException {
 
     FilePathValidator.validatePathOfFile(pathOfFile, FILE_EXTENSION);
     invalidGames.clear();
 
-    Gson gson = new GsonBuilder()
-            .registerTypeAdapter(Action.class, new ActionDeserializer())
-            .registerTypeAdapter(Goal.class, new GoalDeserializer())
-            .setPrettyPrinting()
-            .setLenient()
-            .create();
+    Gson gson = new GsonBuilder().registerTypeAdapter(Action.class, new ActionDeserializer())
+        .registerTypeAdapter(Goal.class, new GoalDeserializer()).setPrettyPrinting().setLenient()
+        .create();
 
     List<Game> games = new ArrayList<>();
 
     try (BufferedReader reader = new BufferedReader(
-            new FileReader(pathOfFile.toLowerCase().trim()))) {
+        new FileReader(pathOfFile.toLowerCase().trim()))) {
       JsonArray jsonArray = gson.fromJson(reader, JsonArray.class);
       if (jsonArray != null) {
         for (JsonElement jsonElement : jsonArray) {
@@ -138,30 +142,33 @@ public class FileGameHandler {
 
             String storyTitle = gson.fromJson(jsonObject.get(STORY_TITLE_KEY), String.class);
 
-            Passage openingPassage = gson.fromJson(jsonObject
-                    .get(STORY_OPENING_PASSAGE_KEY), Passage.class);
+            Passage openingPassage = gson.fromJson(jsonObject.get(STORY_OPENING_PASSAGE_KEY),
+                Passage.class);
 
-            Passage currentPassage = gson.fromJson(jsonObject
-                    .get(STORY_CURRENT_PASSAGE_KEY), Passage.class);
+            Passage currentPassage = gson.fromJson(jsonObject.get(STORY_CURRENT_PASSAGE_KEY),
+                Passage.class);
 
             Story story = new Story(storyTitle, openingPassage);
 
             story.setCurrentPassage(currentPassage);
 
             List<Passage> passages = gson.fromJson(jsonObject.get(STORY_PASSAGES_KEY),
-                    new TypeToken<List<Passage>>(){}.getType());
+                new TypeToken<List<Passage>>() {
+                }.getType());
             for (Passage passage : passages) {
               story.addPassage(passage);
             }
 
             List<Goal> goals = gson.fromJson(jsonObject.get(GOALS_KEY),
-                    new TypeToken<List<Goal>>() {}.getType());
+                new TypeToken<List<Goal>>() {
+                }.getType());
 
             Game game = new Game(gameId, player, story, goals);
             games.add(game);
           } catch (JsonParseException | NullPointerException | IllegalArgumentException e) {
-            String errorMessage = "Failed to load game: " + jsonObject.get(GAME_ID_KEY) + ". "
-                    + e.getMessage() + " The current game cannot be played before it is fixed.";
+            String errorMessage =
+                "Failed to load game: " + jsonObject.get(GAME_ID_KEY) + ". " + e.getMessage()
+                    + " The current game cannot be played before it is fixed.";
 
             logger.log(Level.WARNING, errorMessage, e);
             invalidGames.add(errorMessage);
@@ -181,9 +188,8 @@ public class FileGameHandler {
   }
 
   /**
-   * The method retrieves a list containing information
-   * about the invalid games that were not successfully
-   * read from the file.
+   * The method retrieves a list containing information about the invalid games that were not
+   * successfully read from the file.
    *
    * @return list of invalid games.
    */
