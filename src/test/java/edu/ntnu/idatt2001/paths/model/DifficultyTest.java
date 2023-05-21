@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2001.paths;
+package edu.ntnu.idatt2001.paths.model;
 
 import edu.ntnu.idatt2001.paths.model.Difficulty;
 import org.junit.jupiter.api.DisplayName;

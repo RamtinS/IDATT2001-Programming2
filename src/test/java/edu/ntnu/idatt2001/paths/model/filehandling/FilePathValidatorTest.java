@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2001.paths.filehandling;
+package edu.ntnu.idatt2001.paths.model.filehandling;
 
 import edu.ntnu.idatt2001.paths.model.filehandling.FilePathValidator;
 import org.junit.jupiter.api.DisplayName;

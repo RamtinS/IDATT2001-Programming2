@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2001.paths.filehandling;
+package edu.ntnu.idatt2001.paths.model.filehandling;
 
 import com.google.gson.JsonSyntaxException;
 import edu.ntnu.idatt2001.paths.model.Game;
@@ -11,7 +11,6 @@ import edu.ntnu.idatt2001.paths.model.actions.GoldAction;
 import edu.ntnu.idatt2001.paths.model.actions.HealthAction;
 import edu.ntnu.idatt2001.paths.model.actions.InventoryAction;
 import edu.ntnu.idatt2001.paths.model.actions.ScoreAction;
-import edu.ntnu.idatt2001.paths.model.filehandling.FileGameHandler;
 import edu.ntnu.idatt2001.paths.model.goals.Goal;
 import edu.ntnu.idatt2001.paths.model.goals.GoldGoal;
 import edu.ntnu.idatt2001.paths.model.goals.HealthGoal;

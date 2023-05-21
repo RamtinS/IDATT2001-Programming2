@@ -1,7 +1,7 @@
-package edu.ntnu.idatt2001.paths.goals;
+package edu.ntnu.idatt2001.paths.model.goals;
 
 import edu.ntnu.idatt2001.paths.model.Player;
-import edu.ntnu.idatt2001.paths.model.goals.GoldGoal;
+import edu.ntnu.idatt2001.paths.model.goals.HealthGoal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,80 +9,80 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * The class tests the GoldGoal class.
+ * The class tests the HealthGoal class.
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
- * @since May 6, 2023.
+ * @since March 29, 2023.
  */
-class GoldGoalTest {
-  private GoldGoal goldGoal;
+class HealthGoalTest {
+  private HealthGoal healthGoal;
 
   @BeforeEach
   void setUp() {
-    goldGoal = new GoldGoal(10);
+    healthGoal = new HealthGoal(10);
   }
 
   @Test
   @DisplayName("Test constructor valid input")
   void testConstructorValidInput() {
-    int minimumGold = 5;
-    GoldGoal testGoldGoalConstructor = new GoldGoal(minimumGold);
-    assertEquals(minimumGold, testGoldGoalConstructor.getMinimumGold());
+    int minimumHealth = 5;
+    HealthGoal testHealthGoalConstructor = new HealthGoal(minimumHealth);
+    assertEquals(minimumHealth, testHealthGoalConstructor.getMinimumHealth());
   }
 
   @Test
   @DisplayName("Test constructor invalid input throws IllegalArgumentException")
   void testConstructorInvalidInputThrowsIllegalArgumentException() {
-    int invalidMinimumGold = -5;
-    assertThrows(IllegalArgumentException.class, () -> new GoldGoal(invalidMinimumGold));
+    int invalidMinimumHealth = -5;
+    assertThrows(IllegalArgumentException.class, () -> new HealthGoal(invalidMinimumHealth));
   }
 
   @Test
-  @DisplayName("Should get minimum gold")
-  void shouldGetMinimumGold() {
-    int expectedGold = 10;
-    int actualGold = goldGoal.getMinimumGold();
-    assertEquals(expectedGold, actualGold);
+  @DisplayName("Should get minimum health")
+  void shouldGetMinimumHealth() {
+    int expectedHealth = 10;
+    int actualHealth = healthGoal.getMinimumHealth();
+    assertEquals(expectedHealth, actualHealth);
   }
 
   @Test
   @DisplayName("Goal is fulfilled")
   void goalIsFulfilled() {
     Player validPlayer  = new Player.PlayerBuilder("Test name")
-            .gold(50)
+            .health(100)
             .build();
-    assertTrue(goldGoal.isFulfilled(validPlayer));
+    assertTrue(healthGoal.isFulfilled(validPlayer));
   }
 
   @Test
   @DisplayName("Goal is not fulfilled")
   void goalIsNotFulfilled() {
     Player invalidPlayer  = new Player.PlayerBuilder("Test name")
-            .gold(5)
+            .health(5)
             .build();
-    assertFalse(goldGoal.isFulfilled(invalidPlayer));
+    assertFalse(healthGoal.isFulfilled(invalidPlayer));
   }
 
   @Test
   @DisplayName("Goal is not fulfilled throws NullPointerException")
   void goalIsNotFulfilledThrowsNullPointerException() {
     Player invalidPlayer = null;
-    assertThrows(NullPointerException.class, () -> goldGoal.isFulfilled(invalidPlayer));
+    assertThrows(NullPointerException.class, () -> healthGoal.isFulfilled(invalidPlayer));
   }
 
   @Test
   @DisplayName("Test equals method")
   void testEqualsMethod() {
-    GoldGoal goldGoalEqual = new GoldGoal(10);
-    assertEquals(goldGoal, goldGoalEqual);
+    HealthGoal healthGoalEqual = new HealthGoal(10);
+    assertEquals(healthGoal, healthGoalEqual);
   }
 
   @Test
   @DisplayName("Test toString")
   void testToString() {
-    String expected = "Gold goal:10";
-    String actual = goldGoal.toString();
+    String expected = "Health goal:10";
+    String actual = healthGoal.toString();
     assertEquals(expected, actual);
   }
 }
