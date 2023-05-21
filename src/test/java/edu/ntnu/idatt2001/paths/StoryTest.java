@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -204,7 +205,7 @@ class StoryTest {
     @Test
     @DisplayName("Should not get passage throws IllegalStateException")
     void shouldNotGetPassageThrowsIllegalStateException() {
-      assertThrows(IllegalStateException.class, () -> story.getPassage(link2));
+      assertThrows(NoSuchElementException.class, () -> story.getPassage(link2));
     }
 
     @Test

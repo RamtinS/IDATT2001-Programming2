@@ -3,6 +3,7 @@ package edu.ntnu.idatt2001.paths.model;
 import edu.ntnu.idatt2001.paths.goals.Goal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /**
@@ -116,11 +117,11 @@ public class Game {
    * @param link The link used to find the corresponding passage
    * @return Passage from the corresponding link.
    * @throws NullPointerException If the link is null.
-   * @throws IllegalStateException If the passage is not found.
+   * @throws NoSuchElementException If the passage is not found.
    */
-  public Passage go(Link link) throws NullPointerException, IllegalStateException {
+  public Passage go(Link link) throws NullPointerException, NoSuchElementException {
     if (link == null) {
-      throw new NullPointerException("Link cannot be null");
+      throw new NullPointerException("Link cannot be null.");
     }
     return story.getPassage(link);
   }

@@ -1,11 +1,10 @@
 package edu.ntnu.idatt2001.paths.model;
 
-import edu.ntnu.idatt2001.paths.model.Link;
-import edu.ntnu.idatt2001.paths.model.Passage;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -109,9 +108,9 @@ public class Story {
    * @param link The link that will be used to search for matching passages.
    * @return The passage corresponding to the link.
    * @throws NullPointerException If the link is null.
-   * @throws IllegalStateException If the passage is not found.
+   * @throws NoSuchElementException If the passage is not found.
    */
-  public Passage getPassage(Link link) throws NullPointerException, IllegalStateException {
+  public Passage getPassage(Link link) throws NullPointerException, NoSuchElementException {
     if (link == null) {
       throw new NullPointerException("Link cannot be null.");
     }
@@ -123,7 +122,7 @@ public class Story {
       passage = this.passages.get(passageLink);
     }
     if (passage == null) {
-      throw new IllegalStateException("Passage not found: " + link.getReference());
+      throw new NoSuchElementException("Passage not found: " + link.getReference());
     }
     return passage;
   }
