@@ -16,7 +16,6 @@ import edu.ntnu.idatt2001.paths.view.menus.CreateGameMenu;
 import edu.ntnu.idatt2001.paths.view.menus.MainMenu;
 import edu.ntnu.idatt2001.paths.view.menus.StoredGamesMenu;
 import edu.ntnu.idatt2001.paths.view.menus.Tutorial;
-import edu.ntnu.idatt2001.paths.view.storycreation.ScrollableStoryCreator;
 import edu.ntnu.idatt2001.paths.model.Difficulty;
 import edu.ntnu.idatt2001.paths.model.Game;
 import edu.ntnu.idatt2001.paths.model.Link;
@@ -24,6 +23,7 @@ import edu.ntnu.idatt2001.paths.model.Passage;
 import edu.ntnu.idatt2001.paths.model.Player;
 import edu.ntnu.idatt2001.paths.model.Story;
 import edu.ntnu.idatt2001.paths.model.tts.TextToSpeech;
+import edu.ntnu.idatt2001.paths.view.storycreation.StoryCreator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -476,10 +476,10 @@ public class PathsApp extends Application {
    */
   private void loadStoryCreator(Stage stage) {
     try {
-      ScrollableStoryCreator scrollableStoryCreator = new ScrollableStoryCreator(FRAME_WIDTH,
+      StoryCreator storyCreator = new StoryCreator(FRAME_WIDTH,
               FRAME_HEIGHT, storyCreatorListener);
       stage.setResizable(false);
-      loadScene(stage, scrollableStoryCreator);
+      loadScene(stage, storyCreator);
     } catch (NullPointerException e) {
       logAndDisplayError(e, e.getMessage(), Level.SEVERE, AlertType.ERROR);
     }
