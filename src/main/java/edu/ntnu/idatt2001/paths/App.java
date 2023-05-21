@@ -37,10 +37,9 @@ import javafx.stage.Stage;
 import org.controlsfx.control.Notifications;
 
 /**
- * The class is the main entry point for the Paths application.
- * It extends the JavaFX Application class and provides the necessary methods
- * for users to create their own games, load existing games, creat their own stories,
- * and learn from the tutorial.
+ * The class is the main entry point for the Paths application. It extends the JavaFX Application
+ * class and provides the necessary methods for users to create their own games, load existing
+ * games, creat their own stories, and learn from the tutorial.
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
@@ -52,7 +51,7 @@ public class App extends Application {
   private static final int FRAME_HEIGHT = 600;
   private static final int FRAME_WIDTH = 1000;
   private static final String STANDARD_STYLING =
-      "file:src/main/resources/stylesheets/StandardStyling.css";
+      "file:src/main/resources/stylesheets" + "/StandardStyling.css";
   private Game currentGame;
   private Passage currentPassage;
   private String pathOfStoryFile;
@@ -82,8 +81,8 @@ public class App extends Application {
   public void start(Stage stage) {
     try {
       GameManager.initialize("src/main/resources/games/game_objects.json");
-    } catch (IllegalArgumentException | NullPointerException | IllegalStateException
-             | IOException e) {
+    } catch (IllegalArgumentException | NullPointerException | IllegalStateException |
+             IOException e) {
       logAndDisplayError(e, Level.SEVERE, AlertType.ERROR);
     }
     completedGoals = new ArrayList<>();
@@ -102,7 +101,7 @@ public class App extends Application {
   /**
    * The method sets a stylesheet for the given scene.
    *
-   * @param scene The scene to apply the stylesheet to.
+   * @param scene    The scene to apply the stylesheet to.
    * @param filePath The file path of the stylesheet to be applied.
    */
   private void setStyleSheet(Scene scene, String filePath) {
@@ -149,6 +148,7 @@ public class App extends Application {
        */
       @Override
       public void onRestartClicked() {
+        completedGoals.clear();
         loadNewBaseFrame(stage, currentGame.resetGame(getOriginalStory()));
       }
 
@@ -167,8 +167,8 @@ public class App extends Application {
             GameManager.getInstance().saveGame(currentGame, currentPassage);
             loadMainMenu(stage);
 
-          } catch (IOException | NullPointerException | IllegalArgumentException
-                   | IllegalStateException e) {
+          } catch (IOException | NullPointerException | IllegalArgumentException |
+                   IllegalStateException e) {
 
             String errorMessage = "The game could not be saved due to an error: " + e.getMessage();
             logger.log(Level.SEVERE, errorMessage, e);
@@ -193,19 +193,7 @@ public class App extends Application {
           action.execute(currentGame.getPlayer());
         }
 
-        for (Goal goal : currentGame.getGoals()) {
-          if (goal.isFulfilled(currentGame.getPlayer())) {
-            if (completedGoals.contains(goal)) {
-              break;
-            }
-            completedGoals.add(goal);
-            Notifications.create()
-                .title("Goal achieved")
-                .text(goal.toString())
-                .threshold(3, Notifications.create().title("Collapsed Notification"))
-                .showWarning();
-          }
-        }
+        checkForGoals(currentGame.getGoals(), currentGame.getPlayer());
 
         link.getActions().clear();
         BaseFrame newFrame;
@@ -226,6 +214,7 @@ public class App extends Application {
         stage.show();
 
         if (currentGame.getPlayer().getHealth() <= 0) {
+          completedGoals.clear();
           TextToSpeech.getInstance().resetSpeech();
           Alert alert = new Alert(AlertType.INFORMATION, "The game is finished, you have died.");
           alert.showAndWait();
@@ -233,6 +222,7 @@ public class App extends Application {
         }
 
         if (currentGame.getStory().getPassage(link).getLinks().isEmpty()) {
+          completedGoals.clear();
           Alert alert = new Alert(AlertType.INFORMATION, "Congratulations you have won the game.");
           alert.showAndWait();
           currentGame.resetGame(getOriginalStory());
@@ -240,6 +230,26 @@ public class App extends Application {
         }
       }
     };
+  }
+
+  /**
+   * Checks if there are any achieved goals in a list of goals on a given player.
+   * <p>
+   * If the goal is fulfilled, a notification will be shown to the user, containing information
+   * about the achieved goal.
+   * </p>
+   *
+   * @param goals  The used to look for achieved goals
+   * @param player The
+   */
+  private void checkForGoals(List<Goal> goals, Player player) {
+    for (Goal goal : goals) {
+      if (goal.isFulfilled(player) && !completedGoals.contains(goal)) {
+        completedGoals.add(goal);
+        Notifications.create().title("Goal achieved").text(goal.toString())
+            .threshold(10, Notifications.create().title("Collapsed Notification")).showWarning();
+      }
+    }
   }
 
   /**
@@ -266,16 +276,15 @@ public class App extends Application {
        * @param chosenDifficulty The chosen difficulty for the game
        */
       @Override
-      public void onCreateClicked(String pathOfFile, List<Goal> chosenGoals,
-                                  String gameId, String playerName,
-                                  Difficulty chosenDifficulty, Story selectedStory) {
+      public void onCreateClicked(String pathOfFile, List<Goal> chosenGoals, String gameId,
+                                  String playerName, Difficulty chosenDifficulty,
+                                  Story selectedStory) {
         pathOfStoryFile = pathOfFile;
-        Player player = new Player.PlayerBuilder(playerName)
-                .health(chosenDifficulty.getHealth())
-                .build();
+        Player player = new Player.PlayerBuilder(playerName).health(chosenDifficulty.getHealth())
+            .build();
         try {
           currentGame = GameManager.getInstance()
-                  .createGame(gameId, player, selectedStory, chosenGoals);
+              .createGame(gameId, player, selectedStory, chosenGoals);
           loadNewBaseFrame(stage, currentGame.getStory().getOpeningPassage());
         } catch (NullPointerException | IllegalArgumentException | IllegalStateException e) {
           logAndDisplayError(e, Level.WARNING, AlertType.WARNING);
@@ -438,7 +447,7 @@ public class App extends Application {
   private void loadCreateGameMenu(Stage stage) {
     try {
       CreateGameMenu createGameMenu = new CreateGameMenu(FRAME_WIDTH, FRAME_HEIGHT,
-              createGameListener);
+          createGameListener);
       loadScene(stage, createGameMenu);
     } catch (NullPointerException e) {
       logAndDisplayError(e, Level.SEVERE, AlertType.ERROR);
@@ -453,7 +462,7 @@ public class App extends Application {
   private void loadNewBaseFrame(Stage stage, Passage passage) {
     try {
       BaseFrame currentFrame = new BaseFrame(currentGame.getStory().getTitle(), passage,
-              currentGame.getPlayer(), FRAME_WIDTH, FRAME_HEIGHT, baseFrameListener);
+          currentGame.getPlayer(), FRAME_WIDTH, FRAME_HEIGHT, baseFrameListener);
       this.currentPassage = passage;
       loadScene(stage, currentFrame);
     } catch (NullPointerException e) {
@@ -469,7 +478,7 @@ public class App extends Application {
   private void loadStoryCreator(Stage stage) {
     try {
       ScrollableStoryCreator scrollableStoryCreator = new ScrollableStoryCreator(FRAME_WIDTH,
-              FRAME_HEIGHT, storyCreatorListener);
+          FRAME_HEIGHT, storyCreatorListener);
       stage.setResizable(false);
       loadScene(stage, scrollableStoryCreator);
     } catch (NullPointerException e) {
@@ -485,7 +494,7 @@ public class App extends Application {
   private void loadStoredGames(Stage stage) {
     try {
       StoredGamesMenu loadStoredGamesMenu = new StoredGamesMenu(FRAME_WIDTH, FRAME_HEIGHT,
-              loadStoredGamesListener);
+          loadStoredGamesListener);
       loadScene(stage, loadStoredGamesMenu);
     } catch (NullPointerException | IllegalStateException e) {
       logAndDisplayError(e, Level.SEVERE, AlertType.ERROR);
@@ -508,7 +517,7 @@ public class App extends Application {
    * The method loads the provided scene onto the specified stage.
    *
    * @param stage The stage to load the scene onto.
-   * @param root The root node of the scene.
+   * @param root  The root node of the scene.
    */
   private void loadScene(Stage stage, Parent root) {
     Scene scene = new Scene(root);
@@ -518,11 +527,11 @@ public class App extends Application {
   }
 
   /**
-   * The method handles the given exception by logging it
-   * and displaying an alert with the error message.
+   * The method handles the given exception by logging it and displaying an alert with the error
+   * message.
    *
-   * @param e The exception to be handled.
-   * @param level The log level to use for logging the exception.
+   * @param e         The exception to be handled.
+   * @param level     The log level to use for logging the exception.
    * @param alertType The type of alert to display.
    */
   private void logAndDisplayError(Exception e, Level level, AlertType alertType) {
