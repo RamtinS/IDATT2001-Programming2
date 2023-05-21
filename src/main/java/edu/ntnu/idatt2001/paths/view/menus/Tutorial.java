@@ -31,7 +31,6 @@ public class Tutorial extends BorderPane {
             "TutorialListener cannot be null.");
 
     GuiUtils.setBackgroundImage(this, "images/tutorial.png");
-    GuiUtils.setHeadline(this, "Tutorial", 40, 0, 30, 0, 30);
     GuiUtils.createReturnButton(this, "Return to main menu",
             tutorialListener::onReturnClicked, Pos.CENTER);
 
