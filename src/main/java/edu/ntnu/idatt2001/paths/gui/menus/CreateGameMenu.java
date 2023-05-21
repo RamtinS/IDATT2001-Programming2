@@ -11,15 +11,16 @@ import edu.ntnu.idatt2001.paths.gui.listeners.CheckListListener;
 import edu.ntnu.idatt2001.paths.gui.listeners.CreateGameListener;
 import edu.ntnu.idatt2001.paths.gui.uielements.CheckListView;
 import edu.ntnu.idatt2001.paths.gui.uielements.InputField;
-import edu.ntnu.idatt2001.paths.gui.utility.DimensionUtility;
 import edu.ntnu.idatt2001.paths.gui.utility.GuiUtils;
 import edu.ntnu.idatt2001.paths.model.Link;
 import edu.ntnu.idatt2001.paths.model.Story;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
@@ -81,7 +82,8 @@ public class CreateGameMenu extends BorderPane {
    * @throws NullPointerException if the listener is null.
    */
   public CreateGameMenu(double width, double height, CreateGameListener listener)
-          throws NullPointerException{
+          throws NullPointerException {
+
     this.listener = Objects.requireNonNull(listener, "CreateGameListener cannot be null.");
 
     buttonWidth = width / 4;
@@ -95,23 +97,13 @@ public class CreateGameMenu extends BorderPane {
     GuiUtils.createReturnButton(this, "Return", listener::onReturnClicked, Pos.TOP_CENTER);
 
     setPadding(new Insets(20));
-    setDimensions(width, height);
+    setPrefWidth(width);
+    setPrefHeight(height);
     createGrid();
     createUploadFilesHyperLink();
     addInputs();
     addInputLabels();
     addCreateGameButton();
-  }
-
-  /**
-   * Sets the current, minimum and preferred height and width to the specified values.
-   *
-   * @param width  The width of the frame.
-   * @param height The height of the frame.
-   */
-  private void setDimensions(double width, double height) {
-    DimensionUtility.changeAllPaneWidths(this, width);
-    DimensionUtility.changeAllPaneHeights(this, height);
   }
 
   /**
@@ -272,28 +264,16 @@ public class CreateGameMenu extends BorderPane {
       String pathOfFile = "src/main/resources/stories/" + storyBox.getValue();
       selectedStory = FileStoryHandler.readStoryFromFile(pathOfFile);
 
-      List<Link> brokenLinks = selectedStory.getBrokenLinks();
-      if (!brokenLinks.isEmpty()) {
-        String alertMessage = "The selected story has " + brokenLinks.size() + " broken links.";
-        for (Link link : brokenLinks) {
-          alertMessage = alertMessage.concat("\n" + link.getText() + "  ->  " + link.getReference());
-        }
-        alertMessage = alertMessage.concat("\nAre you sure you want to continue?");
+      if (invalidActionsAlert(FileStoryHandler.getInvalidActions())
+              && brokenLinksAlert(selectedStory.getBrokenLinks())) {
 
-        Alert alert = new Alert(AlertType.CONFIRMATION, alertMessage);
-        alert.showAndWait();
-        if (alert.getResult() != null && !alert.getResult().equals(ButtonType.OK)) {
-          return;
-        }
+        listener.onCreateClicked(pathOfFile, chosenGoals, id,
+                chosenName, getChosenDifficulty(), selectedStory);
       }
 
-      listener.onCreateClicked(pathOfFile, chosenGoals, id, chosenName, getChosenDifficulty(), selectedStory);
-
-    } catch (Exception e) {
-      logger.log(Level.SEVERE, "Error while creating game: " + e.getMessage(), e);
-      Alert alert = new Alert(AlertType.WARNING);
-      alert.setContentText("Something went wrong when creating the game: " + e.getMessage());
-      alert.showAndWait();
+    } catch (IllegalArgumentException | NullPointerException | IOException e) {
+      String errorMessage = "Error while creating game: " + e.getMessage();
+      logAndDisplayError(e, errorMessage, Level.SEVERE, AlertType.ERROR);
     }
   }
 
@@ -356,7 +336,7 @@ public class CreateGameMenu extends BorderPane {
    *
    * @return The difficulty that the user has chosen
    * @throws IllegalArgumentException If the difficultyBox does not have a difficulty.
-   * @throws NullPointerException     If the difficultyBox is null.
+   * @throws NullPointerException If the difficultyBox is null.
    */
   private Difficulty getChosenDifficulty() throws IllegalArgumentException, NullPointerException {
     return Difficulty.parseToDifficulty(difficultyBox.getValue().toString());
@@ -368,9 +348,8 @@ public class CreateGameMenu extends BorderPane {
    * @param location The location of the directory.
    * @return All files located in the given directory
    */
-  @SuppressWarnings("SameParameterValue")
   private String[] findAllDirectoryFiles(String location) {
-    return new File("src/main/resources/stories").list();
+    return new File(location).list();
   }
 
   /**
@@ -389,40 +368,110 @@ public class CreateGameMenu extends BorderPane {
       if (selectedFile == null) {
         return;
       }
-      Story story;
       try {
-        story = FileStoryHandler.readStoryFromFile(selectedFile.getPath());
-      } catch (Exception e) {
-        Alert alert = new Alert(AlertType.ERROR,
-            "Selected file could not be read because: " + e.getMessage());
-        alert.showAndWait();
-        return;
-      }
+        Story story = FileStoryHandler.readStoryFromFile(selectedFile.getPath());
+        if (brokenLinksAlert(story.getBrokenLinks())
+                && invalidActionsAlert(FileStoryHandler.getInvalidActions())) {
 
-      try {
-        List<Link> brokenLinks = story.getBrokenLinks();
-        if (!brokenLinks.isEmpty()) {
-          String errorMessage =
-              "The uploaded passage has: " + brokenLinks.size() + " broken links.";
-
-          errorMessage = errorMessage.concat("\nThese are the broken links:\n");
-          for (Link link : brokenLinks) {
-            errorMessage = errorMessage.concat("\n - " + link.getText());
-          }
-          errorMessage = errorMessage.concat("\n\nAre you sure you want to continue?");
-          Alert alert = new Alert(AlertType.CONFIRMATION, errorMessage);
-          alert.showAndWait();
-          if (alert.getResult().equals(ButtonType.CANCEL)) {
-            return;
-          }
+          String pathOfFile = story.getTitle().trim().toLowerCase().replace(" ", "_");
+          FileStoryHandler.writeStoryToFile(story,
+                  "src/main/resources/stories/" + pathOfFile + ".paths");
         }
-        FileStoryHandler.writeStoryToFile(story, "src/main/resources/stories/uploadStory.paths");
-
-      } catch (Exception e) {
-        Alert alert = new Alert(AlertType.ERROR,
-            "Could not write story to file because" + e.getMessage());
-        alert.showAndWait();
+      } catch (IllegalArgumentException | NullPointerException | IOException e) {
+        logAndDisplayError(e, e.getMessage(), Level.WARNING, AlertType.ERROR);
       }
     });
+  }
+
+  /**
+   * The method checks if there are any invalid actions in the provided list
+   * and displays a warning alert if any invalid actions are found.
+   *
+   * @param invalidActions the list of invalid actions to check.
+   * @return true if no invalid actions or of user confirms the continuation, false otherwise.
+   * @throws NullPointerException if the list of invalid actions is null.
+   */
+  private boolean invalidActionsAlert(List<String> invalidActions) throws NullPointerException {
+    if (invalidActions == null) {
+      throw new NullPointerException("The list of invalid actions cannot be null.");
+    }
+
+    if (!invalidActions.isEmpty()) {
+      StringBuilder stringBuilder = new StringBuilder()
+              .append("The chosen story has ")
+              .append(invalidActions.size())
+              .append(" invalid actions.");
+      for (String action : invalidActions) {
+        stringBuilder.append("\n - ").append(action);
+      }
+      stringBuilder.append("\n\nAre you sure you want to continue?");
+      return createConfirmationAlert(AlertType.WARNING, stringBuilder.toString());
+    }
+    return true;
+  }
+
+  /**
+   * The method checks if there are any broken links in the provided list
+   * and displays a warning alert if any broken links are found.
+   *
+   * @param brokenLinks the list of broken links to check.
+   * @return true if no broken links or of user confirms the continuation, false otherwise.
+   * @throws NullPointerException if the list of broken links is null.
+   */
+  private boolean brokenLinksAlert(List<Link> brokenLinks) throws NullPointerException {
+    if (brokenLinks == null) {
+      throw new NullPointerException("The list of broken links cannot be null.");
+    }
+
+    if (!brokenLinks.isEmpty()) {
+      StringBuilder stringBuilder = new StringBuilder()
+              .append("The chosen story has ")
+              .append(brokenLinks.size())
+              .append(" broken links..");
+      for (Link link : brokenLinks) {
+        stringBuilder
+                .append("\n - ")
+                .append(link.getText())
+                .append("  ->  ")
+                .append(link.getReference());
+      }
+      stringBuilder.append("\n\nAre you sure you want to continue?");
+      return createConfirmationAlert(AlertType.WARNING, stringBuilder.toString());
+    }
+    return true;
+  }
+
+  /**
+   * The method creates and displays an alert dialog with the
+   * specified alert type and message. The alert contains custom
+   * buttons, "Yes" and "No".
+   *
+   * @param alertType the type of the alert.
+   * @param alterMessage the type of the alert.
+   * @return true if the yes button is clicked, false otherwise.
+   */
+  private boolean createConfirmationAlert(AlertType alertType, String alterMessage) {
+    Alert alert = new Alert(alertType, alterMessage);
+    ButtonType yesButton = new ButtonType("Yes");
+    ButtonType noButton = new ButtonType("No");
+    alert.getButtonTypes().setAll(yesButton, noButton);
+    Optional<ButtonType> result = alert.showAndWait();
+    return result.isPresent() && result.get() == yesButton;
+  }
+
+  /**
+   * The method creates and displays an alert dialog with the
+   * specified exception, error message, log level, and alert type.
+   *
+   * @param e the exception to be logged.
+   * @param errorMessage the error message to be logged and displayed.
+   * @param level the log level for logging the exception.
+   * @param alertType the type of the alert.
+   */
+  private void logAndDisplayError(Exception e, String errorMessage,
+                                  Level level, AlertType alertType) {
+    logger.log(level, errorMessage, e);
+    Alert alert = new Alert(alertType, errorMessage);
+    alert.showAndWait();
   }
 }
