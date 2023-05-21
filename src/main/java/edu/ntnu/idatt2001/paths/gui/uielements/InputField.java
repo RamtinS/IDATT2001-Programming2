@@ -1,6 +1,5 @@
 package edu.ntnu.idatt2001.paths.gui.uielements;
 
-import edu.ntnu.idatt2001.paths.gui.utility.DimensionUtility;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -35,8 +34,8 @@ public class InputField extends HBox {
 
     shouldHaveText = false;
     shouldBePositiveInteger = false;
-    DimensionUtility.changeAllPaneHeights(this, height);
-    DimensionUtility.changeAllPaneWidths(this, width);
+    setPrefWidth(width);
+    setPrefHeight(height);
     textArea = new TextArea();
     textArea.setPrefRowCount(1);
     textArea.setWrapText(true);
