@@ -26,10 +26,12 @@ import edu.ntnu.idatt2001.paths.tts.TextToSpeech;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -53,7 +55,7 @@ public class App extends Application {
   private static final int FRAME_HEIGHT = 650;
   private static final int FRAME_WIDTH = 1050;
   private static final String STANDARD_STYLING =
-      "file:src/main/resources/stylesheets" + "/StandardStyling.css";
+      "file:src/main/resources/stylesheets/standard.css";
   private Game currentGame;
   private Passage currentPassage;
   private String pathOfStoryFile;
@@ -201,9 +203,9 @@ public class App extends Application {
           newFrame = new BaseFrame(currentGame.getStory().getTitle(), currentGame.go(link),
               currentGame.getPlayer(), FRAME_WIDTH, FRAME_HEIGHT, this);
           currentPassage = currentGame.go(link);
-        } catch (NullPointerException | IllegalArgumentException e) {
-          String errorMessage = "Unable to continue the story: " + e.getMessage();
-          logAndDisplayError(e, errorMessage, Level.SEVERE, AlertType.ERROR);
+        } catch (NullPointerException | NoSuchElementException e) {
+          String errorMessage = "Unable to continue the story. " + e.getMessage();
+          logAndDisplayError(e, errorMessage, Level.WARNING, AlertType.WARNING);
           return;
         }
         Scene scene = new Scene(newFrame);
@@ -217,14 +219,9 @@ public class App extends Application {
           Alert alert = new Alert(AlertType.INFORMATION, "The game is finished, you have died.");
           alert.showAndWait();
           loadNewBaseFrame(stage, currentGame.resetGame(getOriginalStory()));
-        }
-
-        if (currentGame.getStory().getPassage(link).getLinks().isEmpty()) {
-          completedGoals.clear();
+        } else if (currentGame.getStory().getPassage(link).getLinks().isEmpty()) {
           Alert alert = new Alert(AlertType.INFORMATION, "Congratulations you have won the game.");
           alert.showAndWait();
-          currentGame.resetGame(getOriginalStory());
-          loadMainMenu(stage);
         }
       }
     };
@@ -245,7 +242,9 @@ public class App extends Application {
       if (goal.isFulfilled(player) && !completedGoals.contains(goal)) {
         completedGoals.add(goal);
         Notifications.create().title("Goal achieved").text(goal.toString())
-                .threshold(10, Notifications.create().title("Collapsed Notification")).showWarning();
+                .threshold(10, Notifications.create().title("Collapsed Notification"))
+                .position(Pos.TOP_RIGHT)
+                .showWarning();
       }
     }
   }
