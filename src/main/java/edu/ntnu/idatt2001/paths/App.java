@@ -329,7 +329,8 @@ public class App extends Application {
        */
       @Override
       public void onExitClicked() {
-        stage.close();
+        Platform.exit();
+        System.exit(0);
       }
     };
   }
