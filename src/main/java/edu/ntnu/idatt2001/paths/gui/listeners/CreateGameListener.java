@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2001.paths.gui.listeners;
 
-import edu.ntnu.idatt2001.paths.Difficulty;
-import edu.ntnu.idatt2001.paths.goals.Goal;
+import edu.ntnu.idatt2001.paths.model.Difficulty;
+import edu.ntnu.idatt2001.paths.model.goals.Goal;
 import edu.ntnu.idatt2001.paths.model.Story;
 import java.util.List;
 

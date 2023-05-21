@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2001.paths.filehandling;
+package edu.ntnu.idatt2001.paths.model.filehandling;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -8,8 +8,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import edu.ntnu.idatt2001.paths.actions.Action;
-import edu.ntnu.idatt2001.paths.goals.Goal;
+import edu.ntnu.idatt2001.paths.model.actions.Action;
+import edu.ntnu.idatt2001.paths.model.goals.Goal;
 import edu.ntnu.idatt2001.paths.model.Game;
 import edu.ntnu.idatt2001.paths.model.Passage;
 import edu.ntnu.idatt2001.paths.model.Player;

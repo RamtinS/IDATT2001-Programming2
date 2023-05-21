@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2001.paths.tts;
+package edu.ntnu.idatt2001.paths.model.tts;
 
 import java.beans.PropertyVetoException;
 import java.util.Locale;

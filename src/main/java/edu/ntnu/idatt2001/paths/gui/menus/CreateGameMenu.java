@@ -1,12 +1,12 @@
 package edu.ntnu.idatt2001.paths.gui.menus;
 
-import edu.ntnu.idatt2001.paths.Difficulty;
-import edu.ntnu.idatt2001.paths.filehandling.FileStoryHandler;
-import edu.ntnu.idatt2001.paths.goals.Goal;
-import edu.ntnu.idatt2001.paths.goals.GoldGoal;
-import edu.ntnu.idatt2001.paths.goals.HealthGoal;
-import edu.ntnu.idatt2001.paths.goals.InventoryGoal;
-import edu.ntnu.idatt2001.paths.goals.ScoreGoal;
+import edu.ntnu.idatt2001.paths.model.Difficulty;
+import edu.ntnu.idatt2001.paths.model.filehandling.FileStoryHandler;
+import edu.ntnu.idatt2001.paths.model.goals.Goal;
+import edu.ntnu.idatt2001.paths.model.goals.GoldGoal;
+import edu.ntnu.idatt2001.paths.model.goals.HealthGoal;
+import edu.ntnu.idatt2001.paths.model.goals.InventoryGoal;
+import edu.ntnu.idatt2001.paths.model.goals.ScoreGoal;
 import edu.ntnu.idatt2001.paths.gui.listeners.CheckListListener;
 import edu.ntnu.idatt2001.paths.gui.listeners.CreateGameListener;
 import edu.ntnu.idatt2001.paths.gui.uielements.CheckListView;

@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2001.paths.model;
 
-import edu.ntnu.idatt2001.paths.actions.Action;
+import edu.ntnu.idatt2001.paths.model.actions.Action;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

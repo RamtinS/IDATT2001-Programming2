@@ -1,7 +1,7 @@
-package edu.ntnu.idatt2001.paths.filehandling;
+package edu.ntnu.idatt2001.paths.model.filehandling;
 
-import edu.ntnu.idatt2001.paths.actions.Action;
-import edu.ntnu.idatt2001.paths.actions.ActionFactory;
+import edu.ntnu.idatt2001.paths.model.actions.Action;
+import edu.ntnu.idatt2001.paths.model.actions.ActionFactory;
 import edu.ntnu.idatt2001.paths.model.Link;
 import edu.ntnu.idatt2001.paths.model.Passage;
 import edu.ntnu.idatt2001.paths.model.Story;

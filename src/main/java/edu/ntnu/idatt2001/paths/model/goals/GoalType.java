@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2001.paths.goals;
+package edu.ntnu.idatt2001.paths.model.goals;
 
 /**
  * Enum representing different types of goals.

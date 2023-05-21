@@ -1,8 +1,8 @@
 package edu.ntnu.idatt2001.paths.gui.storycreation;
 
-import edu.ntnu.idatt2001.paths.actions.Action;
-import edu.ntnu.idatt2001.paths.actions.ActionFactory;
-import edu.ntnu.idatt2001.paths.actions.ActionType;
+import edu.ntnu.idatt2001.paths.model.actions.Action;
+import edu.ntnu.idatt2001.paths.model.actions.ActionFactory;
+import edu.ntnu.idatt2001.paths.model.actions.ActionType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

@@ -2,7 +2,7 @@ package edu.ntnu.idatt2001.paths.gui.menus;
 
 import edu.ntnu.idatt2001.paths.gui.listeners.MainMenuListener;
 import edu.ntnu.idatt2001.paths.gui.utility.GuiUtils;
-import edu.ntnu.idatt2001.paths.tts.TextToSpeech;
+import edu.ntnu.idatt2001.paths.model.tts.TextToSpeech;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;

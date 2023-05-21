@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2001.paths.gui.storycreation;
 
-import edu.ntnu.idatt2001.paths.filehandling.FileStoryHandler;
+import edu.ntnu.idatt2001.paths.model.filehandling.FileStoryHandler;
 import edu.ntnu.idatt2001.paths.gui.listeners.StoryCreatorListener;
 import edu.ntnu.idatt2001.paths.model.Passage;
 import edu.ntnu.idatt2001.paths.model.Story;

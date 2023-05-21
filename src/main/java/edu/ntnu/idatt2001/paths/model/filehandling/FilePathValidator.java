@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2001.paths.filehandling;
+package edu.ntnu.idatt2001.paths.model.filehandling;
 
 /**
  * The FilePathValidator class is used to validate the path of a file.

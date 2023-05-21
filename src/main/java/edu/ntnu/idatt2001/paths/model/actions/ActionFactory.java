@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2001.paths.actions;
+package edu.ntnu.idatt2001.paths.model.actions;
 
 /**
  * The ActionFactory class is responsible for creating action objects based on action descriptions

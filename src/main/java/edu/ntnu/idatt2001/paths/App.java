@@ -1,10 +1,10 @@
 package edu.ntnu.idatt2001.paths;
 
 import com.google.gson.JsonSyntaxException;
-import edu.ntnu.idatt2001.paths.actions.Action;
+import edu.ntnu.idatt2001.paths.model.actions.Action;
 import edu.ntnu.idatt2001.paths.controller.GameManager;
-import edu.ntnu.idatt2001.paths.filehandling.FileStoryHandler;
-import edu.ntnu.idatt2001.paths.goals.Goal;
+import edu.ntnu.idatt2001.paths.model.filehandling.FileStoryHandler;
+import edu.ntnu.idatt2001.paths.model.goals.Goal;
 import edu.ntnu.idatt2001.paths.gui.listeners.BaseFrameListener;
 import edu.ntnu.idatt2001.paths.gui.listeners.CreateGameListener;
 import edu.ntnu.idatt2001.paths.gui.listeners.MainMenuListener;
@@ -17,12 +17,13 @@ import edu.ntnu.idatt2001.paths.gui.menus.MainMenu;
 import edu.ntnu.idatt2001.paths.gui.menus.StoredGamesMenu;
 import edu.ntnu.idatt2001.paths.gui.menus.Tutorial;
 import edu.ntnu.idatt2001.paths.gui.storycreation.ScrollableStoryCreator;
+import edu.ntnu.idatt2001.paths.model.Difficulty;
 import edu.ntnu.idatt2001.paths.model.Game;
 import edu.ntnu.idatt2001.paths.model.Link;
 import edu.ntnu.idatt2001.paths.model.Passage;
 import edu.ntnu.idatt2001.paths.model.Player;
 import edu.ntnu.idatt2001.paths.model.Story;
-import edu.ntnu.idatt2001.paths.tts.TextToSpeech;
+import edu.ntnu.idatt2001.paths.model.tts.TextToSpeech;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

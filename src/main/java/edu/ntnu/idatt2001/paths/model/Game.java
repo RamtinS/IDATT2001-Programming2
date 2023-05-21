@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2001.paths.model;
 
-import edu.ntnu.idatt2001.paths.goals.Goal;
+import edu.ntnu.idatt2001.paths.model.goals.Goal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;

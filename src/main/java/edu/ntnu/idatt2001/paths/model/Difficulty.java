@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2001.paths;
+package edu.ntnu.idatt2001.paths.model;
 
 import java.util.Arrays;
 
@@ -44,7 +44,7 @@ public enum Difficulty {
       throws IllegalArgumentException {
     return Arrays.stream(Difficulty.values())
         .filter(difficulty -> difficulty.toString().equalsIgnoreCase(difficultyAsString))
-        .findFirst().orElseThrow(() -> new IllegalArgumentException("Invalid difficulty"));
+        .findFirst().orElseThrow(() -> new IllegalArgumentException("Invalid difficulty."));
   }
 
   @Override

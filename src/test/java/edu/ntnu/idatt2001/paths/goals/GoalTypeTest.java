@@ -1,5 +1,10 @@
 package edu.ntnu.idatt2001.paths.goals;
 
+import edu.ntnu.idatt2001.paths.model.goals.GoalType;
+import edu.ntnu.idatt2001.paths.model.goals.GoldGoal;
+import edu.ntnu.idatt2001.paths.model.goals.HealthGoal;
+import edu.ntnu.idatt2001.paths.model.goals.InventoryGoal;
+import edu.ntnu.idatt2001.paths.model.goals.ScoreGoal;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

@@ -6,7 +6,7 @@ import edu.ntnu.idatt2001.paths.gui.utility.GuiUtils;
 import edu.ntnu.idatt2001.paths.model.Link;
 import edu.ntnu.idatt2001.paths.model.Passage;
 import edu.ntnu.idatt2001.paths.model.Player;
-import edu.ntnu.idatt2001.paths.tts.TextToSpeech;
+import edu.ntnu.idatt2001.paths.model.tts.TextToSpeech;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;

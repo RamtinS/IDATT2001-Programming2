@@ -1,12 +1,12 @@
-package edu.ntnu.idatt2001.paths.filehandling;
+package edu.ntnu.idatt2001.paths.model.filehandling;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import edu.ntnu.idatt2001.paths.actions.Action;
-import edu.ntnu.idatt2001.paths.actions.ActionType;
+import edu.ntnu.idatt2001.paths.model.actions.Action;
+import edu.ntnu.idatt2001.paths.model.actions.ActionType;
 import java.lang.reflect.Type;
 
 /**

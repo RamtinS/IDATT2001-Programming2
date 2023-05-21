@@ -8,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import edu.ntnu.idatt2001.paths.model.Player;
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.ntnu.idatt2001.paths.model.goals.InventoryGoal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2001.paths;
 
-import edu.ntnu.idatt2001.paths.goals.Goal;
-import edu.ntnu.idatt2001.paths.goals.HealthGoal;
+import edu.ntnu.idatt2001.paths.model.goals.Goal;
+import edu.ntnu.idatt2001.paths.model.goals.HealthGoal;
 import edu.ntnu.idatt2001.paths.model.Game;
 import edu.ntnu.idatt2001.paths.model.Link;
 import edu.ntnu.idatt2001.paths.model.Passage;

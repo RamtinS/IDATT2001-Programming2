@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2001.paths.gui.menus;
 
 import edu.ntnu.idatt2001.paths.controller.GameManager;
-import edu.ntnu.idatt2001.paths.filehandling.FileGameHandler;
+import edu.ntnu.idatt2001.paths.model.filehandling.FileGameHandler;
 import edu.ntnu.idatt2001.paths.gui.listeners.StoredGamesListener;
 import edu.ntnu.idatt2001.paths.gui.utility.GuiUtils;
 import edu.ntnu.idatt2001.paths.model.Game;
