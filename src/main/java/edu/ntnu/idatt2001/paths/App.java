@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2001.paths;
 
+import com.google.gson.JsonSyntaxException;
 import edu.ntnu.idatt2001.paths.actions.Action;
 import edu.ntnu.idatt2001.paths.controller.GameManager;
 import edu.ntnu.idatt2001.paths.filehandling.FileStoryHandler;
@@ -37,9 +38,10 @@ import javafx.stage.Stage;
 import org.controlsfx.control.Notifications;
 
 /**
- * The class is the main entry point for the Paths application. It extends the JavaFX Application
- * class and provides the necessary methods for users to create their own games, load existing
- * games, creat their own stories, and learn from the tutorial.
+ * The class is the main entry point for the Paths application.
+ * It extends the JavaFX Application class and provides the necessary
+ * methods for users to create their own games, load existing games,
+ * creat their own stories, and learn from the tutorial.
  *
  * @author Ramtin Samavat and Tobias Oftedal.
  * @version 1.0
@@ -48,8 +50,8 @@ import org.controlsfx.control.Notifications;
 public class App extends Application {
 
   private static final Logger logger = Logger.getLogger(App.class.getName());
-  private static final int FRAME_HEIGHT = 600;
-  private static final int FRAME_WIDTH = 1000;
+  private static final int FRAME_HEIGHT = 650;
+  private static final int FRAME_WIDTH = 1050;
   private static final String STANDARD_STYLING =
       "file:src/main/resources/stylesheets" + "/StandardStyling.css";
   private Game currentGame;
@@ -81,9 +83,9 @@ public class App extends Application {
   public void start(Stage stage) {
     try {
       GameManager.initialize("src/main/resources/games/game_objects.json");
-    } catch (IllegalArgumentException | NullPointerException | IllegalStateException |
-             IOException e) {
-      logAndDisplayError(e, Level.SEVERE, AlertType.ERROR);
+    } catch (IllegalArgumentException | NullPointerException | IllegalStateException
+             | IOException | JsonSyntaxException e) {
+      logAndDisplayError(e, e.getMessage(), Level.SEVERE, AlertType.ERROR);
     }
     completedGoals = new ArrayList<>();
     stage.setTitle("Paths");
@@ -101,7 +103,7 @@ public class App extends Application {
   /**
    * The method sets a stylesheet for the given scene.
    *
-   * @param scene    The scene to apply the stylesheet to.
+   * @param scene The scene to apply the stylesheet to.
    * @param filePath The file path of the stylesheet to be applied.
    */
   private void setStyleSheet(Scene scene, String filePath) {
@@ -130,7 +132,7 @@ public class App extends Application {
     try {
       story = FileStoryHandler.readStoryFromFile(pathOfStoryFile);
     } catch (NullPointerException | IllegalArgumentException | IOException e) {
-      logAndDisplayError(e, Level.SEVERE, AlertType.ERROR);
+      logAndDisplayError(e, e.getMessage(), Level.SEVERE, AlertType.ERROR);
     }
     return story;
   }
@@ -167,13 +169,11 @@ public class App extends Application {
             GameManager.getInstance().saveGame(currentGame, currentPassage);
             loadMainMenu(stage);
 
-          } catch (IOException | NullPointerException | IllegalArgumentException |
-                   IllegalStateException e) {
+          } catch (IOException | NullPointerException | IllegalArgumentException
+                   | IllegalStateException e) {
 
             String errorMessage = "The game could not be saved due to an error: " + e.getMessage();
-            logger.log(Level.SEVERE, errorMessage, e);
-            Alert alert = new Alert(AlertType.ERROR, errorMessage);
-            alert.showAndWait();
+            logAndDisplayError(e, errorMessage, Level.SEVERE, AlertType.ERROR);
             loadMainMenu(stage);
           }
         } else {
@@ -203,9 +203,7 @@ public class App extends Application {
           currentPassage = currentGame.go(link);
         } catch (NullPointerException | IllegalArgumentException e) {
           String errorMessage = "Unable to continue the story: " + e.getMessage();
-          logger.log(Level.SEVERE, errorMessage, e);
-          Alert alert = new Alert(AlertType.ERROR, errorMessage);
-          alert.showAndWait();
+          logAndDisplayError(e, errorMessage, Level.SEVERE, AlertType.ERROR);
           return;
         }
         Scene scene = new Scene(newFrame);
@@ -247,7 +245,7 @@ public class App extends Application {
       if (goal.isFulfilled(player) && !completedGoals.contains(goal)) {
         completedGoals.add(goal);
         Notifications.create().title("Goal achieved").text(goal.toString())
-            .threshold(10, Notifications.create().title("Collapsed Notification")).showWarning();
+                .threshold(10, Notifications.create().title("Collapsed Notification")).showWarning();
       }
     }
   }
@@ -276,18 +274,19 @@ public class App extends Application {
        * @param chosenDifficulty The chosen difficulty for the game
        */
       @Override
-      public void onCreateClicked(String pathOfFile, List<Goal> chosenGoals, String gameId,
-                                  String playerName, Difficulty chosenDifficulty,
-                                  Story selectedStory) {
+      public void onCreateClicked(String pathOfFile, List<Goal> chosenGoals,
+                                  String gameId, String playerName,
+                                  Difficulty chosenDifficulty, Story selectedStory) {
         pathOfStoryFile = pathOfFile;
-        Player player = new Player.PlayerBuilder(playerName).health(chosenDifficulty.getHealth())
-            .build();
+        Player player = new Player.PlayerBuilder(playerName)
+                .health(chosenDifficulty.getHealth())
+                .build();
         try {
           currentGame = GameManager.getInstance()
-              .createGame(gameId, player, selectedStory, chosenGoals);
+                  .createGame(gameId, player, selectedStory, chosenGoals);
           loadNewBaseFrame(stage, currentGame.getStory().getOpeningPassage());
         } catch (NullPointerException | IllegalArgumentException | IllegalStateException e) {
-          logAndDisplayError(e, Level.WARNING, AlertType.WARNING);
+          logAndDisplayError(e, e.getMessage(), Level.SEVERE, AlertType.ERROR);
         }
       }
     };
@@ -421,7 +420,7 @@ public class App extends Application {
       Tutorial tutorial = new Tutorial(FRAME_WIDTH, FRAME_HEIGHT, loadTutorialListener);
       loadScene(stage, tutorial);
     } catch (NullPointerException e) {
-      logAndDisplayError(e, Level.SEVERE, AlertType.ERROR);
+      logAndDisplayError(e, e.getMessage(), Level.SEVERE, AlertType.ERROR);
     }
   }
 
@@ -435,7 +434,7 @@ public class App extends Application {
       MainMenu mainMenu = new MainMenu(FRAME_WIDTH, FRAME_HEIGHT, mainMenuListener);
       loadScene(stage, mainMenu);
     } catch (NullPointerException e) {
-      logAndDisplayError(e, Level.SEVERE, AlertType.ERROR);
+      logAndDisplayError(e, e.getMessage(), Level.SEVERE, AlertType.ERROR);
     }
   }
 
@@ -447,10 +446,10 @@ public class App extends Application {
   private void loadCreateGameMenu(Stage stage) {
     try {
       CreateGameMenu createGameMenu = new CreateGameMenu(FRAME_WIDTH, FRAME_HEIGHT,
-          createGameListener);
+              createGameListener);
       loadScene(stage, createGameMenu);
     } catch (NullPointerException e) {
-      logAndDisplayError(e, Level.SEVERE, AlertType.ERROR);
+      logAndDisplayError(e, e.getMessage(), Level.SEVERE, AlertType.ERROR);
     }
   }
 
@@ -462,11 +461,11 @@ public class App extends Application {
   private void loadNewBaseFrame(Stage stage, Passage passage) {
     try {
       BaseFrame currentFrame = new BaseFrame(currentGame.getStory().getTitle(), passage,
-          currentGame.getPlayer(), FRAME_WIDTH, FRAME_HEIGHT, baseFrameListener);
+              currentGame.getPlayer(), FRAME_WIDTH, FRAME_HEIGHT, baseFrameListener);
       this.currentPassage = passage;
       loadScene(stage, currentFrame);
     } catch (NullPointerException e) {
-      logAndDisplayError(e, Level.SEVERE, AlertType.ERROR);
+      logAndDisplayError(e, e.getMessage(), Level.SEVERE, AlertType.ERROR);
     }
   }
 
@@ -478,11 +477,11 @@ public class App extends Application {
   private void loadStoryCreator(Stage stage) {
     try {
       ScrollableStoryCreator scrollableStoryCreator = new ScrollableStoryCreator(FRAME_WIDTH,
-          FRAME_HEIGHT, storyCreatorListener);
+              FRAME_HEIGHT, storyCreatorListener);
       stage.setResizable(false);
       loadScene(stage, scrollableStoryCreator);
     } catch (NullPointerException e) {
-      logAndDisplayError(e, Level.SEVERE, AlertType.ERROR);
+      logAndDisplayError(e, e.getMessage(), Level.SEVERE, AlertType.ERROR);
     }
   }
 
@@ -494,10 +493,10 @@ public class App extends Application {
   private void loadStoredGames(Stage stage) {
     try {
       StoredGamesMenu loadStoredGamesMenu = new StoredGamesMenu(FRAME_WIDTH, FRAME_HEIGHT,
-          loadStoredGamesListener);
+              loadStoredGamesListener);
       loadScene(stage, loadStoredGamesMenu);
     } catch (NullPointerException | IllegalStateException e) {
-      logAndDisplayError(e, Level.SEVERE, AlertType.ERROR);
+      logAndDisplayError(e, e.getMessage(), Level.SEVERE, AlertType.ERROR);
     }
   }
 
@@ -517,7 +516,7 @@ public class App extends Application {
    * The method loads the provided scene onto the specified stage.
    *
    * @param stage The stage to load the scene onto.
-   * @param root  The root node of the scene.
+   * @param root The root node of the scene.
    */
   private void loadScene(Stage stage, Parent root) {
     Scene scene = new Scene(root);
@@ -527,16 +526,18 @@ public class App extends Application {
   }
 
   /**
-   * The method handles the given exception by logging it and displaying an alert with the error
-   * message.
+   * The method handles the given exception by logging it
+   * and displaying an alert with the error message.
    *
-   * @param e         The exception to be handled.
-   * @param level     The log level to use for logging the exception.
+   * @param e The exception to be handled.
+   * @param errorMessage the error message to be logged and displayed.
+   * @param level The log level to use for logging the exception.
    * @param alertType The type of alert to display.
    */
-  private void logAndDisplayError(Exception e, Level level, AlertType alertType) {
-    logger.log(level, e.getMessage(), e);
-    Alert alert = new Alert(alertType, e.getMessage());
+  private void logAndDisplayError(Exception e, String errorMessage,
+                                  Level level, AlertType alertType) {
+    logger.log(level, errorMessage, e);
+    Alert alert = new Alert(alertType, errorMessage);
     alert.showAndWait();
   }
 }
