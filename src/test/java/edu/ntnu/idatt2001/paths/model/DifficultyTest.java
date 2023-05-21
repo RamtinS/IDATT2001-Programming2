@@ -1,6 +1,5 @@
 package edu.ntnu.idatt2001.paths.model;
 
-import edu.ntnu.idatt2001.paths.model.Difficulty;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

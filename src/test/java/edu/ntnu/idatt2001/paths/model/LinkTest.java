@@ -2,7 +2,6 @@ package edu.ntnu.idatt2001.paths.model;
 
 import edu.ntnu.idatt2001.paths.model.actions.Action;
 import edu.ntnu.idatt2001.paths.model.actions.GoldAction;
-import edu.ntnu.idatt2001.paths.model.Link;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

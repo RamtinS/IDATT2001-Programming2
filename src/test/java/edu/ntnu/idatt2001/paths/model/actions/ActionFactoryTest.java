@@ -1,11 +1,5 @@
 package edu.ntnu.idatt2001.paths.model.actions;
 
-import edu.ntnu.idatt2001.paths.model.actions.Action;
-import edu.ntnu.idatt2001.paths.model.actions.ActionFactory;
-import edu.ntnu.idatt2001.paths.model.actions.GoldAction;
-import edu.ntnu.idatt2001.paths.model.actions.HealthAction;
-import edu.ntnu.idatt2001.paths.model.actions.InventoryAction;
-import edu.ntnu.idatt2001.paths.model.actions.ScoreAction;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2001.paths.model.goals;
 
 import edu.ntnu.idatt2001.paths.model.Player;
-import edu.ntnu.idatt2001.paths.model.goals.ScoreGoal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
