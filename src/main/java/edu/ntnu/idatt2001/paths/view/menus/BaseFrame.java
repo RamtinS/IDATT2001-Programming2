@@ -1,8 +1,8 @@
-package edu.ntnu.idatt2001.paths.gui.menus;
+package edu.ntnu.idatt2001.paths.view.menus;
 
-import edu.ntnu.idatt2001.paths.gui.listeners.BaseFrameListener;
-import edu.ntnu.idatt2001.paths.gui.uielements.InventoryPane;
-import edu.ntnu.idatt2001.paths.gui.utility.GuiUtils;
+import edu.ntnu.idatt2001.paths.view.listeners.BaseFrameListener;
+import edu.ntnu.idatt2001.paths.view.uielements.InventoryPane;
+import edu.ntnu.idatt2001.paths.view.utility.GuiUtils;
 import edu.ntnu.idatt2001.paths.model.Link;
 import edu.ntnu.idatt2001.paths.model.Passage;
 import edu.ntnu.idatt2001.paths.model.Player;

@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2001.paths.gui.storycreation;
+package edu.ntnu.idatt2001.paths.view.storycreation;
 
 import edu.ntnu.idatt2001.paths.model.Link;
 import javafx.scene.Scene;

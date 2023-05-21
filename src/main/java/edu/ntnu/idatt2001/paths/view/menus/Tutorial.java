@@ -1,7 +1,7 @@
-package edu.ntnu.idatt2001.paths.gui.menus;
+package edu.ntnu.idatt2001.paths.view.menus;
 
-import edu.ntnu.idatt2001.paths.gui.listeners.TutorialListener;
-import edu.ntnu.idatt2001.paths.gui.utility.GuiUtils;
+import edu.ntnu.idatt2001.paths.view.listeners.TutorialListener;
+import edu.ntnu.idatt2001.paths.view.utility.GuiUtils;
 import java.util.Objects;
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;

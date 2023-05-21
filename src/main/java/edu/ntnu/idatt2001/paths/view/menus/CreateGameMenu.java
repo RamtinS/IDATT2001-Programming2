@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2001.paths.gui.menus;
+package edu.ntnu.idatt2001.paths.view.menus;
 
 import edu.ntnu.idatt2001.paths.model.Difficulty;
 import edu.ntnu.idatt2001.paths.model.filehandling.FileStoryHandler;
@@ -7,11 +7,11 @@ import edu.ntnu.idatt2001.paths.model.goals.GoldGoal;
 import edu.ntnu.idatt2001.paths.model.goals.HealthGoal;
 import edu.ntnu.idatt2001.paths.model.goals.InventoryGoal;
 import edu.ntnu.idatt2001.paths.model.goals.ScoreGoal;
-import edu.ntnu.idatt2001.paths.gui.listeners.CheckListListener;
-import edu.ntnu.idatt2001.paths.gui.listeners.CreateGameListener;
-import edu.ntnu.idatt2001.paths.gui.uielements.CheckListView;
-import edu.ntnu.idatt2001.paths.gui.uielements.InputField;
-import edu.ntnu.idatt2001.paths.gui.utility.GuiUtils;
+import edu.ntnu.idatt2001.paths.view.listeners.CheckListListener;
+import edu.ntnu.idatt2001.paths.view.listeners.CreateGameListener;
+import edu.ntnu.idatt2001.paths.view.uielements.CheckListView;
+import edu.ntnu.idatt2001.paths.view.uielements.InputField;
+import edu.ntnu.idatt2001.paths.view.utility.GuiUtils;
 import edu.ntnu.idatt2001.paths.model.Link;
 import edu.ntnu.idatt2001.paths.model.Story;
 import java.io.File;

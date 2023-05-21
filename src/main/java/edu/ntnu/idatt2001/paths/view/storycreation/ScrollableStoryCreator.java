@@ -1,6 +1,6 @@
-package edu.ntnu.idatt2001.paths.gui.storycreation;
+package edu.ntnu.idatt2001.paths.view.storycreation;
 
-import edu.ntnu.idatt2001.paths.gui.listeners.StoryCreatorListener;
+import edu.ntnu.idatt2001.paths.view.listeners.StoryCreatorListener;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 

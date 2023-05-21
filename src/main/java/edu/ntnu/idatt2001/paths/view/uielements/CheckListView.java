@@ -1,6 +1,6 @@
-package edu.ntnu.idatt2001.paths.gui.uielements;
+package edu.ntnu.idatt2001.paths.view.uielements;
 
-import edu.ntnu.idatt2001.paths.gui.listeners.CheckListListener;
+import edu.ntnu.idatt2001.paths.view.listeners.CheckListListener;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.Node;

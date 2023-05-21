@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2001.paths.gui.utility;
+package edu.ntnu.idatt2001.paths.view.utility;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

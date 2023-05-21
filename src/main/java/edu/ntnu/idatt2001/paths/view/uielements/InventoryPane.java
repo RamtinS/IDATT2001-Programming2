@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2001.paths.gui.uielements;
+package edu.ntnu.idatt2001.paths.view.uielements;
 
 import java.io.File;
 import java.util.Arrays;

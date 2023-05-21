@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2001.paths.gui.uielements;
+package edu.ntnu.idatt2001.paths.view.uielements;
 
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;

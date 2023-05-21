@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2001.paths.gui.storycreation;
+package edu.ntnu.idatt2001.paths.view.storycreation;
 
 import java.util.ArrayList;
 import java.util.Comparator;

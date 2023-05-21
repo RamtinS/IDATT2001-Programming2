@@ -1,9 +1,9 @@
-package edu.ntnu.idatt2001.paths.gui.menus;
+package edu.ntnu.idatt2001.paths.view.menus;
 
 import edu.ntnu.idatt2001.paths.controller.GameManager;
 import edu.ntnu.idatt2001.paths.model.filehandling.FileGameHandler;
-import edu.ntnu.idatt2001.paths.gui.listeners.StoredGamesListener;
-import edu.ntnu.idatt2001.paths.gui.utility.GuiUtils;
+import edu.ntnu.idatt2001.paths.view.listeners.StoredGamesListener;
+import edu.ntnu.idatt2001.paths.view.utility.GuiUtils;
 import edu.ntnu.idatt2001.paths.model.Game;
 import java.io.IOException;
 import java.util.ArrayList;

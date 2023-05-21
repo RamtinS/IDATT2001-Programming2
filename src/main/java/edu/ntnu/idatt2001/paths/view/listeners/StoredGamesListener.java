@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2001.paths.gui.listeners;
+package edu.ntnu.idatt2001.paths.view.listeners;
 
 import edu.ntnu.idatt2001.paths.model.Game;
 
