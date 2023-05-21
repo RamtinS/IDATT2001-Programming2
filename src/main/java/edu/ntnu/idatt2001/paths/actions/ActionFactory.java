@@ -53,7 +53,7 @@ public class ActionFactory {
     } catch (NumberFormatException e) {
       throw new NumberFormatException(
           "Invalid action value for " + actionDescription + ": " + actionValue + ". "
-              + actionDescription + "action expects a numeric value in integer format.");
+              + actionDescription + " action expects a numeric value in integer format.");
     } catch (IllegalArgumentException e) {
       throw new IllegalArgumentException(
           "Invalid action value for " + actionDescription + ": " + actionValue + ". "
