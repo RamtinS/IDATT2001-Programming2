@@ -12,7 +12,8 @@ import javafx.scene.shape.Circle;
  * Represents a position given by an x and y coordinate. Contains a circle point that can be used to
  * show where the position is located on the screen.
  *
- * @author Ramtin Samavat and Tobias Oftedal.
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal
  * @version 1.0
  * @since May 12, 2023.
  */
@@ -29,14 +30,15 @@ public class Position {
    * @param y The y value of the position.
    */
   public Position(double x, double y) {
-    if (x < 0) {
-      throw new IllegalArgumentException("X value cannot be negative");
-    }
-    if (y < 0) {
-      throw new IllegalArgumentException("Y value cannot be negative");
-    }
     this.x = x;
     this.y = y;
+
+    if (x < 0) {
+      x = 0;
+    }
+    if (y < 0) {
+      y = 0;
+    }
     this.icon = new Circle(x, y, 2, Paint.valueOf("#000000"));
   }
 
