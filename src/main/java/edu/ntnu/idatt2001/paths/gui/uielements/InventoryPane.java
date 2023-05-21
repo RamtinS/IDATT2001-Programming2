@@ -72,9 +72,9 @@ public class InventoryPane extends HBox {
     String[] images = new File("src/main/resources/items").list();
     Objects.requireNonNull(images, "Image folder is empty");
 
-    String location =
-        "/items/" + Arrays.stream(images).filter(image -> image.contains(name)).findFirst()
-            .orElseThrow(NullPointerException::new);
+    String location = "/items/" + Arrays.stream(images)
+        .filter(image -> image.toLowerCase().contains(name.toLowerCase())).findFirst()
+        .orElseThrow(NullPointerException::new);
 
     pane.setStyle(
         "-fx-background-image: url('" + location + "');" + "-fx-background-size: stretch");
