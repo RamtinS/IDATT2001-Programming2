@@ -45,9 +45,8 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
 /**
- * Class that represents a menu for creating a game.
- * Holds input fields for all values needed to create a game.
- * Includes input validation to make sure that all input is valid.
+ * Class that represents a menu for creating a game. Holds input fields for all values needed to
+ * create a game. Includes input validation to make sure that all input is valid.
  *
  * @author Ramtin Samavat
  * @author Tobias Oftedal
@@ -57,32 +56,32 @@ import javafx.stage.Stage;
 public class CreateGameMenu extends BorderPane {
 
   private static final Logger logger = Logger.getLogger(CreateGameMenu.class.getName());
+  private static final String STORY_LOCATION = "src/main/resources/stories";
   private final Button inventoryButton;
   private final GridPane infoGrid;
+  private final ComboBox<String> storyBox;
   private final CreateGameListener listener;
+  private final double buttonWidth;
   private ComboBox<Difficulty> difficultyBox;
-  private ComboBox<String> storyBox;
   private InputField playerNameInput;
   private InputField healthGoalInput;
   private InputField goldGoalInput;
   private InputField scoreGoalInput;
-  private Button createGame;
   private List<String> inputInventoryGoals;
   private Stage inventoryCheckList;
   private Hyperlink hyperlink;
-  private final double buttonWidth;
   private InputField gameId;
 
   /**
    * Constructor for a CreateGameMenu object.
    *
-   * @param width The width of the frame.
-   * @param height The height of the frame.
+   * @param width    The width of the frame.
+   * @param height   The height of the frame.
    * @param listener The listener used to activate button functionality.
    * @throws NullPointerException if the listener is null.
    */
   public CreateGameMenu(double width, double height, CreateGameListener listener)
-          throws NullPointerException {
+      throws NullPointerException {
 
     this.listener = Objects.requireNonNull(listener, "CreateGameListener cannot be null.");
 
@@ -143,7 +142,7 @@ public class CreateGameMenu extends BorderPane {
     gameId = new InputField(buttonWidth, 30);
     gameId.setShouldHaveText(true);
 
-    storyBox = createStoryBox();
+    updateStoryBox();
     difficultyBox = createDifficultyBox();
     createInventoryButton();
 
@@ -215,21 +214,19 @@ public class CreateGameMenu extends BorderPane {
   }
 
   /**
-   * Creates a {@link ComboBox} of all stories, and adds it to the menu.
-   *
-   * @return A ComboBox containing all stored stories.
+   * Updates the {@link #storyBox} with all found stories.
    */
-  private ComboBox<String> createStoryBox() {
-    ComboBox<String> stories = new ComboBox<>();
-    stories.setPrefWidth(buttonWidth);
-    stories.getItems().addAll(findAllDirectoryFiles("src/main/resources/stories"));
-    return stories;
+  private void updateStoryBox() {
+    storyBox.getItems().removeAll(storyBox.getItems());
+    storyBox.getItems().addAll(findAllDirectoryFiles(STORY_LOCATION));
+    storyBox.setPrefWidth(buttonWidth);
   }
 
   /**
    * Adds a "create game" button and adds the listener to it.
    */
   private void addCreateGameButton() {
+    Button createGame;
     createGame = new Button("Create");
     createGame.setOnAction(event -> createGameClicked());
     createGame.disableProperty().bind(inputIsValid().not());
@@ -264,11 +261,11 @@ public class CreateGameMenu extends BorderPane {
       String pathOfFile = "src/main/resources/stories/" + storyBox.getValue();
       selectedStory = FileStoryHandler.readStoryFromFile(pathOfFile);
 
-      if (invalidActionsAlert(FileStoryHandler.getInvalidActions())
-              && brokenLinksAlert(selectedStory.getBrokenLinks())) {
+      if (invalidActionsAlert(FileStoryHandler.getInvalidActions()) && brokenLinksAlert(
+          selectedStory.getBrokenLinks())) {
 
-        listener.onCreateClicked(pathOfFile, chosenGoals, id,
-                chosenName, getChosenDifficulty(), selectedStory);
+        listener.onCreateClicked(pathOfFile, chosenGoals, id, chosenName, getChosenDifficulty(),
+            selectedStory);
       }
 
     } catch (IllegalArgumentException | NullPointerException | IOException e) {
@@ -281,7 +278,7 @@ public class CreateGameMenu extends BorderPane {
    * {@link BooleanBinding} for checking if all inputs that should be parseable are so.
    *
    * @return A BooleanBinding representing true parseable inputs are parseable, if not, it will
-   *        represent true.
+   * represent true.
    */
   private BooleanBinding inputIsValid() {
     return Bindings.createBooleanBinding(
@@ -336,7 +333,7 @@ public class CreateGameMenu extends BorderPane {
    *
    * @return The difficulty that the user has chosen
    * @throws IllegalArgumentException If the difficultyBox does not have a difficulty.
-   * @throws NullPointerException If the difficultyBox is null.
+   * @throws NullPointerException     If the difficultyBox is null.
    */
   private Difficulty getChosenDifficulty() throws IllegalArgumentException, NullPointerException {
     return Difficulty.parseToDifficulty(difficultyBox.getValue().toString());
@@ -370,12 +367,14 @@ public class CreateGameMenu extends BorderPane {
       }
       try {
         Story story = FileStoryHandler.readStoryFromFile(selectedFile.getPath());
-        if (brokenLinksAlert(story.getBrokenLinks())
-                && invalidActionsAlert(FileStoryHandler.getInvalidActions())) {
+        if (brokenLinksAlert(story.getBrokenLinks()) && invalidActionsAlert(
+            FileStoryHandler.getInvalidActions())) {
 
           String pathOfFile = story.getTitle().trim().toLowerCase().replace(" ", "_");
+
           FileStoryHandler.writeStoryToFile(story,
-                  "src/main/resources/stories/" + pathOfFile + ".paths");
+              "src/main/resources/stories/" + pathOfFile + ".paths");
+          updateStoryBox();
         }
       } catch (IllegalArgumentException | NullPointerException | IOException e) {
         logAndDisplayError(e, e.getMessage(), Level.WARNING, AlertType.ERROR);
@@ -384,8 +383,8 @@ public class CreateGameMenu extends BorderPane {
   }
 
   /**
-   * The method checks if there are any invalid actions in the provided list
-   * and displays a warning alert if any invalid actions are found.
+   * The method checks if there are any invalid actions in the provided list and displays a warning
+   * alert if any invalid actions are found.
    *
    * @param invalidActions the list of invalid actions to check.
    * @return true if no invalid actions or of user confirms the continuation, false otherwise.
@@ -397,10 +396,8 @@ public class CreateGameMenu extends BorderPane {
     }
 
     if (!invalidActions.isEmpty()) {
-      StringBuilder stringBuilder = new StringBuilder()
-              .append("The chosen story has ")
-              .append(invalidActions.size())
-              .append(" invalid actions.");
+      StringBuilder stringBuilder = new StringBuilder().append("The chosen story has ")
+          .append(invalidActions.size()).append(" invalid actions.");
       for (String action : invalidActions) {
         stringBuilder.append("\n - ").append(action);
       }
@@ -411,8 +408,8 @@ public class CreateGameMenu extends BorderPane {
   }
 
   /**
-   * The method checks if there are any broken links in the provided list
-   * and displays a warning alert if any broken links are found.
+   * The method checks if there are any broken links in the provided list and displays a warning
+   * alert if any broken links are found.
    *
    * @param brokenLinks the list of broken links to check.
    * @return true if no broken links or of user confirms the continuation, false otherwise.
@@ -424,16 +421,11 @@ public class CreateGameMenu extends BorderPane {
     }
 
     if (!brokenLinks.isEmpty()) {
-      StringBuilder stringBuilder = new StringBuilder()
-              .append("The chosen story has ")
-              .append(brokenLinks.size())
-              .append(" broken links..");
+      StringBuilder stringBuilder = new StringBuilder().append("The chosen story has ")
+          .append(brokenLinks.size()).append(" broken links..");
       for (Link link : brokenLinks) {
-        stringBuilder
-                .append("\n - ")
-                .append(link.getText())
-                .append("  ->  ")
-                .append(link.getReference());
+        stringBuilder.append("\n - ").append(link.getText()).append("  ->  ")
+            .append(link.getReference());
       }
       stringBuilder.append("\n\nAre you sure you want to continue?");
       return createConfirmationAlert(AlertType.WARNING, stringBuilder.toString());
@@ -442,11 +434,10 @@ public class CreateGameMenu extends BorderPane {
   }
 
   /**
-   * The method creates and displays an alert dialog with the
-   * specified alert type and message. The alert contains custom
-   * buttons, "Yes" and "No".
+   * The method creates and displays an alert dialog with the specified alert type and message. The
+   * alert contains custom buttons, "Yes" and "No".
    *
-   * @param alertType the type of the alert.
+   * @param alertType    the type of the alert.
    * @param alterMessage the type of the alert.
    * @return true if the yes button is clicked, false otherwise.
    */
@@ -460,16 +451,16 @@ public class CreateGameMenu extends BorderPane {
   }
 
   /**
-   * The method creates and displays an alert dialog with the
-   * specified exception, error message, log level, and alert type.
+   * The method creates and displays an alert dialog with the specified exception, error message,
+   * log level, and alert type.
    *
-   * @param e the exception to be logged.
+   * @param e            the exception to be logged.
    * @param errorMessage the error message to be logged and displayed.
-   * @param level the log level for logging the exception.
-   * @param alertType the type of the alert.
+   * @param level        the log level for logging the exception.
+   * @param alertType    the type of the alert.
    */
-  private void logAndDisplayError(Exception e, String errorMessage,
-                                  Level level, AlertType alertType) {
+  private void logAndDisplayError(Exception e, String errorMessage, Level level,
+                                  AlertType alertType) {
     logger.log(level, errorMessage, e);
     Alert alert = new Alert(alertType, errorMessage);
     alert.showAndWait();
