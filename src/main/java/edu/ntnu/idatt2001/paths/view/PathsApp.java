@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2001.paths;
+package edu.ntnu.idatt2001.paths.view;
 
 import com.google.gson.JsonSyntaxException;
 import edu.ntnu.idatt2001.paths.model.actions.Action;
@@ -50,9 +50,9 @@ import org.controlsfx.control.Notifications;
  * @version 1.0
  * @since May 19, 2023.
  */
-public class App extends Application {
+public class PathsApp extends Application {
 
-  private static final Logger logger = Logger.getLogger(App.class.getName());
+  private static final Logger logger = Logger.getLogger(PathsApp.class.getName());
   private static final int FRAME_HEIGHT = 650;
   private static final int FRAME_WIDTH = 1050;
   private static final String STANDARD_STYLING =
@@ -353,7 +353,7 @@ public class App extends Application {
 
       /**
        * Sets the current game to the selected game. And executes
-       * {@link App#loadNewBaseFrame(Stage, Passage)}
+       * {@link PathsApp#loadNewBaseFrame(Stage, Passage)}
        *
        * @param game The selected game.
        */
