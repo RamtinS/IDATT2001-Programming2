@@ -88,7 +88,7 @@ public class HealthGoal implements Goal {
    */
   @Override
   public String toString() {
-    return "Health goal:" + getMinimumHealth();
+    return "Health goal: " + getMinimumHealth();
   }
 
 }

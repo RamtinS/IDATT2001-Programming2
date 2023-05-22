@@ -88,6 +88,6 @@ public class GoldGoal implements Goal {
    */
   @Override
   public String toString() {
-    return "Gold goal:" + getMinimumGold();
+    return "Gold goal: " + getMinimumGold();
   }
 }

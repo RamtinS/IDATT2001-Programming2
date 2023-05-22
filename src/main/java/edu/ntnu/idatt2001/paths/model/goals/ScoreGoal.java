@@ -88,6 +88,6 @@ public class ScoreGoal implements Goal {
    */
   @Override
   public String toString() {
-    return "Score goal:" + getMinimumPoints();
+    return "Score goal: " + getMinimumPoints();
   }
 }
