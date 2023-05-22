@@ -1,1 +1,876 @@
-[]
+[
+  {
+    "game ID": "Game 45",
+    "player": {
+      "name": "Ramtin",
+      "startHealth": 75,
+      "startScore": 0,
+      "startGold": 0,
+      "health": 75,
+      "score": 0,
+      "gold": 0,
+      "inventory": []
+    },
+    "story title": "Forest Adventure",
+    "story opening passage": {
+      "title": "Beginnings",
+      "content": "You are standing at the edge of a dense forest. You see a path leading into the forest.",
+      "links": [
+        {
+          "text": "Follow the path",
+          "reference": "Clearing",
+          "actions": [
+            {
+              "item": "sword"
+            },
+            {
+              "item": "axe"
+            },
+            {
+              "item": "pickaxe"
+            }
+          ]
+        }
+      ]
+    },
+    "story current passage": {
+      "title": "Beginnings",
+      "content": "You are standing at the edge of a dense forest. You see a path leading into the forest.",
+      "links": [
+        {
+          "text": "Follow the path",
+          "reference": "Clearing",
+          "actions": [
+            {
+              "item": "sword"
+            },
+            {
+              "item": "axe"
+            },
+            {
+              "item": "pickaxe"
+            }
+          ]
+        }
+      ]
+    },
+    "story passages": [
+      {
+        "title": "Altar",
+        "content": "As you approach the altar, you see that there is a small, ornate box inside.",
+        "links": [
+          {
+            "text": "Open the box",
+            "reference": "Treasure",
+            "actions": [
+              {
+                "points": 20
+              },
+              {
+                "gold": 50
+              }
+            ]
+          },
+          {
+            "text": "Continue through the forest",
+            "reference": "Deeper into the forest",
+            "actions": []
+          },
+          {
+            "text": "Go back",
+            "reference": "Clearing",
+            "actions": []
+          }
+        ]
+      },
+      {
+        "title": "Dungeon",
+        "content": "You fight the guards, but they overpower you and throw you into the dungeon.",
+        "links": []
+      },
+      {
+        "title": "Fight guardian",
+        "content": "You decided to attack the guardian, but quickly realize that it was a mistake as the guardian easily defeats you.",
+        "links": [
+          {
+            "text": "Start over",
+            "reference": "Forest\u0027s Heart",
+            "actions": []
+          }
+        ]
+      },
+      {
+        "title": "Clearing",
+        "content": "As you make your way through the forest, you come across a small clearing. In the center of the clearing is an altar.",
+        "links": [
+          {
+            "text": "Approach the altar",
+            "reference": "Altar",
+            "actions": [
+              {
+                "points": 20
+              }
+            ]
+          },
+          {
+            "text": "Continue through the forest",
+            "reference": "Deeper into the forest",
+            "actions": []
+          },
+          {
+            "text": "Go back",
+            "reference": "Beginnings",
+            "actions": []
+          }
+        ]
+      },
+      {
+        "title": "Treasure",
+        "content": "You open the box and find a glittering gem inside. Suddenly, you hear a rustling in the bushes behind you.",
+        "links": [
+          {
+            "text": "Investigate the noise",
+            "reference": "Troll",
+            "actions": [
+              {
+                "points": 20
+              }
+            ]
+          },
+          {
+            "text": "Leave the clearing and continue through the forest",
+            "reference": "Deeper into the forest",
+            "actions": []
+          }
+        ]
+      },
+      {
+        "title": "Gold chest",
+        "content": "You find a lot of gold in the chest. You decide to take the gold with you and go back to the main path.",
+        "links": [
+          {
+            "text": "Leave the throne room",
+            "reference": "Forest\u0027s Heart",
+            "actions": [
+              {
+                "gold": 300
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Deeper into the forest",
+        "content": "You continue to make your way through the forest, and you see an another path.",
+        "links": [
+          {
+            "text": "Follow the second path",
+            "reference": "Castle",
+            "actions": [
+              {
+                "points": 20
+              }
+            ]
+          },
+          {
+            "text": "Follow the main path",
+            "reference": "Forest\u0027s Heart",
+            "actions": []
+          },
+          {
+            "text": "Go back",
+            "reference": "Clearing",
+            "actions": []
+          }
+        ]
+      },
+      {
+        "title": "Castle",
+        "content": "You come across an old castle in the middle of the forest. The gate is closed, and there are stone guards patrolling the perimeter.",
+        "links": [
+          {
+            "text": "Sneak past the guards",
+            "reference": "Throne Room",
+            "actions": [
+              {
+                "points": 20
+              }
+            ]
+          },
+          {
+            "text": "Fight the guards",
+            "reference": "Dungeon",
+            "actions": [
+              {
+                "health": -101
+              }
+            ]
+          },
+          {
+            "text": "Go back",
+            "reference": "Deeper into the forest",
+            "actions": []
+          }
+        ]
+      },
+      {
+        "title": "Continue journey",
+        "content": "After explaining your quest to the guardian, it grants you permission to continue through the forest and find what you seek.",
+        "links": [
+          {
+            "text": "Continue through the forest",
+            "reference": "Final Showdown",
+            "actions": []
+          },
+          {
+            "text": "Go back",
+            "reference": "Guardian",
+            "actions": []
+          }
+        ]
+      },
+      {
+        "title": "Ran from monster",
+        "content": "You quickly turn around and run back the way you came. The monster catches up to you, and it is all over.",
+        "links": []
+      },
+      {
+        "title": "Fight troll",
+        "content": "You choose your weapon and prepare to fight the troll.",
+        "links": [
+          {
+            "text": "Sword",
+            "reference": "Deeper into the forest",
+            "actions": [
+              {
+                "points": 50
+              },
+              {
+                "gold": 30
+              }
+            ]
+          },
+          {
+            "text": "Axe",
+            "reference": "Deeper into the forest",
+            "actions": [
+              {
+                "health": -30
+              }
+            ]
+          },
+          {
+            "text": "Fist",
+            "reference": "Deeper into the forest",
+            "actions": [
+              {
+                "health": -101
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Guardian",
+        "content": "As you approach the tree, a mysterious figure appears. It introduces itself as the guardian of the forest and asks why you have come.",
+        "links": [
+          {
+            "text": "Explain your quest",
+            "reference": "Continue journey",
+            "actions": [
+              {
+                "points": 50
+              }
+            ]
+          },
+          {
+            "text": "Attack the guardian",
+            "reference": "Fight guardian",
+            "actions": [
+              {
+                "points": -300
+              },
+              {
+                "gold": -200
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Troll",
+        "content": "A troll emerges from the bushes, its eyes fixed on the gem in your hand.",
+        "links": [
+          {
+            "text": "Fight the troll",
+            "reference": "Fight troll",
+            "actions": [
+              {
+                "points": 20
+              }
+            ]
+          },
+          {
+            "text": "Run away",
+            "reference": "Ran from Troll",
+            "actions": [
+              {
+                "health": -101
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Forest\u0027s Heart",
+        "content": "You continue through the forest and eventually find yourself in a clearing at the center of the forest. In the center of the clearing, you see a large, ancient tree.",
+        "links": [
+          {
+            "text": "Approach the tree",
+            "reference": "Guardian",
+            "actions": []
+          }
+        ]
+      },
+      {
+        "title": "Fight monster",
+        "content": "The monster charges at you. You quickly draw your weapon and attack it.",
+        "links": [
+          {
+            "text": "Sword",
+            "reference": "Victory",
+            "actions": [
+              {
+                "health": -50
+              },
+              {
+                "points": 50
+              }
+            ]
+          },
+          {
+            "text": "Axe",
+            "reference": "Victory",
+            "actions": [
+              {
+                "points": 100
+              }
+            ]
+          },
+          {
+            "text": "Fist",
+            "reference": "Beginnings",
+            "actions": [
+              {
+                "health": -101
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Throne Room",
+        "content": "You successfully sneak past the guards and find yourself in the throne room. You see a treasure chest next to the throne.",
+        "links": [
+          {
+            "text": "Open the chest",
+            "reference": "Gold chest",
+            "actions": [
+              {
+                "points": 50
+              }
+            ]
+          },
+          {
+            "text": "Leave the throne room",
+            "reference": "Castle",
+            "actions": []
+          }
+        ]
+      },
+      {
+        "title": "Final Showdown",
+        "content": "You finally reach the end of the forest and find what you have been searching for. But before you can claim it, a fierce monster appears.",
+        "links": [
+          {
+            "text": "Fight the monster",
+            "reference": "Fight monster",
+            "actions": []
+          },
+          {
+            "text": "Run away",
+            "reference": "Ran from monster",
+            "actions": [
+              {
+                "health": -101
+              }
+            ]
+          },
+          {
+            "text": "Go back",
+            "reference": "Continue journey",
+            "actions": []
+          }
+        ]
+      },
+      {
+        "title": "Ran from Troll",
+        "content": "You start running from the troll, but it catches up to you, and you die.",
+        "links": []
+      },
+      {
+        "title": "Victory",
+        "content": "You emerge victorious after the battle. You claim your prize and leave the forest a hero.",
+        "links": []
+      }
+    ],
+    "goals": [
+      {
+        "minimumHealth": 70
+      },
+      {
+        "minimumGold": 230
+      },
+      {
+        "minimumPoints": 250
+      },
+      {
+        "mandatoryItems": [
+          "sword",
+          "axe"
+        ]
+      }
+    ]
+  },
+  {
+    "game ID": "Game 29",
+    "player": {
+      "name": "Tobias",
+      "startHealth": 50,
+      "startScore": 0,
+      "startGold": 0,
+      "health": 50,
+      "score": 40,
+      "gold": 50,
+      "inventory": [
+        "sword",
+        "axe",
+        "pickaxe"
+      ]
+    },
+    "story title": "Forest Adventure",
+    "story opening passage": {
+      "title": "Beginnings",
+      "content": "You are standing at the edge of a dense forest. You see a path leading into the forest.",
+      "links": [
+        {
+          "text": "Follow the path",
+          "reference": "Clearing",
+          "actions": []
+        }
+      ]
+    },
+    "story current passage": {
+      "title": "Guardian",
+      "content": "As you approach the tree, a mysterious figure appears. It introduces itself as the guardian of the forest and asks why you have come.",
+      "links": [
+        {
+          "text": "Explain your quest",
+          "reference": "Continue journey",
+          "actions": [
+            {
+              "points": 50
+            }
+          ]
+        },
+        {
+          "text": "Attack the guardian",
+          "reference": "Fight guardian",
+          "actions": [
+            {
+              "points": -300
+            },
+            {
+              "gold": -200
+            }
+          ]
+        }
+      ]
+    },
+    "story passages": [
+      {
+        "title": "Altar",
+        "content": "As you approach the altar, you see that there is a small, ornate box inside.",
+        "links": [
+          {
+            "text": "Open the box",
+            "reference": "Treasure",
+            "actions": []
+          },
+          {
+            "text": "Continue through the forest",
+            "reference": "Deeper into the forest",
+            "actions": []
+          },
+          {
+            "text": "Go back",
+            "reference": "Clearing",
+            "actions": []
+          }
+        ]
+      },
+      {
+        "title": "Dungeon",
+        "content": "You fight the guards, but they overpower you and throw you into the dungeon.",
+        "links": []
+      },
+      {
+        "title": "Fight guardian",
+        "content": "You decided to attack the guardian, but quickly realize that it was a mistake as the guardian easily defeats you.",
+        "links": [
+          {
+            "text": "Start over",
+            "reference": "Forest\u0027s Heart",
+            "actions": []
+          }
+        ]
+      },
+      {
+        "title": "Clearing",
+        "content": "As you make your way through the forest, you come across a small clearing. In the center of the clearing is an altar.",
+        "links": [
+          {
+            "text": "Approach the altar",
+            "reference": "Altar",
+            "actions": []
+          },
+          {
+            "text": "Continue through the forest",
+            "reference": "Deeper into the forest",
+            "actions": []
+          },
+          {
+            "text": "Go back",
+            "reference": "Beginnings",
+            "actions": []
+          }
+        ]
+      },
+      {
+        "title": "Treasure",
+        "content": "You open the box and find a glittering gem inside. Suddenly, you hear a rustling in the bushes behind you.",
+        "links": [
+          {
+            "text": "Investigate the noise",
+            "reference": "Troll",
+            "actions": [
+              {
+                "points": 20
+              }
+            ]
+          },
+          {
+            "text": "Leave the clearing and continue through the forest",
+            "reference": "Deeper into the forest",
+            "actions": []
+          }
+        ]
+      },
+      {
+        "title": "Gold chest",
+        "content": "You find a lot of gold in the chest. You decide to take the gold with you and go back to the main path.",
+        "links": [
+          {
+            "text": "Leave the throne room",
+            "reference": "Forest\u0027s Heart",
+            "actions": [
+              {
+                "gold": 300
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Deeper into the forest",
+        "content": "You continue to make your way through the forest, and you see an another path.",
+        "links": [
+          {
+            "text": "Follow the second path",
+            "reference": "Castle",
+            "actions": [
+              {
+                "points": 20
+              }
+            ]
+          },
+          {
+            "text": "Follow the main path",
+            "reference": "Forest\u0027s Heart",
+            "actions": []
+          },
+          {
+            "text": "Go back",
+            "reference": "Clearing",
+            "actions": []
+          }
+        ]
+      },
+      {
+        "title": "Castle",
+        "content": "You come across an old castle in the middle of the forest. The gate is closed, and there are stone guards patrolling the perimeter.",
+        "links": [
+          {
+            "text": "Sneak past the guards",
+            "reference": "Throne Room",
+            "actions": [
+              {
+                "points": 20
+              }
+            ]
+          },
+          {
+            "text": "Fight the guards",
+            "reference": "Dungeon",
+            "actions": [
+              {
+                "health": -101
+              }
+            ]
+          },
+          {
+            "text": "Go back",
+            "reference": "Deeper into the forest",
+            "actions": []
+          }
+        ]
+      },
+      {
+        "title": "Continue journey",
+        "content": "After explaining your quest to the guardian, it grants you permission to continue through the forest and find what you seek.",
+        "links": [
+          {
+            "text": "Continue through the forest",
+            "reference": "Final Showdown",
+            "actions": []
+          },
+          {
+            "text": "Go back",
+            "reference": "Guardian",
+            "actions": []
+          }
+        ]
+      },
+      {
+        "title": "Ran from monster",
+        "content": "You quickly turn around and run back the way you came. The monster catches up to you, and it is all over.",
+        "links": []
+      },
+      {
+        "title": "Fight troll",
+        "content": "You choose your weapon and prepare to fight the troll.",
+        "links": [
+          {
+            "text": "Sword",
+            "reference": "Deeper into the forest",
+            "actions": [
+              {
+                "points": 50
+              },
+              {
+                "gold": 30
+              }
+            ]
+          },
+          {
+            "text": "Axe",
+            "reference": "Deeper into the forest",
+            "actions": [
+              {
+                "health": -30
+              }
+            ]
+          },
+          {
+            "text": "Fist",
+            "reference": "Deeper into the forest",
+            "actions": [
+              {
+                "health": -101
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Guardian",
+        "content": "As you approach the tree, a mysterious figure appears. It introduces itself as the guardian of the forest and asks why you have come.",
+        "links": [
+          {
+            "text": "Explain your quest",
+            "reference": "Continue journey",
+            "actions": [
+              {
+                "points": 50
+              }
+            ]
+          },
+          {
+            "text": "Attack the guardian",
+            "reference": "Fight guardian",
+            "actions": [
+              {
+                "points": -300
+              },
+              {
+                "gold": -200
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Troll",
+        "content": "A troll emerges from the bushes, its eyes fixed on the gem in your hand.",
+        "links": [
+          {
+            "text": "Fight the troll",
+            "reference": "Fight troll",
+            "actions": [
+              {
+                "points": 20
+              }
+            ]
+          },
+          {
+            "text": "Run away",
+            "reference": "Ran from Troll",
+            "actions": [
+              {
+                "health": -101
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Forest\u0027s Heart",
+        "content": "You continue through the forest and eventually find yourself in a clearing at the center of the forest. In the center of the clearing, you see a large, ancient tree.",
+        "links": [
+          {
+            "text": "Approach the tree",
+            "reference": "Guardian",
+            "actions": []
+          }
+        ]
+      },
+      {
+        "title": "Fight monster",
+        "content": "The monster charges at you. You quickly draw your weapon and attack it.",
+        "links": [
+          {
+            "text": "Sword",
+            "reference": "Victory",
+            "actions": [
+              {
+                "health": -50
+              },
+              {
+                "points": 50
+              }
+            ]
+          },
+          {
+            "text": "Axe",
+            "reference": "Victory",
+            "actions": [
+              {
+                "points": 100
+              }
+            ]
+          },
+          {
+            "text": "Fist",
+            "reference": "Beginnings",
+            "actions": [
+              {
+                "health": -101
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Throne Room",
+        "content": "You successfully sneak past the guards and find yourself in the throne room. You see a treasure chest next to the throne.",
+        "links": [
+          {
+            "text": "Open the chest",
+            "reference": "Gold chest",
+            "actions": [
+              {
+                "points": 50
+              }
+            ]
+          },
+          {
+            "text": "Leave the throne room",
+            "reference": "Castle",
+            "actions": []
+          }
+        ]
+      },
+      {
+        "title": "Final Showdown",
+        "content": "You finally reach the end of the forest and find what you have been searching for. But before you can claim it, a fierce monster appears.",
+        "links": [
+          {
+            "text": "Fight the monster",
+            "reference": "Fight monster",
+            "actions": []
+          },
+          {
+            "text": "Run away",
+            "reference": "Ran from monster",
+            "actions": [
+              {
+                "health": -101
+              }
+            ]
+          },
+          {
+            "text": "Go back",
+            "reference": "Continue journey",
+            "actions": []
+          }
+        ]
+      },
+      {
+        "title": "Ran from Troll",
+        "content": "You start running from the troll, but it catches up to you, and you die.",
+        "links": []
+      },
+      {
+        "title": "Victory",
+        "content": "You emerge victorious after the battle. You claim your prize and leave the forest a hero.",
+        "links": []
+      }
+    ],
+    "goals": [
+      {
+        "minimumHealth": 100
+      },
+      {
+        "minimumGold": 150
+      },
+      {
+        "minimumPoints": 400
+      },
+      {
+        "mandatoryItems": [
+          "pickaxe"
+        ]
+      }
+    ]
+  }
+]
