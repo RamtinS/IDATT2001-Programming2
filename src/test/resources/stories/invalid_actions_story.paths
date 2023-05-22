@@ -1,0 +1,15 @@
+Haunted House
+
+::Beginnings
+There is a door in front of you.
+[Try to open the door](Another room){InventorySword}
+
+::Another room
+The door opens to another room. You see a desk with a large, dusty book.
+[Open the book](The book of spells){Score:1kl0}{Health:10}
+[Go back](Beginnings){Score:-10}{Health:-10}
+
+::The book of spells
+You open the book and find the spell of teleportation.
+[Cast the spell](Forest){NonExistingAction:10}
+[Go back](Another room){Gold:-10}

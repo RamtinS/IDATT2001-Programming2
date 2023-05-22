@@ -1,7 +1,11 @@
 [
   {
+    "game ID": "Test ID 1",
     "player": {
       "name": "Player1",
+      "startHealth": 50,
+      "startScore": 100,
+      "startGold": 50,
       "health": 50,
       "score": 100,
       "gold": 50,
@@ -18,6 +22,21 @@
           "actions": [
             {
               "invalid action": "Sword"
+            }
+          ]
+        }
+      ]
+    },
+    "story current passage": {
+      "title": "Beginnings",
+      "content": "There is a door in front of you.",
+      "links": [
+        {
+          "text": "Try to open the door",
+          "reference": "Another room",
+          "actions": [
+            {
+              "item": "Sword"
             }
           ]
         }
@@ -88,12 +107,21 @@
       },
       {
         "minimumGold": 100
+      },
+      {
+        "mandatoryItems": [
+          "Sword"
+        ]
       }
     ]
   },
   {
+    "game ID": "Test ID 2",
     "player": {
       "name": "Player2",
+      "startHealth": 60,
+      "startScore": 100,
+      "startGold": 40,
       "health": 60,
       "score": 100,
       "gold": 40,
@@ -101,6 +129,21 @@
     },
     "story title": "Haunted House",
     "story opening passage": {
+      "title": "Beginnings",
+      "content": "There is a door in front of you.",
+      "links": [
+        {
+          "text": "Try to open the door",
+          "reference": "Another room",
+          "actions": [
+            {
+              "item": "Sword"
+            }
+          ]
+        }
+      ]
+    },
+    "story current passage": {
       "title": "Beginnings",
       "content": "There is a door in front of you.",
       "links": [
@@ -180,6 +223,11 @@
       },
       {
         "minimumGold": 10
+      },
+      {
+        "mandatoryItems": [
+          "Sword"
+        ]
       }
     ]
   }
