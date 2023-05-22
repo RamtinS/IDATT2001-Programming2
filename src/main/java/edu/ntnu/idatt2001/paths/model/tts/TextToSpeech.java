@@ -1,28 +1,27 @@
 package edu.ntnu.idatt2001.paths.model.tts;
 
-import java.beans.PropertyVetoException;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.speech.AudioException;
 import javax.speech.Central;
-import javax.speech.EngineException;
 import javax.speech.EngineStateError;
 import javax.speech.synthesis.Synthesizer;
 import javax.speech.synthesis.SynthesizerModeDesc;
 import javax.speech.synthesis.Voice;
 
 /**
- * Singleton class for handling TTS (text to speech) requests.
- * The class contains methods for speaking text objects out loud using
- * synthetic English voice using an emulator.
+ * Singleton class for handling TTS (text to speech) requests. The class contains methods for
+ * speaking text objects out loud using synthetic English voice using an emulator.
+ *
+ * @author Ramtin Samavat and Tobias Oftedal.
+ * @version 1.0
+ * @since May 19, 2023.
  */
 public class TextToSpeech {
 
   private static final Logger logger = Logger.getLogger(TextToSpeech.class.getName());
-  private static Synthesizer synthesizer;
-  private static Voice voice;
   private static TextToSpeech instance = null;
+  private Synthesizer synthesizer;
   private boolean speechEnabled;
 
   /**
@@ -58,12 +57,13 @@ public class TextToSpeech {
       synthesizer = Central.createSynthesizer(synthesizerModeDesc);
       synthesizer.allocate();
 
-      TextToSpeech.voice = new Voice("Geir", Voice.GENDER_FEMALE, Voice.AGE_CHILD, "casual");
+      Voice voice = new Voice("Geir", Voice.GENDER_FEMALE, Voice.AGE_CHILD, "casual");
       synthesizer.getSynthesizerProperties().setVoice(voice);
       synthesizer.resume();
-    } catch (EngineException | PropertyVetoException | AudioException | EngineStateError e) {
-      logger.log(Level.WARNING, "Error while initiating text to speak class because: "
-              + e.getMessage(), e);
+    } catch (Exception e) {
+      logger.log(Level.WARNING,
+          String.format("Error while initiating text to speak class because %s", e.getMessage()),
+          e);
     }
   }
 
@@ -97,8 +97,9 @@ public class TextToSpeech {
     resetSpeech();
     try {
       synthesizer.speakPlainText(text, null);
-    } catch (EngineStateError e) {
-      logger.log(Level.WARNING, "Error while speaking text because: " + e.getMessage(), e);
+    } catch (EngineStateError | NullPointerException e) {
+      logger.log(Level.WARNING,
+          String.format("Error while speaking text because %s", e.getMessage()), e);
     }
   }
 
@@ -108,8 +109,9 @@ public class TextToSpeech {
   public void resetSpeech() {
     try {
       synthesizer.cancel();
-    } catch (EngineStateError e) {
-      logger.log(Level.WARNING, "Error while resting text because: " + e.getMessage(), e);
+    } catch (EngineStateError | NullPointerException e) {
+      logger.log(Level.WARNING,
+          String.format("Error while resetting text because %s", e.getMessage()), e);
     }
   }
 }
