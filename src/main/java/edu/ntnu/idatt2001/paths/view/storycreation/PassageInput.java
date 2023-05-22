@@ -9,7 +9,8 @@ import javafx.scene.layout.VBox;
 /**
  * Represents a passage input. Contains a headline, passage text
  *
- * @author Ramtin Samavat and Tobias Oftedal.
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal
  * @version 1.0
  * @since May 12, 2023.
  */
@@ -25,9 +26,7 @@ public class PassageInput extends VBox {
   public PassageInput() {
     setPadding(new Insets(3));
     setStyle("-fx-background-color: #000000");
-    setOnMouseEntered(event -> {
-      setCursor(Cursor.HAND); // Set cursor to hand when mouse enters the button
-    });
+    setOnMouseEntered(event -> setCursor(Cursor.HAND));
 
     titleField = createTitleField();
     passageText = createPassageText();
@@ -36,6 +35,11 @@ public class PassageInput extends VBox {
     getChildren().add(passageText);
   }
 
+  /**
+   * Creates a new {@link TextArea} with the prompt "Passage text".
+   *
+   * @return A new {@link TextArea} with the prompt "Passage text".
+   */
   private TextArea createPassageText() {
     TextArea textArea = new TextArea();
     textArea.setPromptText("Passage text");
