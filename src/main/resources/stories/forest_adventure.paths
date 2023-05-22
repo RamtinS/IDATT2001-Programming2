@@ -2,7 +2,7 @@ Forest Adventure
 
 ::Beginnings
 You are standing at the edge of a dense forest. You see a path leading into the forest.
-[Follow the path](Clearing){Inventory:Sword}{Inventory:Axe}
+[Follow the path](Clearing){Inventory:sword}{Inventory:axe}{Inventory:pickaxe}
 
 ::Altar
 As you approach the altar, you see that there is a small, ornate box inside.
