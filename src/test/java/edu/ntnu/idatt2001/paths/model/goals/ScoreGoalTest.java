@@ -80,7 +80,7 @@ class ScoreGoalTest {
   @Test
   @DisplayName("Test toString")
   void testToString() {
-    String expected = "Score goal:50";
+    String expected = "Score goal: 50";
     String actual = scoreGoal.toString();
     assertEquals(expected, actual);
   }
