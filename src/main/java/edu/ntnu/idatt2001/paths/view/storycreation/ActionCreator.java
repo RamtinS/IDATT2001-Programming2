@@ -20,6 +20,11 @@ import javafx.scene.layout.HBox;
  * The class contains method for retrieving the data. It also automatically updates the amount of
  * entries in the list if the list has no empty entries.
  * </p>
+ *
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal
+ * @version 1.0
+ * @since May 22, 2023.
  */
 public class ActionCreator extends ListView<HBox> {
 
@@ -144,5 +149,4 @@ public class ActionCreator extends ListView<HBox> {
         .get(CHOICE_BOX_INDEX);
     return !textField.getText().isEmpty() && choiceBox.getValue() != null;
   }
-
 }
