@@ -1,9 +1,9 @@
 package edu.ntnu.idatt2001.paths.view.storycreation;
 
-import edu.ntnu.idatt2001.paths.model.filehandling.FileStoryHandler;
-import edu.ntnu.idatt2001.paths.view.listeners.StoryCreatorListener;
 import edu.ntnu.idatt2001.paths.model.Passage;
 import edu.ntnu.idatt2001.paths.model.Story;
+import edu.ntnu.idatt2001.paths.model.filehandling.FileStoryHandler;
+import edu.ntnu.idatt2001.paths.view.listeners.StoryCreatorListener;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,8 +31,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 /**
- * Pane used to create a story, has methods for creating passages and links, and retrieving their
- * data.
+ * Symbolizes a pane used to create a story, has methods for creating {@link Passage} and
+ * {@link edu.ntnu.idatt2001.paths.model.Link Link} objects, and retrieving their data. This data is
+ * written to files in the form of a story using the {@link FileStoryHandler}.
+ *
+ * @author Ramtin Samavat
+ * @author Tobias Oftedal
+ * @version 1.0
+ * @since May 22, 2023.
  */
 public class StoryCreator extends Pane {
 
@@ -52,13 +58,13 @@ public class StoryCreator extends Pane {
   /**
    * Constructor for a StoryCreator object. Adds buttons, and adds the keyboard shortcuts.
    *
-   * @param width The width of the frame.
-   * @param height The height of the frame.
+   * @param width    The width of the frame.
+   * @param height   The height of the frame.
    * @param listener The listener used to handle button activities.
    * @throws NullPointerException if the listener is null.
    */
   public StoryCreator(double width, double height, StoryCreatorListener listener)
-          throws NullPointerException {
+      throws NullPointerException {
     this.listener = Objects.requireNonNull(listener, "StoryCreatorListener cannot be null.");
     setFrameDimensions(width, height);
     addInputElements();
@@ -67,6 +73,10 @@ public class StoryCreator extends Pane {
 
   }
 
+  /**
+   * Shows an alert to the user that the {@link StoryCreator} is still in its beginning stages, and
+   * that some methods may not work optimally.
+   */
   private void showPrototypeAlert() {
     Alert alert = new Alert(AlertType.INFORMATION);
 
