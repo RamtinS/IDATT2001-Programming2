@@ -23,10 +23,12 @@ The application serves as a game engine for choice-based and interactive storyte
 
 ## Wiki
 [Main Page](https://gitlab.stud.idi.ntnu.no/gruppe44/mappevurdering-idatt2001/-/wikis/Main-Page)
-- [Class diagram](https://gitlab.stud.idi.ntnu.no/gruppe44/mappevurdering-idatt2001/-/wikis/Main-Page/Class-diagram)
-- [Flowchart](https://gitlab.stud.idi.ntnu.no/gruppe44/mappevurdering-idatt2001/-/wikis/Main-Page/Flowchart)
-- [Sequence diagram](https://gitlab.stud.idi.ntnu.no/gruppe44/mappevurdering-idatt2001/-/wikis/Main-Page/Sequence-diagram)
-- [Use case diagram](https://gitlab.stud.idi.ntnu.no/gruppe44/mappevurdering-idatt2001/-/wikis/Main-Page/Use-case-diagram)
+- [Sources](https://gitlab.stud.idi.ntnu.no/gruppe44/mappevurdering-idatt2001/-/wikis/Main-Page/Sources)
+- [UML](https://gitlab.stud.idi.ntnu.no/gruppe44/mappevurdering-idatt2001/-/wikis/Main-Page/UML)
+  - [Class diagram](https://gitlab.stud.idi.ntnu.no/gruppe44/mappevurdering-idatt2001/-/wikis/Main-Page/UML/Class-diagram)
+  - [Flowchart](https://gitlab.stud.idi.ntnu.no/gruppe44/mappevurdering-idatt2001/-/wikis/Main-Page/UML/Flowchart)
+  - [Sequence diagram](https://gitlab.stud.idi.ntnu.no/gruppe44/mappevurdering-idatt2001/-/wikis/Main-Page/UML/Sequence-diagram)
+  - [Use case diagram](https://gitlab.stud.idi.ntnu.no/gruppe44/mappevurdering-idatt2001/-/wikis/Main-Page/UML/Use-case-diagram)
 - [Wireframes](https://gitlab.stud.idi.ntnu.no/gruppe44/mappevurdering-idatt2001/-/wikis/Main-Page/wireframes)
 
 ## Prerequisites
