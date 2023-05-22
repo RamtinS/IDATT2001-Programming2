@@ -1,10 +1,10 @@
 package edu.ntnu.idatt2001.paths.view.listeners;
 
-
 import java.util.List;
 
 /**
- * Interface for setting actions to the buttons of a base frame.
+ * Interface activating button activity in a
+ * {@link edu.ntnu.idatt2001.paths.view.uielements.CheckListView CheckListView} object.
  *
  * @author Tobias Oftedal
  * @author Ramtin Samavat
@@ -13,6 +13,11 @@ import java.util.List;
  */
 public interface CheckListListener {
 
+  /**
+   * Handles the confirming of selected goals.
+   *
+   * @param selectedGoals The selected goals.
+   */
   void onConfirmSelectionsClicked(List<String> selectedGoals);
 
 }
