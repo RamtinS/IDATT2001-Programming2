@@ -12,7 +12,7 @@ Paths is a Maven-based JavaFX application developed as part of an assessment in 
 - [Prerequisites](#prerequisites)
 - [Features](#features)
 - [Technologies Used](#technologies-used)
-- [Getting Started](#getting-started)
+- [Installation](#installation)
 - [Usage](#usage)
 - [Acknowledgements](#acknowledgements)
 
@@ -63,11 +63,14 @@ Paths utilizes the following technologies:
 - TTS
 
 
-## Getting Started
+## Installation
 
 To run the Paths application locally, follow these steps:
 
-1. Clone the repository: [https://gitlab.stud.idi.ntnu.no/gruppe44/mappevurdering-idatt2001](https://gitlab.stud.idi.ntnu.no/gruppe44/mappevurdering-idatt2001)
+1. Clone the repository from GitLab (you need to be connected to the NTNU network or have a VPN connection established):
+```
+git clone git@gitlab.stud.idi.ntnu.no:gruppe44/mappevurdering-idatt2001.git
+```
 2. Open the project in IntelliJ IDEA or your preferred Java IDE.
 3. Ensure a clean build of the application by executing the following command: 
 ```
