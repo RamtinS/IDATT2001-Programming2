@@ -8,7 +8,6 @@ Paths is a Maven-based JavaFX application developed as part of an assessment in 
 ## Table of Contents
 
 - [Overview](#overview)
-- [Wiki](#wiki)
 - [Prerequisites](#prerequisites)
 - [Features](#features)
 - [Technologies Used](#technologies-used)
@@ -20,16 +19,6 @@ Paths is a Maven-based JavaFX application developed as part of an assessment in 
 ## Overview
 
 The application serves as a game engine for choice-based and interactive storytelling.
-
-## Wiki
-[Main Page](https://gitlab.stud.idi.ntnu.no/gruppe44/mappevurdering-idatt2001/-/wikis/Main-Page)
-- [Sources](https://gitlab.stud.idi.ntnu.no/gruppe44/mappevurdering-idatt2001/-/wikis/Main-Page/Sources)
-- [UML](https://gitlab.stud.idi.ntnu.no/gruppe44/mappevurdering-idatt2001/-/wikis/Main-Page/UML)
-  - [Class diagram](https://gitlab.stud.idi.ntnu.no/gruppe44/mappevurdering-idatt2001/-/wikis/Main-Page/UML/Class-diagram)
-  - [Flowchart](https://gitlab.stud.idi.ntnu.no/gruppe44/mappevurdering-idatt2001/-/wikis/Main-Page/UML/Flowchart)
-  - [Sequence diagram](https://gitlab.stud.idi.ntnu.no/gruppe44/mappevurdering-idatt2001/-/wikis/Main-Page/UML/Sequence-diagram)
-  - [Use case diagram](https://gitlab.stud.idi.ntnu.no/gruppe44/mappevurdering-idatt2001/-/wikis/Main-Page/UML/Use-case-diagram)
-- [Wireframes](https://gitlab.stud.idi.ntnu.no/gruppe44/mappevurdering-idatt2001/-/wikis/Main-Page/wireframes)
 
 ## Prerequisites
 
