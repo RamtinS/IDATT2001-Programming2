@@ -58,7 +58,7 @@ To run the Paths application locally, follow these steps:
 
 1. Clone the repository from GitLab (you need to be connected to the NTNU network or have a VPN connection established):
 ```
-git clone git@gitlab.stud.idi.ntnu.no:gruppe44/mappevurdering-idatt2001.git
+git clone https://github.com/RamtinS/paths.git
 ```
 2. Open the project in IntelliJ IDEA or your preferred Java IDE.
 3. Ensure a clean build of the application by executing the following command: 
